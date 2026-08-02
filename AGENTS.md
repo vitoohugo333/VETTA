@@ -12,6 +12,29 @@ O VETTA ajuda motoristas de aplicativo a planejar, registrar e entender o própr
 
 Branch, commit, SHA, ambiente publicado, fase e pendências pertencem ao `PROJECT_STATE.md`, nunca a este arquivo.
 
+## Uso obrigatório do Codex Engineering Guardrails
+
+O Codex Engineering Guardrails deve ser usado durante todo o trabalho no VETTA. Ele não é opcional nem uma etapa isolada: orienta o diagnóstico, o contrato, a implementação e a verificação para manter cada ação direcionada, com escopo controlado e evidência fresca.
+
+- Antes de agir, carregar e seguir a habilidade aplicável do Codex Engineering Guardrails.
+- Em diagnóstico, auditoria ou revisão sem alteração, usar `code-verification`.
+- Em mudança autorizada, usar `code-work` do contrato à verificação final.
+- Se a habilidade não estiver disponível, declarar isso antes de continuar e aplicar estas regras do projeto como limite mínimo; nunca substituir a verificação por suposição.
+
+## Protocolo obrigatório de identidade do ambiente
+
+Antes de qualquer diagnóstico, contrato, alteração ou afirmação sobre o VETTA:
+
+1. Localizar e ler o `AGENTS.md` aplicável antes de usar memória do chat ou arquivos locais.
+2. Ler o `PROJECT_STATE.md` da branch confirmada.
+3. Se houver cópia Git local, confirmar raiz do repositório, remoto `origin`, branch, commit e `git status`, incluindo alterações locais preexistentes.
+4. Confirmar pelo conector GitHub o mesmo repositório, branch e commit.
+5. Comparar local, GitHub, CI, site de validação e `PROJECT_STATE.md`, quando existirem.
+
+Se não houver repositório Git local quando a tarefa exigir Git, se o `origin` não for o repositório esperado, ou se houver qualquer divergência, parar e explicar. Nesse caso, atuar somente em diagnóstico: não editar, criar commit, PR, branch, push, deploy ou publicação.
+
+Arquivos soltos em uma pasta nunca provam o estado do VETTA no GitHub.
+
 ## Modos de trabalho
 
 - **Diagnóstico:** somente leitura. Não editar, publicar, criar commit nem propor refatoração como parte da execução.
@@ -23,10 +46,13 @@ Branch, commit, SHA, ambiente publicado, fase e pendências pertencem ao `PROJEC
 
 ## Antes de qualquer alteração
 
-1. Ler integralmente este arquivo e `PROJECT_STATE.md`.
-2. Confirmar e reportar: repositório e branch; `git status`, incluindo alterações locais preexistentes; commit atual; SHA publicado no site de validação, quando existir; entrada correspondente no `PROJECT_STATE.md`; e arquivos previstos.
-3. Apresentar um contrato curto: objetivo observável, arquivos previstos, o que não pode mudar, critério de aceite e teste.
-4. Aguardar autorização explícita do proprietário antes de tocar em interface, PWA, armazenamento, navegação, arquitetura, cálculos, build ou publicação.
+Após concluir o Protocolo obrigatório de identidade do ambiente:
+
+1. Ler integralmente este arquivo e `PROJECT_STATE.md` da branch confirmada.
+2. Confirmar e reportar repositório, branch, `git status` incluindo alterações locais preexistentes, commit atual, estado remoto, SHA publicado no site de validação quando existir, entrada correspondente no `PROJECT_STATE.md` e arquivos previstos.
+3. Informar qualquer divergência encontrada.
+4. Apresentar um contrato curto: objetivo observável, arquivos previstos, o que não pode mudar, critério de aceite e teste.
+5. Aguardar autorização explícita do proprietário antes de tocar em interface, PWA, armazenamento, navegação, arquitetura, cálculos, build ou publicação.
 
 Nunca sobrescrever, descartar ou incorporar alterações locais preexistentes sem ordem explícita.
 
@@ -34,7 +60,7 @@ Nunca sobrescrever, descartar ou incorporar alterações locais preexistentes se
 
 - Aprovação de investigação não autoriza alteração.
 - Aprovação de alteração não autoriza commit, push, PR, tag, deploy ou publicação.
-- Aprovação de publicação deve citar expressamente o commit a publicar.
+- Aprovação de publicação deve citar expressamente o commit, PR ou alvo a publicar.
 - Se a causa exigir arquivo ou área não prevista no contrato, parar, explicar e pedir novo aceite.
 
 ## Escopo e segurança
@@ -71,6 +97,12 @@ Enquanto não houver teste no celular, declarar claramente: **aguardando valida�
 - Não declarar paridade entre branch e site de validação sem comparar os SHAs.
 - Não declarar correção por leitura de código: apresentar teste, reprodução ou evidência direta proporcional ao risco.
 - Não chamar falha de “pré-existente” sem evidência.
+
+## Declarações verificáveis
+
+Só afirmar “commit criado”, “publicado”, “CI passou”, “site atualizado” ou “branch igual ao site” com evidência recente e identificável.
+
+A evidência deve citar, conforme o caso, SHA do commit, branch, resultado da CI, URL ou SHA efetivamente servido e confirmação do conector GitHub. Sem essa evidência, declarar: **não confirmado**.
 
 ## Direção técnica mínima
 
