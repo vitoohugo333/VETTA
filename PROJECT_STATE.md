@@ -1,8 +1,8 @@
 # Estado oficial — VETTA
 
-**Atualizado em:** 2026-08-02  
-**Estado:** migração limpa do aplicativo local-first em revisão remota.
-**Alteração em curso:** base inicial do aplicativo reescrita na branch remota `migration/vetta-clean-3-5-1`; aguardando revisão e validação física.
+**Atualizado em:** 2026-08-02
+**Estado:** base 3.5.1 restaurada byte a byte na branch de migração; aguardando validação física.
+**Alteração em curso:** a árvore funcional de `CALCULA-MOTORA/main` no commit `f4817fb0b8fd753b8d51f077837a65ac6a92d6c6` substitui integralmente a base reduzida na branch remota `migration/vetta-clean-3-5-1`.
 **Validação física:** aguardando validação física.
 
 ## Repositório e publicação
@@ -10,42 +10,35 @@
 | Item | Estado atual |
 |---|---|
 | Repositório Git | `vitoohugo333/VETTA` |
-| Branch de origem | `main` em `67361493784548dc31f063fb5bf76cbd1f247bd4` |
-| Branch de trabalho | `migration/vetta-clean-3-5-1` (remota) |
-| Commit de fundação | `67361493784548dc31f063fb5bf76cbd1f247bd4` |
+| Branch de origem | `CALCULA-MOTORA/main` em `f4817fb0b8fd753b8d51f077837a65ac6a92d6c6` |
+| Branch de trabalho | `migration/vetta-clean-3-5-1` (remota; PR #1) |
+| Base anterior da branch | `dc79f7f57150ac6918dd48d6105d0e6f7fd8523f` |
 | Site de validação | ainda não configurado |
 | SHA servido | ainda não configurado |
 | Produção | ainda não configurada |
 
 ## Verdades confirmadas
 
-- O VETTA começa com esta fundação organizacional.
-- A prioridade de produto é: confiança nos cálculos, registro diário, histórico útil e onboarding claro.
-- Novas áreas só serão consideradas depois da consolidação da experiência principal.
-- A primeira base do aplicativo foi escrita na branch de trabalho, com cálculos puros, dados locais, telas e navegação separados.
-- A branch de migração e seu commit de revisão foram enviados; não há PR ou site criado nesta alteração.
+- A origem aprovada é a `main` 3.5.1 do CALCULA-MOTORA, no commit acima.
+- Interface, fluxos, cálculos e PWA foram preservados por cópia de conteúdo, sem redesenho ou reinterpretação.
+- Arquivos de governança do VETTA permanecem próprios: `AGENTS.md`, este estado e a verificação de governança.
+- A checagem de produção da origem referencia `netlify/edge-functions/access-gate.js`, que não está presente no commit de origem. Isso é uma pendência da própria referência e não foi alterado para manter paridade.
 
 ## Branches remotas ativas
 
 | Branch | Papel | Situação |
 |---|---|---|
-| `main` | fundação inicial | ativa |
+| `main` | fundação protegida | ativa |
+| `migration/vetta-clean-3-5-1` | migração byte a byte em PR #1 | ativa |
 
 ## Próximo passo único
 
-Revisar a migração limpa remota e autorizar a abertura de PR em rascunho, se estiver de acordo.
-
-## Itens deliberadamente adiados
-
-- Modularização ampla ou sistema de plugins.
-- Backend, login, sincronização, pagamentos, PDF e CSV.
-- Refino visual ou novos recursos.
+Validar a interface restaurada no celular antes de qualquer merge ou publicação.
 
 ## Registro de evidência
 
 | Data | Ação | Evidência | Resultado |
 |---|---|---|---|
-| 2026-08-02 | Fundação publicada na `main` | sete arquivos operacionais conferidos no GitHub | aprovada: estrutura presente |
-| 2026-08-02 | Governança inicial revisada | `scripts/verify-governance.sh` | aprovado: checagem documental passou |
-| 2026-08-02 | Protocolo de integridade publicado | leitura direta do GitHub dos três arquivos e oito requisitos obrigatórios | aprovado: requisitos presentes |
-| 2026-08-02 | Migração limpa enviada | branch remota e sete testes determinísticos | aguardando revisão e validação física |
+| 2026-08-02 | Referência de origem confirmada | commit `f4817fb0b8fd753b8d51f077837a65ac6a92d6c6` | aprovada pelo proprietário |
+| 2026-08-02 | Paridade da migração | hashes SHA-256 dos arquivos funcionais da origem | aguardando confirmação pós-envio |
+| 2026-08-02 | Teste da referência | `node tests/verify-production.mjs` | falha conhecida: arquivo `netlify/edge-functions/access-gate.js` ausente na própria referência |
