@@ -12,6 +12,10 @@ grep -q 'No máximo quatro branches remotas ativas' AGENTS.md
 grep -q 'Hierarquia de verdade' AGENTS.md
 grep -q 'Modos de trabalho' AGENTS.md
 grep -q 'Ainda não validado no celular' AGENTS.md
+grep -q 'Uso obrigatório do Codex Engineering Guardrails' AGENTS.md
+grep -q 'Protocolo obrigatório de identidade do ambiente' AGENTS.md
+grep -q 'Arquivos soltos em uma pasta nunca provam' AGENTS.md
+grep -q 'Declarações verificáveis' AGENTS.md
 grep -q 'Repositório e publicação' PROJECT_STATE.md
 grep -q 'Autorização' docs/CONTRACT_TEMPLATE.md
 
