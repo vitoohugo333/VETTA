@@ -2,129 +2,100 @@
 
 O VETTA ajuda motoristas de aplicativo a planejar, registrar e entender o próprio resultado financeiro. Ele deve ser simples no celular, confiável nos números e local-first.
 
+## Princípio de trabalho
+
+Trabalhar de forma objetiva: primeiro entregar a conclusão e o efeito prático; depois, apenas o detalhe técnico necessário. A cautela deve crescer com o risco da ação — não com o tamanho da conversa.
+
+Não transformar perguntas simples, explicações ou pequenas consultas de status em uma sequência de autorizações. Fazer a apuração necessária e responder de forma conclusiva.
+
+## Trabalho por blocos de ação
+
+Quando o proprietário autorizar um trabalho, executar um **bloco de ação completo**: o conjunto de etapas diretamente necessárias para entregar um resultado verificável. Um bloco normalmente inclui entender o estado relevante, fazer a alteração aprovada, rodar as verificações proporcionais e apresentar o resultado final.
+
+O bloco não é medido por minutos. Ele deve ter começo, fim e objetivo claro, grande o bastante para evitar pedidos de autorização a cada microetapa e pequeno o bastante para não misturar objetivos diferentes.
+
+- Uma autorização para um bloco cobre as etapas técnicas previsíveis e diretamente ligadas a ele, inclusive testes e correções pequenas descobertas durante a execução que sejam necessárias para o resultado aprovado.
+- Não interromper o bloco apenas para confirmar comandos, leituras, testes, ajustes documentais previstos ou outras etapas rotineiras.
+- Parar e pedir nova decisão somente se aparecer mudança de objetivo, arquivo ou área fora do combinado, risco novo para dados, cálculos, interface, PWA, `main`, publicação ou uma escolha do proprietário.
+- Ao iniciar, dizer em poucas linhas o resultado esperado, o limite do bloco e o que ficará intocado. Ao terminar, entregar a conclusão, a evidência e a pendência real — sem transformar cada passo interno em uma nova conversa.
+
 ## Hierarquia de verdade
 
 1. Ordem explícita mais recente do proprietário.
-2. Este `AGENTS.md`: regras permanentes do projeto.
-3. `PROJECT_STATE.md`: estado atual e próximo passo.
-4. Evidência fresca do repositório, CI e artefato publicado.
-5. Memória do chat: apenas contexto auxiliar; nunca substitui os itens acima.
+2. Este `AGENTS.md`: regras permanentes.
+3. Fontes vivas atuais: GitHub, PR, CI e site de validação, quando forem relevantes.
+4. `PROJECT_STATE.md`: registro de trabalho, que pode estar desatualizado.
+5. Memória do chat, resumos e capturas: apenas contexto auxiliar.
 
-Branch, commit, SHA, ambiente publicado, fase e pendências pertencem ao `PROJECT_STATE.md`, nunca a este arquivo.
+Para repositório, branches, PRs, CI e publicação, usar o conector GitHub como fonte remota principal. Nunca tratar uma checagem antiga como prova atual. Se algo importante não puder ser confirmado, dizer **não confirmado**, explicar o impacto e não inventar certeza.
 
 ## Uso obrigatório do Codex Engineering Guardrails
 
-O Codex Engineering Guardrails deve ser usado durante todo o trabalho no VETTA. Ele não é opcional nem uma etapa isolada: orienta o diagnóstico, o contrato, a implementação e a verificação para manter cada ação direcionada, com escopo controlado e evidência fresca.
+- Diagnóstico, auditoria ou revisão sem alteração: usar `code-verification`.
+- Mudança autorizada: usar `code-work`, do recorte à verificação final.
+- Se a habilidade não estiver disponível, declarar isso e seguir estas regras como limite mínimo. Nunca trocar evidência por suposição.
 
-- Antes de agir, carregar e seguir a habilidade aplicável do Codex Engineering Guardrails.
-- Em diagnóstico, auditoria ou revisão sem alteração, usar `code-verification`.
-- Em mudança autorizada, usar `code-work` do contrato à verificação final.
-- Se a habilidade não estiver disponível, declarar isso antes de continuar e aplicar estas regras do projeto como limite mínimo; nunca substituir a verificação por suposição.
+## Níveis de trabalho
 
-## Protocolo obrigatório de identidade do ambiente
+### 1. Conversa, explicação, estratégia ou decisão
 
-Antes de qualquer diagnóstico, contrato, alteração ou afirmação sobre o VETTA:
+Responder diretamente. Não exigir contrato, status completo do GitHub nem autorização para explicar algo. Se a resposta depender de um fato atual, consultar apenas a fonte necessária.
 
-1. Localizar e ler o `AGENTS.md` aplicável antes de usar memória do chat ou arquivos locais.
-2. Ler o `PROJECT_STATE.md` da branch confirmada.
-3. Se houver cópia Git local, confirmar raiz do repositório, remoto `origin`, branch, commit e `git status`, incluindo alterações locais preexistentes.
-4. Confirmar pelo conector GitHub o mesmo repositório, branch e commit.
-5. Comparar local, GitHub, CI, site de validação e `PROJECT_STATE.md`, quando existirem.
+### 2. Status do projeto ou dúvida sobre GitHub
 
-Se não houver repositório Git local quando a tarefa exigir Git, se o `origin` não for o repositório esperado, ou se houver qualquer divergência, parar e explicar. Nesse caso, atuar somente em diagnóstico: não editar, criar commit, PR, branch, push, deploy ou publicação.
+Fazer uma checagem atual e objetiva do que muda a resposta: repositório, branch, PR, CI ou site, conforme o caso. Informar onde está o estado mais novo, o efeito prático e a pendência real. Não repetir dados que não ajudam a decisão.
 
-Arquivos soltos em uma pasta nunca provam o estado do VETTA no GitHub.
+### 3. Mudança documental ou de baixo risco
 
-## Modos de trabalho
+Definir em uma frase o resultado, os arquivos e o que ficará intocado; com autorização explícita, executar e verificar em uma única etapa. Não criar commit, enviar ao GitHub, abrir PR ou publicar sem autorização específica.
 
-- **Diagnóstico:** somente leitura. Não editar, publicar, criar commit nem propor refatoração como parte da execução.
-- **Contrato:** definir o recorte e aguardar aprovação.
-- **Implementação:** alterar somente o contrato aprovado.
-- **Verificação:** testar e reportar evidência, sem ampliar o escopo.
-- **Publicação:** somente com autorização explícita e separada.
-- **Checkpoint:** registrar o estado no `PROJECT_STATE.md` após a validação física do proprietário.
+### 4. Mudança no app, dados, cálculos, interface, PWA ou navegação
 
-## Antes de qualquer alteração
+Antes de editar, confirmar de forma proporcional: repositório e branch corretos, alterações locais já existentes, arquivos consumidores, testes e impacto em dados, interface, cálculos, build, CI e publicação. Apresentar um contrato curto e aguardar autorização explícita.
 
-Após concluir o Protocolo obrigatório de identidade do ambiente:
+Mudanças de interface ou PWA exigem validação manual no celular. Valores financeiros exigem testes determinísticos e independentes da interface. Atualizações não podem apagar registros existentes.
 
-1. Ler integralmente este arquivo e `PROJECT_STATE.md` da branch confirmada.
-2. Confirmar e reportar repositório, branch, `git status` incluindo alterações locais preexistentes, commit atual, estado remoto, SHA publicado no site de validação quando existir, entrada correspondente no `PROJECT_STATE.md` e arquivos previstos.
-3. Informar qualquer divergência encontrada.
-4. Apresentar um contrato curto: objetivo observável, arquivos previstos, o que não pode mudar, critério de aceite e teste.
-5. Aguardar autorização explícita do proprietário antes de tocar em interface, PWA, armazenamento, navegação, arquitetura, cálculos, build ou publicação.
+### 5. Merge, publicação, deploy ou alteração em `main`
 
-Nunca sobrescrever, descartar ou incorporar alterações locais preexistentes sem ordem explícita.
+Exigem autorização explícita e separada, citando o alvo. Antes de executar, confirmar a versão correta, CI aplicável e o ambiente que será afetado. Não declarar publicado ou igual ao site sem evidência atual.
 
-## Aprovação
-
-- Aprovação de investigação não autoriza alteração.
-- Aprovação de alteração não autoriza commit, push, PR, tag, deploy ou publicação.
-- Aprovação de publicação deve citar expressamente o commit, PR ou alvo a publicar.
-- Se a causa exigir arquivo ou área não prevista no contrato, parar, explicar e pedir novo aceite.
-
-## Escopo e segurança
+## Regras de segurança e escopo
 
 - Uma mudança observável por vez.
-- Sem refatoração, limpeza, modernização ou melhoria paralela.
-- Sem criar branch, PR, commit, push, tag, deploy, publicação ou alteração em `main` sem autorização explícita.
-- Se o pedido exigir duas áreas relevantes, divergir do site validado ou indicar risco de remendo, parar e pedir decisão.
-- Nunca afirmar “corrigido”, “publicado” ou “funcionando” sem evidência fresca.
+- Não sobrescrever, descartar ou incorporar alterações locais preexistentes sem ordem explícita.
+- Sem refatoração, limpeza ou melhoria paralela fora do objetivo aprovado.
+- Se surgir uma área não prevista que mude risco, dados, interface, cálculos ou publicação, parar, explicar a decisão necessária e pedir novo aceite.
+- No máximo quatro branches remotas ativas; seus papéis e situação devem constar no `PROJECT_STATE.md`.
+- Não construir agora plugins, backend, login, sincronização, pagamento, manifestos, eventos ou feature flags.
 
-## Limite de branches
+Ao consolidar o app, manter quatro limites claros: cálculos puros, dados versionados, telas/áreas e navegação.
 
-No máximo quatro branches remotas ativas. Seus papéis, nomes e situação atual devem estar definidos no `PROJECT_STATE.md`.
+## Evidência e checkpoint
 
-Versões aprovadas são preservadas por tags (`vX.Y.Z`), não por branches acumuladas.
+- Não afirmar “corrigido”, “funcionando”, “CI passou”, “site atualizado” ou “publicado” sem evidência recente e identificável.
+- Para o GitHub Pages, configuração de branch não basta: quando necessário, comparar o conteúdo servido com a versão esperada.
+- Após validação no celular, registrar no `PROJECT_STATE.md`: data, branch e atualização testada, site/SHA quando aplicável, comportamento testado, resultado, pendência real e próximo passo único.
+- Antes disso, usar **aguardando validação física**.
 
-## Checkpoint de validação
+## Comunicação com o proprietário
 
-O `PROJECT_STATE.md` pode ser atualizado no início de uma alteração para registrar “em curso” ou “aguardando validação”. Após o teste no celular, registrar:
+Falar como para leigo em programação: didático, direto e curto.
 
-- data;
-- branch e commit testado;
-- SHA efetivamente servido pelo site de validação, quando aplicável;
-- comportamento testado;
-- resultado;
-- pendência real;
-- próximo passo único.
+- Começar por: o que está acontecendo, o que muda, o que não muda e qual é o próximo passo.
+- Só explicar termos técnicos se eles ajudarem a decidir. Nunca despejar códigos, nome de branch, SHA ou resultado de CI sem traduzir.
+- Quando houver divergência relevante, usar uma tabela simples com cópia local, GitHub, site de validação, qual está mais novo, diferença prática e próximo passo.
+- Em vez de linguagem mecânica, dizer de forma natural: “o GitHub tem uma atualização mais recente que esta cópia; ela mudou X; para editar sem risco, preciso usar essa versão”.
+- Usar o formato completo de entrega apenas em mudanças, verificações ou publicações. Para conversa e explicação, responder normalmente.
 
-Enquanto não houver teste no celular, declarar claramente: **aguardando validação física**.
-
-## Evidência mínima
-
-- Não inferir o ambiente publicado apenas pela branch.
-- Não declarar paridade entre branch e site de validação sem comparar os SHAs.
-- Não declarar correção por leitura de código: apresentar teste, reprodução ou evidência direta proporcional ao risco.
-- Não chamar falha de “pré-existente” sem evidência.
-
-## Declarações verificáveis
-
-Só afirmar “commit criado”, “publicado”, “CI passou”, “site atualizado” ou “branch igual ao site” com evidência recente e identificável.
-
-A evidência deve citar, conforme o caso, SHA do commit, branch, resultado da CI, URL ou SHA efetivamente servido e confirmação do conector GitHub. Sem essa evidência, declarar: **não confirmado**.
-
-## Direção técnica mínima
-
-Não construir agora sistema de plugins, backend, login, sincronização, pagamento, manifestos, eventos ou feature flags.
-
-Ao consolidar o app, manter quatro limites claros: cálculos puros, dados versionados, telas/áreas e navegação. Isso permite crescer depois sem antecipar uma plataforma grande.
-
-## Critérios de qualidade
-
-- Valores financeiros precisam de testes determinísticos e independentes da interface.
-- Custos estimados e reais precisam estar identificados de forma inequívoca.
-- Atualizações não podem apagar registros existentes.
-- Toda mudança de interface/PWA precisa de validação manual no celular.
-
-## Formato obrigatório de entrega
+## Formato de entrega para trabalho técnico
 
 - Modo executado:
 - Objetivo aprovado:
-- Branch e commit:
+- Repositório, branch e atualização:
+- Estado explicado:
 - Arquivos alterados:
 - Evidência e testes:
-- SHA do site de validação:
+- Site de validação:
 - Ainda não validado no celular:
 - `main` e publicação foram alterados?:
 - Próximo passo único:
