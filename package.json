@@ -1,0 +1,10 @@
+{
+  "name": "vetta",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/app.js && node --check src/domain/finance.js && node --check src/data/storage.js"
+  }
+}
