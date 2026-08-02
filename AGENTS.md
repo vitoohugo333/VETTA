@@ -21,19 +21,55 @@ O Codex Engineering Guardrails deve ser usado durante todo o trabalho no VETTA. 
 - Em mudança autorizada, usar `code-work` do contrato à verificação final.
 - Se a habilidade não estiver disponível, declarar isso antes de continuar e aplicar estas regras do projeto como limite mínimo; nunca substituir a verificação por suposição.
 
-## Protocolo obrigatório de identidade do ambiente
+## Protocolo obrigatório de identidade do ambiente e apuração integral antes de decidir
+
+Antes de qualquer diagnóstico, contrato, alteração, conclusão ou resposta factual sobre o VETTA, realizar uma apuração completa, atual e proporcional ao risco nas fontes vivas relevantes. O objetivo é antecipar dependências e erros de ponta a ponta antes de tomar uma decisão; não descobrir obstáculos importantes depois de começar.
+
+Nunca decidir com base apenas em memória do chat, resumo anterior, `PROJECT_STATE.md`, captura de tela ou checagem antiga. Esses itens registram contexto e evidência histórica, mas não provam o estado atual.
+
+### Fontes de verdade e validade
+
+- A ordem explícita mais recente do proprietário define o que deve ser feito.
+- Para repositório, branches, commits, PRs, CI e publicação, o conector GitHub é a fonte remota primária de confirmação.
+- Para o ambiente de validação, confirmar a configuração atual do GitHub Pages e o conteúdo efetivamente servido pela URL. A configuração de uma branch, sozinha, não prova que o deploy já terminou.
+- `AGENTS.md` contém regras permanentes; `PROJECT_STATE.md` contém o estado vivo de trabalho; ambos podem ficar desatualizados e devem ser confrontados com as fontes vivas antes de orientar uma decisão.
+- Memória, resumos e capturas de tela são contexto ou evidência de um momento específico; nunca substituem uma consulta atual quando o fato pode ter mudado.
+
+Todo fato variável deve ser tratado com três informações: **fonte**, **momento da checagem** e **validade**. “Confirmado antes” significa apenas “era verdadeiro naquele momento”; nunca “continua verdadeiro agora”. Se a fonte atual não puder ser consultada, declarar **não confirmado**, explicar a consequência e não preencher a lacuna com suposição.
+
+### Levantamento obrigatório
 
 Antes de qualquer diagnóstico, contrato, alteração ou afirmação sobre o VETTA:
 
-1. Localizar e ler o `AGENTS.md` aplicável antes de usar memória do chat ou arquivos locais.
-2. Ler o `PROJECT_STATE.md` da branch confirmada.
-3. Se houver cópia Git local, confirmar raiz do repositório, remoto `origin`, branch, commit e `git status`, incluindo alterações locais preexistentes.
-4. Confirmar pelo conector GitHub o mesmo repositório, branch e commit.
-5. Comparar local, GitHub, CI, site de validação e `PROJECT_STATE.md`, quando existirem.
+1. Localizar e ler o `AGENTS.md` remoto aplicável antes de usar memória do chat ou arquivos locais.
+2. Confirmar pelo GitHub o repositório, a branch relevante, o commit atual e o PR relacionado, quando existir: base, cabeça, estado, diff e CI.
+3. Ler o `PROJECT_STATE.md` da branch já confirmada e separar o que ele registra do que foi confirmado agora.
+4. Se houver cópia Git local, confirmar raiz do repositório, remoto `origin`, branch, commit, relação com a ponta remota e `git status`, incluindo alterações locais preexistentes.
+5. Conferir workflows, testes, configurações, importações e arquivos consumidores que podem ser afetados pelo trabalho pretendido.
+6. Quando houver ambiente de validação, confirmar URL, branch e pasta configuradas no GitHub Pages; obter a ponta atual dessa branch; e comparar o conteúdo servido com o commit esperado quando isso for necessário para a decisão.
+7. Identificar os impactos possíveis em dados existentes, interface, cálculos, PWA, navegação, build, CI e publicação.
 
-Se não houver repositório Git local quando a tarefa exigir Git, se o `origin` não for o repositório esperado, ou se houver qualquer divergência, parar e explicar. Nesse caso, atuar somente em diagnóstico: não editar, criar commit, PR, branch, push, deploy ou publicação.
+Arquivos soltos em uma pasta nunca provam o estado do VETTA no GitHub. Se não houver repositório Git local quando a tarefa exigir Git, se o `origin` não for o repositório esperado, ou se houver uma divergência que impeça saber qual conteúdo será alterado ou testado, parar e explicar. Nesse caso, atuar somente em diagnóstico até o proprietário decidir como prosseguir: não criar commit, PR, branch, push, deploy ou publicação.
 
-Arquivos soltos em uma pasta nunca provam o estado do VETTA no GitHub.
+### Mapa completo antes de alterar
+
+Antes de propor uma alteração, mapear o caminho completo até a validação no celular:
+
+1. origem e destino exatos;
+2. resultado observável que o proprietário verá;
+3. arquivos e áreas afetadas, com o que deve permanecer intocado;
+4. dependências previsíveis, configurações, testes, workflows e serviços envolvidos;
+5. riscos para dados, interface, cálculos, PWA, build, CI e publicação;
+6. testes locais, CI remota, ambiente de validação e prova final necessários.
+
+Dependências previsíveis devem aparecer no contrato inicial. Não é aceitável propor “alterar só um arquivo” sem antes verificar que configurações, testes ou consumidores obrigatórios também precisam ser considerados. Se a apuração revelar área fora do contrato, risco de remendo ou divergência com o site validado, parar, explicar em linguagem simples e pedir nova decisão.
+
+Antes de agir, separar explicitamente no relatório:
+
+- **confirmado agora**: fonte atual e o que ela prova;
+- **histórico/documentado**: informação registrada, que pode estar velha;
+- **informado pelo proprietário**: preferência, intenção ou validação pessoal que não deve ser reinterpretada como fato técnico;
+- **pendente de confirmação**: o que falta, por que importa e qual fonte pode confirmar.
 
 ## Modos de trabalho
 
@@ -104,6 +140,16 @@ Só afirmar “commit criado”, “publicado”, “CI passou”, “site atual
 
 A evidência deve citar, conforme o caso, SHA do commit, branch, resultado da CI, URL ou SHA efetivamente servido e confirmação do conector GitHub. Sem essa evidência, declarar: **não confirmado**.
 
+## Comunicação clara para o proprietário
+
+Falar com o proprietário como leigo em programação: de forma didática, direta e curta, explicando qualquer termo técnico necessário antes de usá-lo como conclusão.
+
+- Nunca apresentar somente códigos técnicos, como `aa58e4d`, SHA, nome de branch ou resultado de CI. Traduzir sempre: onde está, se é o estado mais novo ou anterior, o que mudou e qual é o efeito prático.
+- Não usar metáforas mecânicas nem apresentar um commit como número de versão. Primeiro dizer, em linguagem simples, se o GitHub tem uma atualização mais nova ou anterior, o que ela mudou e qual é o efeito prático. Só explicar que “commit” é o registro técnico dessa atualização se isso ajudar a decisão.
+- Ao reportar divergência, usar uma tabela simples com: cópia local, GitHub, site de validação, qual está mais novo, diferença prática e o que permanece intocado.
+- Dizer “não confirmado” quando a informação não tiver prova atual; nunca transformar incerteza técnica em certeza para simplificar a resposta.
+- O relatório deve responder primeiro ao que importa para o proprietário: o que está acontecendo, o que muda, o que não muda, o que foi provado e qual é o próximo passo único.
+
 ## Direção técnica mínima
 
 Não construir agora sistema de plugins, backend, login, sincronização, pagamento, manifestos, eventos ou feature flags.
@@ -122,6 +168,7 @@ Ao consolidar o app, manter quatro limites claros: cálculos puros, dados versio
 - Modo executado:
 - Objetivo aprovado:
 - Branch e commit:
+- Estado explicado: (em linguagem simples: local, GitHub, site e qual está mais novo)
 - Arquivos alterados:
 - Evidência e testes:
 - SHA do site de validação:
