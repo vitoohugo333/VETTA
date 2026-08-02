@@ -12,7 +12,7 @@
 | Repositório Git | `vitoohugo333/VETTA` |
 | Branch ativa | `main` |
 | Commit de fundação | `20be88b01099b3e060bcc421d8c8be6f024bfedb` |
-| Último commit confirmado antes deste registro | `44c0243464ea341af8a6c33e96ab284d6ebfa297` |
+| Último commit confirmado antes deste registro | `8f25f61de502b812c98edc455bcb3cd9826e2eaf` |
 | Site de validação | ainda não configurado |
 | SHA servido | ainda não configurado |
 | Produção | ainda não configurada |
@@ -46,4 +46,4 @@ Definir e aprovar o primeiro recorte de produto antes de criar ou alterar códig
 |---|---|---|---|
 | 2026-08-02 | Fundação publicada na `main` | sete arquivos operacionais conferidos no GitHub | aprovada: estrutura presente |
 | 2026-08-02 | Governança inicial revisada | `scripts/verify-governance.sh` | aprovado: checagem documental passou |
-| 2026-08-02 | Protocolo de integridade publicado | `AGENTS.md`, verificador e confirmação remota até `44c0243` | aguardando checagem pós-publicação |
+| 2026-08-02 | Protocolo de integridade publicado | leitura direta do GitHub dos três arquivos e oito requisitos obrigatórios | aprovado: requisitos presentes |
