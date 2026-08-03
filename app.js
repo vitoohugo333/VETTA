@@ -36,6 +36,8 @@ const app = {
   toastTimer: null,
   onboardingStep: 1,
   onboardingDays: 6,
+  currentView: 'dashboard',
+  currentPrimaryView: 'dashboard',
 
   init() {
     this.load();
@@ -43,6 +45,7 @@ const app = {
     this.prepareRecordForm();
     this.syncInputs();
     this.render();
+    this.initializeNavigation();
     this.setupPwa();
     this.prepareOnboarding();
   },
@@ -146,7 +149,10 @@ const app = {
     document.querySelectorAll('[data-period]').forEach(button => button.addEventListener('click', () => {
       this.state.compare.period = Number(button.dataset.period); this.save(); this.renderCompare(this.calculations());
     }));
-    document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => this.showView(button.dataset.view)));
+    document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => this.navigateToPrimary(button.dataset.view)));
+    document.querySelectorAll('[data-secondary-view]').forEach(button => button.addEventListener('click', () => this.openSecondary(button.dataset.secondaryView)));
+    document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => this.navigateBack()));
+    window.addEventListener('popstate', event => this.restoreNavigation(event.state));
 
     ['recordGross', 'recordKm', 'recordHours', 'recordFuel', 'recordDate'].forEach(id => this.$(id).addEventListener('input', () => this.renderRecordPreview()));
     this.$('saveDayButton').addEventListener('click', () => this.saveDay());
@@ -250,16 +256,54 @@ const app = {
     this.save(); this.syncInputs(); this.render(); this.toast(`${this.state.fuel.label} agora é o combustível das metas.`);
   },
 
-  showView(view) {
+  initializeNavigation() {
+    const state = history.state;
+    if (state?.vettaNavigation) this.restoreNavigation(state);
+    else history.replaceState({ vettaNavigation: true, view: 'dashboard', primaryView: 'dashboard' }, '', window.location.href);
+  },
+
+  navigateToPrimary(view) {
+    if (view === this.currentView && view === this.currentPrimaryView) return;
+    history.pushState({ vettaNavigation: true, view, primaryView: view }, '', window.location.href);
+    this.showView(view, view);
+  },
+
+  openSecondary(view) {
+    const primaryView = this.currentPrimaryView;
+    history.pushState({ vettaNavigation: true, view, primaryView }, '', window.location.href);
+    this.showView(view, primaryView);
+  },
+
+  navigateBack() {
+    if (this.currentView !== this.currentPrimaryView) history.back();
+  },
+
+  restoreNavigation(state) {
+    const view = state?.vettaNavigation ? state.view : 'dashboard';
+    const primaryView = state?.vettaNavigation ? state.primaryView : 'dashboard';
+    this.showView(view, primaryView);
+  },
+
+  showView(view, primaryView = view) {
     document.querySelectorAll('.view-section').forEach(section => section.classList.add('hidden'));
     const target = this.$(`view-${view}`); if (!target) return;
     target.classList.remove('hidden');
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.view === view));
+    this.currentView = view;
+    this.currentPrimaryView = primaryView;
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.view === primaryView));
     if (view === 'day') this.prepareRecordForm(false);
     if (view === 'history') this.renderHistory();
     if (view === 'settings') { this.renderCosts(); this.renderLearning(); }
     if (view === 'more') { this.renderEvents(); this.renderCompare(this.calculations()); }
+    if (view === 'planning') this.renderPlanning();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+
+  renderPlanning() {
+    const context = this.monthContext();
+    this.$('planningTarget').textContent = this.money(this.state.targetProfit, 0);
+    this.$('planningDays').textContent = `${context.plannedDays} dias`;
+    this.$('planningDaysOff').textContent = this.integer(this.state.extraDaysOff);
   },
 
   monthContext(reference = new Date()) {

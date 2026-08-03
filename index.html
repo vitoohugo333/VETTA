@@ -67,6 +67,25 @@
       </div>
 
       <div class="card-vetta p-6 bg-gradient-to-br from-blue-50 to-white"><div class="flex gap-4"><div class="w-11 h-11 shrink-0 rounded-2xl bg-blue-600 text-white grid place-items-center"><i class="fas fa-wand-magic-sparkles"></i></div><div><span class="label-micro !text-blue-700">Leitura do VETTA</span><h3 id="insightTitle" class="font-extrabold text-lg">Sua meta está pronta</h3><p id="insightText" class="text-xs text-slate-500 mt-2"></p></div></div><div id="insightReasons" class="mt-4 space-y-2"></div></div>
+
+      <button data-secondary-view="planning" class="w-full card-vetta p-5 flex justify-between items-center text-left">
+        <div><span class="label-micro !text-blue-600">Planejamento</span><strong class="block">Ver planejamento do mês</strong></div>
+        <i class="fas fa-chevron-right text-blue-600"></i>
+      </button>
+    </section>
+
+    <section id="view-planning" class="view-section hidden space-y-6 animate-enter">
+      <div class="rounded-[2rem] bg-vetta-900 p-8 text-white">
+        <button data-back class="mb-6 -ml-2 px-2 py-1 text-xs font-extrabold text-blue-200"><i class="fas fa-arrow-left mr-2"></i>Voltar</button>
+        <span class="text-[10px] text-blue-300 font-extrabold uppercase tracking-widest">Planejamento</span>
+        <h2 class="text-2xl font-extrabold mt-2">Meu planejamento</h2>
+        <p class="text-sm text-slate-400 mt-2">A base da sua meta para este mês.</p>
+      </div>
+      <div class="card-vetta p-6">
+        <div class="grid grid-cols-2 gap-3"><div class="bg-slate-50 rounded-2xl p-4"><span class="label-micro">Objetivo líquido</span><strong id="planningTarget" class="text-lg text-emerald-600">R$ 0</strong></div><div class="bg-slate-50 rounded-2xl p-4"><span class="label-micro">Dias planejados</span><strong id="planningDays" class="text-lg">0 dias</strong></div></div>
+        <div class="mt-4 bg-blue-50 rounded-2xl p-4"><span class="label-micro !text-blue-700">Folgas extras</span><strong id="planningDaysOff" class="text-lg text-blue-700">0</strong></div>
+        <p class="text-xs text-slate-500 mt-5">Neste primeiro bloco, a edição do planejamento continua em Ajustes.</p>
+      </div>
     </section>
 
     <section id="view-day" class="view-section hidden space-y-6 animate-enter">
