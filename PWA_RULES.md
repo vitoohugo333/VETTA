@@ -94,6 +94,20 @@ Nenhum estado de espera pode permanecer indefinidamente. Se `beforeinstallprompt
 - estado concluído destacado;
 - nenhuma promessa de abertura automática do instalador.
 
+## Automação de navegador sem burlar a instalação
+
+Testes automatizados podem precisar acessar a interface interna sem instalar fisicamente o PWA. Esse acesso só é aceitável quando todas as condições abaixo forem preservadas:
+
+- o caminho especial depende de uma característica inequívoca do navegador automatizado, como `navigator.webdriver`;
+- um parâmetro explícito, atualmente `forceBrowser=1`, deve permitir testar a experiência normal de navegador sem o desvio de automação;
+- a mesma execução deve comprovar que a página comum continua protegida por senha e mostra a instalação, sem renderizar a interface interna;
+- somente depois dessa prova o robô pode abrir o aplicativo pelo caminho exclusivo de automação;
+- nenhuma chave em `localStorage`, query pública isolada ou botão escondido pode liberar o aplicativo para um usuário comum;
+- a senha usada pelo robô deve entrar por segredo de ambiente e nunca ser gravada no repositório;
+- automação de Chromium não prova instalação real, ícone no sistema, abertura pelo sistema operacional nem comportamento físico do Android ou iPhone.
+
+O teste remoto econômico está documentado em `tests/README.md` e implementado em `tests/e2e-remote/usage-gate.spec.js`.
+
 ## Provas obrigatórias antes de encerrar
 
 - manifesto carregado com MIME correto;
