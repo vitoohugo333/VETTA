@@ -8,6 +8,7 @@ const sw = readFileSync('sw.js', 'utf8');
 const netlify = readFileSync('netlify.toml', 'utf8');
 const manifest = JSON.parse(readFileSync('manifest.webmanifest', 'utf8'));
 const accessGate = readFileSync('netlify/edge-functions/access-gate.js', 'utf8');
+const robotAccess = readFileSync('netlify/edge-functions/robot-access.js', 'utf8');
 
 assert.equal((app.match(/app\.init\(\);/g) || []).length, 1);
 assert.equal((app.match(/saveCostButton'\)\.addEventListener\('click'/g) || []).length, 1);
@@ -38,6 +39,8 @@ assert.ok(manifest.icons.some(icon => icon.src === './icon-512.png'));
 
 assert.ok(netlify.includes('publish = "_site"'));
 assert.ok(netlify.includes('edge_functions = "netlify/edge-functions"'));
+assert.ok(netlify.includes('path = "/__vetta-robot-access"'));
+assert.ok(netlify.includes('function = "robot-access"'));
 assert.ok(netlify.includes('function = "calculaae-access-gate"'));
 for (const path of ['/manifest.webmanifest', '/sw.js', '/icon.svg', '/icon-192.png', '/icon-512.png']) {
   assert.ok(netlify.includes(`"${path}"`), `${path} deve ficar fora da barreira de acesso`);
@@ -45,6 +48,9 @@ for (const path of ['/manifest.webmanifest', '/sw.js', '/icon.svg', '/icon-192.p
 assert.ok(accessGate.includes("runtimeEnv('VETTA_ACCESS_CREDENTIALS_JSON')"));
 assert.ok(accessGate.includes("runtimeEnv('VETTA_ACCESS_SESSION_SECRET')"));
 assert.ok(accessGate.includes("data-vetta-access-gate=\"true\""));
-assert.equal(accessGate.match(/\b[a-f0-9]{64}\b/gi), null, 'hash real não pode estar no repositório');
+assert.ok(robotAccess.includes("runtimeEnv('VETTA_ACCESS_ROBOT_HASH')"));
+assert.ok(robotAccess.includes("runtimeEnv('VETTA_ACCESS_CREDENTIALS_JSON')"));
+assert.ok(robotAccess.includes("runtimeEnv('VETTA_ACCESS_SESSION_SECRET')"));
+assert.equal(`${accessGate}\n${robotAccess}`.match(/\b[a-f0-9]{64}\b/gi), null, 'hash real não pode estar no repositório');
 
 console.log('VETTA 3.5.1 protected PWA production verification passed');
