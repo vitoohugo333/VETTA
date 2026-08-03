@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0B1121">
-  <meta name="description" content="Instale o VETTA para acessar sua inteligência financeira.">
+  <meta name="description" content="Instale o VETTA no seu celular.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icon.svg">
@@ -23,11 +23,11 @@
 <body>
   <main aria-labelledby="title">
     <div class="logo">V</div>
-    <h1 id="title">Instale o VETTA para continuar</h1>
-    <p>O VETTA funciona como aplicativo instalado. Seus registros continuam salvos neste aparelho.</p>
+    <h1 id="title">Instale o VETTA no seu celular</h1>
+    <p>A instalação é feita apenas uma vez. Depois, abra o VETTA normalmente pelo ícone na tela do seu celular.</p>
     <ol id="steps"></ol>
     <button id="install" type="button">Instalar VETTA</button>
-    <p id="status" class="note">Depois de instalar, abra pelo ícone do VETTA na tela inicial.</p>
+    <p id="status" class="note">Depois de instalar, procure o ícone do VETTA na tela inicial.</p>
   </main>
   <script>
     (()=>{
@@ -41,13 +41,28 @@
       const status=document.getElementById('status');
       let promptEvent=null;
       const showSteps=items=>{steps.replaceChildren(...items.map(text=>{const li=document.createElement('li');li.textContent=text;return li}))};
-      if(embedded){button.hidden=true;showSteps([ios?'Abra esta página no Safari.':'Abra esta página no Chrome.','Use o menu do navegador para instalar ou adicionar à tela inicial.']);status.textContent='Navegadores internos de redes sociais não conseguem instalar corretamente.'}
-      else if(ios){button.hidden=true;showSteps(['No Safari, toque em Compartilhar.','Toque em Adicionar à Tela de Início.','Ative Abrir como App, quando aparecer.','Toque em Adicionar e abra pelo ícone do VETTA.']);status.textContent='O iPhone não oferece botão automático de instalação nesta página.'}
-      else if(android){showSteps(['Toque em Instalar VETTA.','Confirme a instalação.','Abra o VETTA pelo ícone criado na tela inicial.'])}
-      else{button.hidden=true;showSteps(['Abra esta página no Chrome ou Safari do celular.','Use Instalar aplicativo ou Adicionar à Tela de Início.'])}
+      if(embedded){
+        button.hidden=true;
+        showSteps([ios?'Abra esta página no Safari.':'Abra esta página no Chrome.','Use o menu do navegador e escolha a opção para instalar ou adicionar à tela inicial.']);
+        status.textContent='A instalação é feita apenas uma vez. Depois, abra o VETTA pelo ícone na tela do celular.';
+      }
+      else if(ios){
+        button.hidden=true;
+        showSteps(['No Safari, toque em Compartilhar.','Escolha Adicionar à Tela de Início.','Ative Abrir como App da Web.','Toque em Adicionar.']);
+        status.textContent='A instalação é feita apenas uma vez. Depois, abra o VETTA normalmente pelo ícone na tela do seu celular.';
+      }
+      else if(android){
+        showSteps(['Toque em Instalar VETTA.','Confirme a instalação.']);
+        status.textContent='A instalação é feita apenas uma vez. Depois, abra o VETTA normalmente pelo ícone na tela do seu celular.';
+      }
+      else{
+        button.hidden=true;
+        showSteps(['Abra esta página no Chrome ou Safari do celular.','Use a opção Instalar ou Adicionar à Tela de Início.']);
+        status.textContent='Depois de instalar, abra o VETTA pelo ícone na tela do celular.';
+      }
       addEventListener('beforeinstallprompt',event=>{event.preventDefault();promptEvent=event;if(!ios&&!embedded)button.hidden=false});
-      button.addEventListener('click',async()=>{if(!promptEvent){status.textContent='Use o menu do Chrome e toque em Instalar aplicativo.';return}promptEvent.prompt();await promptEvent.userChoice;promptEvent=null});
-      addEventListener('appinstalled',()=>{button.hidden=true;status.textContent='VETTA instalado. Agora abra pelo ícone do VETTA na tela inicial.'});
+      button.addEventListener('click',async()=>{if(!promptEvent){status.textContent='Abra o menu do Chrome e toque em Instalar.';return}promptEvent.prompt();await promptEvent.userChoice;promptEvent=null});
+      addEventListener('appinstalled',()=>{button.hidden=true;status.textContent='VETTA instalado. Agora abra pelo ícone na tela do seu celular.'});
     })();
   </script>
 </body>
