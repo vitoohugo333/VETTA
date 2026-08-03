@@ -56,6 +56,24 @@ A interface, os dados e as páginas do aplicativo continuam protegidos. Somente 
 4. páginas do aplicativo continuam protegidas;
 5. `tests/pwa-access-boundary.test.mjs` passa.
 
+## Abertura do aplicativo sem mostrar a instalação
+
+A página `index.html` é exclusiva do navegador e do processo de instalação. O aplicativo já instalado não pode renderizar essa página nem por um quadro antes de abrir a interface interna.
+
+- `manifest.webmanifest` deve usar `start_url: "./app-shell.html"` nesta arquitetura.
+- Instalações antigas que ainda abram `./` devem ser detectadas no `<head>`, antes do `<body>` e antes do primeiro desenho da tela.
+- Nesse caminho de compatibilidade, ocultar o documento imediatamente e usar `location.replace('./app-shell.html')`.
+- Não buscar `app-shell.html` de forma assíncrona para depois substituir o documento, porque isso permite que a tela de instalação apareça por um instante.
+- Mudança em `index.html` ou `manifest.webmanifest` exige renovação do cache do service worker.
+- `tests/pwa-standalone-launch.test.mjs` deve passar.
+
+### Prova física obrigatória
+
+1. fechar completamente o PWA;
+2. abrir pelo ícone em uma partida fria;
+3. confirmar que nenhuma parte da tela de instalação aparece;
+4. repetir a abertura depois de fechar o aplicativo novamente.
+
 ## Estados mínimos da tela Android
 
 - verificando se já está instalado;
