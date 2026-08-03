@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê
 
 **Atualizado em:** 2026-08-03  
-**Estado:** PWA validado no Android; Bloco 0 concluído; estratégia de branches definida.  
-**Alteração em curso:** nenhuma no aplicativo; organização documental concluída e exclusão de três branches superadas pendente por limitação do conector GitHub.
+**Estado:** PWA validado no Android; Bloco 0 concluído; teste remoto econômico preparado na branch de validação.  
+**Alteração em curso:** nenhuma no aplicativo; ativação do botão manual do GitHub Actions e cadastro do segredo de teste ainda pendentes.
 
 ## Estado atual
 
@@ -15,6 +15,8 @@
 | Relatório do Bloco 0 | `docs/planos/01-BLOCO-0-REFERENCIA-E-PROTECAO-DA-BASE.md` |
 | Plano ativo | `docs/planos/01-CONSOLIDACAO-DA-EXPERIENCIA.md` |
 | Branch histórica permanente | `migration/vetta-clean-3-5-1` |
+| Teste remoto preparado | `tests/e2e-remote/usage-gate.spec.js` |
+| Workflow preparado | `.github/workflows/test-usage-manual.yml` |
 | `main` | protegida e não alterada; `2a42c39612ec161bf58f16bbbbbd26521f28d30a` |
 
 ## Decisões explícitas do proprietário
@@ -24,92 +26,90 @@
 - `migration/vetta-clean-3-5-1` é uma referência histórica permanente e nunca deve ser excluída.
 - A PR #1 deve permanecer aberta e intocada até nova decisão.
 - Não será criada uma segunda credencial de acesso neste momento.
-- `main`, cálculos, dados, PWA e interface permanecem fora desta organização de branches.
+- O teste automatizado deve priorizar custo-benefício, gratuidade e estabilidade.
+- Não deve rodar em todo commit nem consumir recursos sem necessidade.
+- `main`, cálculos, dados, PWA funcional e interface permanecem protegidos.
 
-## Branches e PR — confirmação atual
+## Teste remoto econômico — preparado agora
 
-Na checagem anterior à organização existiam seis branches remotas:
+Foi criada uma única execução Playwright para o site publicado, usando somente Chromium e uma máquina Linux.
 
-| Branch | Situação confirmada |
-|---|---|
-| `main` | produção protegida; permanece intocada |
-| `netlify/teste-fechado` | branch ativa e mais nova |
-| `migration/vetta-clean-3-5-1` | referência permanente; cabeça da PR #1 |
-| `feature/bloco-1-navegacao-secundaria` | superada; totalmente contida na branch ativa; sem PR dependente |
-| `tmp/pwa-gate-apply` | superada; totalmente contida na branch ativa; sem PR dependente |
-| `tmp/pwa-gate-apply-2` | superada; totalmente contida na branch ativa; sem PR dependente |
+O cenário:
 
-As três branches autorizadas para exclusão apontam para a mesma fotografia antiga `f22159d2ef321b3ab268b7a1b8ecfeb5b8a0c62a`. A branch ativa está 61 fotografias salvas à frente e não está atrás delas.
+1. confirma que manifesto, service worker e ícones continuam públicos;
+2. confirma que o site comum continua protegido por senha;
+3. autentica com uma credencial existente;
+4. usa `forceBrowser=1` para provar que o navegador comum continua vendo a instalação e não a interface interna;
+5. abre novamente sem `forceBrowser`, permitindo o acesso apenas porque o navegador informa `navigator.webdriver`;
+6. testa digitação, navegação, botão voltar e preservação dos campos;
+7. falha se ocorrer erro JavaScript não tratado.
 
-A PR #1 continua aberta em rascunho, sem merge, com base em `main` e cabeça em `migration/vetta-clean-3-5-1`.
+### Proteções de custo
 
-## Limitação operacional encontrada
+- acionamento somente manual;
+- um Chromium;
+- um trabalhador;
+- nenhuma repetição automática;
+- limite máximo de oito minutos;
+- vídeo desligado;
+- captura e trace somente em falha;
+- evidência retida por um dia;
+- nova execução cancela outra igual ainda em andamento.
 
-O conector GitHub disponível nesta sessão permite pesquisar, comparar, criar e mover branches, mas não oferece uma ação de exclusão de branch.
+## Estado da ativação
 
-Por isso:
+### Confirmado
 
-- nenhuma exclusão foi simulada;
-- nenhuma branch foi movida para outro commit;
-- as três branches superadas continuam existindo até serem excluídas pela interface do GitHub ou por uma futura ação remota suportada;
-- a regra permanente e a decisão do proprietário já foram registradas no `AGENTS.md`.
+- `playwright.config.js` possui modo remoto ativado somente quando `VETTA_TEST_BASE_URL` existe.
+- `tests/e2e-remote/usage-gate.spec.js` contém o cenário contínuo de barreira e uso interno.
+- `.github/workflows/test-usage-manual.yml` contém apenas `workflow_dispatch`; não há `push` nem agendamento.
+- `tests/README.md` documenta operação, custo, senha e limites da prova.
+- `SKILLS.md` obriga os próximos agentes a ler essas regras antes de criar ou ampliar automação.
+- `PWA_RULES.md` registra como testar o interior sem burlar a instalação obrigatória.
+- `INC-0003` preserva o aprendizado para outros PWAs e aplicações web.
+- a sintaxe dos arquivos JavaScript novos e alterados passou em `node --check` numa cópia isolada;
+- a estrutura econômica do workflow foi verificada: Linux, oito minutos, Chromium único, falha-only e retenção de um dia.
+
+### Ainda não ativado
+
+- o GitHub só permite acionar manualmente um workflow quando o arquivo também existe na branch padrão;
+- o workflow está preparado em `netlify/teste-fechado`, mas não foi adicionado à `main` porque essa branch exige autorização expressa separada citando o alvo;
+- o segredo `VETTA_TEST_PASSWORD` ainda precisa ser cadastrado nas configurações do GitHub usando uma senha já existente;
+- o conector GitHub atual não oferece operação de criação de segredos;
+- por essas duas razões, o navegador remoto ainda não foi executado contra o site real.
 
 ## Aplicativo e validação física
 
 - O botão de instalação abriu a janela nativa do Android.
 - O PWA foi instalado e abriu pelo ícone sem mostrar a tela de instalação.
 - A validação física do PWA no Android está concluída.
-- Nenhum arquivo funcional do aplicativo foi alterado nesta organização.
+- Nenhum arquivo funcional do aplicativo, cálculo, dado, interface, manifesto, service worker ou cache foi alterado neste bloco.
+- Não é necessária nova validação física para esta infraestrutura de testes.
 - O fluxo completo no iPhone/Safari continua não confirmado.
 
-## Credenciais de acesso
+## Branches e PR
 
-- A configuração do Netlify preserva três credenciais sem expiração.
-- A credencial adicionada usa a senha escolhida pelo proprietário; o identificador interno não é uma segunda senha.
-- Nenhuma senha em texto está no repositório.
-- Não será criada outra credencial neste momento.
+Continuam existindo seis branches remotas:
 
-## Bloco 0 — resultado
+| Branch | Situação confirmada |
+|---|---|
+| `main` | produção protegida; permanece intocada |
+| `netlify/teste-fechado` | branch ativa e mais nova |
+| `migration/vetta-clean-3-5-1` | referência permanente; cabeça da PR #1 |
+| `feature/bloco-1-navegacao-secundaria` | superada; exclusão anteriormente autorizada, mas ainda pendente |
+| `tmp/pwa-gate-apply` | superada; exclusão anteriormente autorizada, mas ainda pendente |
+| `tmp/pwa-gate-apply-2` | superada; exclusão anteriormente autorizada, mas ainda pendente |
 
-O Bloco 0 foi concluído como diagnóstico, referência e contrato. Foram registrados:
-
-- telas e fluxos atuais;
-- comportamentos de dados, cálculos, navegação, PWA e aparência que não podem regredir;
-- testes existentes e lacunas;
-- situação das branches e da PR;
-- contrato proposto do Bloco 1.
-
-Nenhum item do Bloco 1 foi implementado.
-
-## Testes e lacunas antes do Bloco 1
-
-- a branch de validação não possui CI automática associada a cada push;
-- faltam testes determinísticos independentes da interface para todas as fórmulas financeiras;
-- faltam coberturas completas de registros diários, importação, exportação, onboarding e recuperação de dados;
-- o teste E2E do gate do PWA contém texto de uma versão anterior;
-- `tests/README.md` cita um cache antigo;
-- workflows de `main` ainda apontam para domínio e conjunto de arquivos antigos;
-- dependências visuais externas precisam ser consideradas em testes offline;
-- `app.js` possui camadas de compatibilidade que não podem ser refatoradas junto com a mudança visual.
+A PR #1 continua aberta em rascunho, sem merge, com base em `main` e cabeça em `migration/vetta-clean-3-5-1`.
 
 ## Aprendizado do bloco
 
-**Aprendizado operacional fechado:** uma exclusão autorizada só pode ser declarada concluída quando a fonte remota confirmar a remoção. Ausência de ação no conector não autoriza simular a operação, mover a branch ou usar outro caminho sem transparência.
+**Aprendizado fechado:** automação de navegador e prova de instalação devem ser tratadas como evidências separadas.
 
-A proteção permanente da branch histórica está no `AGENTS.md`; este arquivo registra o estado atual e a pendência operacional.
+O robô só pode entrar pelo caminho interno quando existir uma característica inequívoca de automação, enquanto a mesma execução prova que o navegador comum continua protegido e preso à instalação. A regra está em `PWA_RULES.md`; o histórico está em `INC-0003`; a prova executável está em `tests/e2e-remote/usage-gate.spec.js`.
 
-## Próximo passo único — preparação do Bloco 1
+## Próximo passo único — ativação mínima do teste manual
 
-Antes de modificar a interface, apresentar o contrato executável do **Bloco 1 — Navegação e tela Hoje**.
+Autorizar expressamente um bloco limitado à `main` para adicionar **somente** `.github/workflows/test-usage-manual.yml`, sem copiar aplicativo, testes de produto, interface, cálculos ou dados para essa branch; depois cadastrar manualmente o segredo `VETTA_TEST_PASSWORD` nas configurações do GitHub e executar o workflow escolhendo a branch `netlify/teste-fechado`.
 
-O contrato deve detalhar:
-
-1. como a navegação mudará para `Hoje | Histórico | Planejar | Mais`;
-2. onde ficará a ação `Registrar meu dia`;
-3. quais elementos permanecerão na tela Hoje e quais serão movidos;
-4. arquivos e testes afetados;
-5. proteção dos cálculos, dados locais, PWA, acesso e `main`;
-6. deploy automático em `calculaae.netlify.app`;
-7. roteiro de validação física no Android.
-
-Essa preparação não autoriza a implementação até o proprietário aprovar o contrato específico.
+Resultado esperado: o agente poderá iniciar sob demanda o navegador virtual no site real, sem execução automática e sem retirar a instalação obrigatória.
