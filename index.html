@@ -18,6 +18,8 @@
     }
     *{box-sizing:border-box}
     html,body{margin:0;min-height:100%}
+    html.standalone-launch{background:#f8fafc}
+    html.standalone-launch body{visibility:hidden}
     body{
       min-height:100dvh;
       display:grid;
@@ -227,14 +229,8 @@
         || navigator.standalone === true
         || (navigator.webdriver && !params.has('forceBrowser'));
       if (!installed) return;
-      fetch('./app-shell.html', { cache: 'no-store' })
-        .then(response => response.text())
-        .then(html => {
-          document.open();
-          document.write(html.replaceAll('VETTA', 'CalculaAê'));
-          document.close();
-        })
-        .catch(() => location.replace('./app-shell.html'));
+      document.documentElement.classList.add('standalone-launch');
+      location.replace('./app-shell.html');
     })();
   </script>
 </head>
