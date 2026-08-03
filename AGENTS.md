@@ -110,6 +110,14 @@ Exigem autorização explícita e separada, citando o alvo. O deploy automático
 - No máximo quatro branches remotas ativas; seus papéis e situação devem constar no `PROJECT_STATE.md`.
 - Não construir agora plugins, backend, login, sincronização, pagamento, manifestos, eventos ou feature flags.
 
+## Política permanente de branches
+
+- `main` é a branch protegida e não pode ser alterada, mesclada ou publicada sem autorização explícita separada.
+- `netlify/teste-fechado` é a branch ativa de desenvolvimento e validação. Seus commits acionam o deploy automático conhecido em `calculaae.netlify.app`.
+- `migration/vetta-clean-3-5-1` é uma referência histórica permanente. Ela nunca pode ser excluída, renomeada, movida para outro commit ou reutilizada para desenvolvimento, salvo ordem explícita do proprietário revogando esta regra.
+- Branch temporária ou superada só pode ser excluída após comparação fresca provar que não possui trabalho exclusivo, confirmação de que nenhuma PR depende dela e autorização explícita do proprietário.
+- A PR #1 permanece ligada à `migration/vetta-clean-3-5-1` e não deve ser fechada, mesclada ou alterada sem autorização específica.
+
 Ao consolidar o app, manter quatro limites claros: cálculos puros, dados versionados, telas/áreas e navegação.
 
 ## Deploy automático da branch nesta operação
