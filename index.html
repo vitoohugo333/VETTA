@@ -6,236 +6,26 @@
   <meta name="theme-color" content="#0B1121">
   <meta name="description" content="Instale o CalculaAê no seu celular.">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icon.svg">
+  <link rel="icon" href="./icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
   <title>CalculaAê | Instalação</title>
   <style>
-    :root{
-      color-scheme:light;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:#0b1121;
-      background:#eef2ff
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%}
-    body{
-      min-height:100dvh;
-      display:grid;
-      place-items:center;
-      padding:max(22px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom));
-      background:
-        radial-gradient(circle at 12% 8%,rgba(37,99,235,.16),transparent 28%),
-        radial-gradient(circle at 88% 10%,rgba(14,165,233,.12),transparent 24%),
-        linear-gradient(180deg,#f8fafc 0%,#eef2ff 100%)
-    }
-    button{font:inherit}
-    .shell{width:min(100%,440px)}
-    .card{
-      overflow:hidden;
-      border:1px solid rgba(148,163,184,.22);
-      border-radius:32px;
-      background:rgba(255,255,255,.96);
-      box-shadow:0 28px 80px rgba(15,23,42,.16)
-    }
-    .hero{
-      position:relative;
-      overflow:hidden;
-      padding:28px 26px 24px;
-      background:linear-gradient(145deg,#0b1121,#172554);
-      color:#fff
-    }
-    .hero::after{
-      content:"";
-      position:absolute;
-      width:210px;height:210px;
-      right:-100px;top:-115px;
-      border-radius:50%;
-      background:rgba(59,130,246,.28);
-      filter:blur(4px)
-    }
-    .brand{position:relative;z-index:1;display:flex;align-items:center;gap:14px}
-    .logo{
-      width:64px;height:64px;
-      display:grid;place-items:center;
-      border-radius:20px;
-      background:linear-gradient(145deg,#3b82f6,#1d4ed8);
-      box-shadow:0 14px 34px rgba(37,99,235,.36),inset 0 1px 0 rgba(255,255,255,.25);
-      font-size:28px;font-weight:950
-    }
-    .brand-name{font-size:23px;font-weight:900;letter-spacing:-.035em}
-    .brand-tag{display:block;margin-top:3px;color:#bfdbfe;font-size:12px;font-weight:700}
-    .hero h1{
-      position:relative;z-index:1;
-      margin:25px 0 10px;
-      max-width:340px;
-      font-size:clamp(30px,8vw,39px);
-      line-height:1.03;
-      letter-spacing:-.045em
-    }
-    .hero p{
-      position:relative;z-index:1;
-      margin:0;
-      max-width:355px;
-      color:#cbd5e1;
-      font-size:15px;
-      line-height:1.6
-    }
-    .content{padding:24px}
-    .platform{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      margin-bottom:16px;
-      padding:8px 11px;
-      border-radius:999px;
-      background:#eff6ff;
-      color:#1d4ed8;
-      font-size:12px;
-      font-weight:850
-    }
-    .platform-dot{width:8px;height:8px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 5px #dbeafe}
-    .steps{display:grid;gap:10px;margin:0 0 19px;padding:0;list-style:none}
-    .step{
-      display:grid;
-      grid-template-columns:34px 1fr;
-      gap:12px;
-      align-items:center;
-      min-height:56px;
-      padding:10px 12px;
-      border:1px solid #e2e8f0;
-      border-radius:17px;
-      background:#f8fafc;
-      color:#334155;
-      font-size:14px;
-      line-height:1.42
-    }
-    .step-number{
-      width:34px;height:34px;
-      display:grid;place-items:center;
-      border-radius:11px;
-      background:#e0e7ff;
-      color:#1d4ed8;
-      font-weight:900
-    }
-    .action{
-      width:100%;
-      min-height:58px;
-      border:0;
-      border-radius:18px;
-      padding:15px 18px;
-      background:linear-gradient(135deg,#3b82f6,#2563eb 58%,#1d4ed8);
-      color:#fff;
-      font-size:16px;
-      font-weight:900;
-      box-shadow:0 16px 30px rgba(37,99,235,.25);
-      cursor:pointer;
-      transition:transform .18s ease,filter .18s ease,opacity .18s ease
-    }
-    .action:active:not(:disabled){transform:translateY(1px) scale(.995)}
-    .action:disabled{
-      cursor:wait;
-      background:#cbd5e1;
-      color:#475569;
-      box-shadow:none
-    }
-    .secondary{
-      width:100%;
-      margin-top:12px;
-      border:0;
-      background:transparent;
-      color:#475569;
-      padding:10px;
-      font-size:13px;
-      font-weight:800;
-      cursor:pointer
-    }
-    .helper{
-      margin:14px 2px 0;
-      color:#64748b;
-      font-size:13px;
-      line-height:1.5;
-      text-align:center
-    }
-    .success{
-      padding:30px 24px 28px;
-      text-align:center
-    }
-    .success-icon{
-      width:88px;height:88px;
-      margin:0 auto 20px;
-      display:grid;place-items:center;
-      border-radius:28px;
-      background:linear-gradient(145deg,#22c55e,#15803d);
-      color:#fff;
-      box-shadow:0 20px 45px rgba(22,163,74,.28);
-      font-size:44px;
-      font-weight:950
-    }
-    .success h2{
-      margin:0;
-      color:#14532d;
-      font-size:32px;
-      line-height:1.05;
-      letter-spacing:-.04em
-    }
-    .success-lead{
-      margin:13px auto 0;
-      max-width:340px;
-      color:#334155;
-      font-size:18px;
-      line-height:1.45;
-      font-weight:800
-    }
-    .home-hint{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      margin:22px 0 4px;
-      padding:16px;
-      border:1px solid #bbf7d0;
-      border-radius:20px;
-      background:#f0fdf4;
-      text-align:left
-    }
-    .mini-icon{
-      width:54px;height:54px;
-      flex:0 0 auto;
-      display:grid;place-items:center;
-      border-radius:17px;
-      background:linear-gradient(145deg,#0b1121,#2563eb);
-      color:#fff;
-      font-size:23px;
-      font-weight:950
-    }
-    .home-hint strong{display:block;color:#166534;font-size:15px}
-    .home-hint span{display:block;margin-top:4px;color:#475569;font-size:13px;line-height:1.4}
-    [hidden]{display:none!important}
-    @media(max-width:360px){
-      body{padding-inline:12px}
-      .hero{padding:24px 20px 21px}
-      .content,.success{padding-inline:19px}
-      .logo{width:58px;height:58px}
-    }
-    @media(prefers-reduced-motion:reduce){
-      *{scroll-behavior:auto!important;transition:none!important}
-    }
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#0b1121;background:#eef2ff;color-scheme:light}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}
+    body{min-height:100dvh;display:grid;place-items:center;padding:max(22px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom));background:radial-gradient(circle at 12% 8%,rgba(37,99,235,.16),transparent 28%),radial-gradient(circle at 88% 10%,rgba(14,165,233,.12),transparent 24%),linear-gradient(180deg,#f8fafc,#eef2ff)}
+    button{font:inherit}.shell{width:min(100%,440px)}.card{overflow:hidden;border:1px solid rgba(148,163,184,.22);border-radius:32px;background:#fff;box-shadow:0 28px 80px rgba(15,23,42,.16)}
+    .hero{position:relative;overflow:hidden;padding:28px 26px 24px;background:linear-gradient(145deg,#0b1121,#172554);color:#fff}.hero:after{content:"";position:absolute;width:210px;height:210px;right:-100px;top:-115px;border-radius:50%;background:rgba(59,130,246,.28)}
+    .brand{position:relative;z-index:1;display:flex;align-items:center;gap:14px}.logo{width:64px;height:64px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(145deg,#3b82f6,#1d4ed8);box-shadow:0 14px 34px rgba(37,99,235,.36);font-size:28px;font-weight:950}.brand-name{font-size:23px;font-weight:900}.brand-tag{display:block;margin-top:3px;color:#bfdbfe;font-size:12px;font-weight:700}
+    h1{position:relative;z-index:1;margin:25px 0 10px;max-width:350px;font-size:clamp(30px,8vw,39px);line-height:1.03;letter-spacing:-.045em}.hero p{position:relative;z-index:1;margin:0;color:#cbd5e1;font-size:15px;line-height:1.6}
+    .content{padding:24px}.platform{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;padding:8px 11px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:850}.dot{width:8px;height:8px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 5px #dbeafe}
+    .steps{display:grid;gap:10px;margin:0 0 19px;padding:0;list-style:none}.step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:center;min-height:56px;padding:10px 12px;border:1px solid #e2e8f0;border-radius:17px;background:#f8fafc;color:#334155;font-size:14px;line-height:1.42}.number{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:#e0e7ff;color:#1d4ed8;font-weight:900}
+    .action{width:100%;min-height:58px;border:0;border-radius:18px;padding:15px 18px;background:linear-gradient(135deg,#3b82f6,#2563eb 58%,#1d4ed8);color:#fff;font-size:16px;font-weight:900;box-shadow:0 16px 30px rgba(37,99,235,.25);cursor:pointer}.action:disabled{cursor:wait;background:#cbd5e1;color:#475569;box-shadow:none}.action.retry{background:linear-gradient(135deg,#0f172a,#334155)}
+    .helper{margin:14px 2px 0;color:#64748b;font-size:13px;line-height:1.5;text-align:center}.secondary{width:100%;margin-top:12px;border:0;background:transparent;color:#475569;padding:10px;font-size:13px;font-weight:800;cursor:pointer}
+    .success{padding:30px 24px 28px;text-align:center}.success-icon{width:88px;height:88px;margin:0 auto 20px;display:grid;place-items:center;border-radius:28px;background:linear-gradient(145deg,#22c55e,#15803d);color:#fff;box-shadow:0 20px 45px rgba(22,163,74,.28);font-size:44px;font-weight:950}.success h2{margin:0;color:#14532d;font-size:32px;line-height:1.05}.success-lead{margin:13px auto 0;max-width:340px;color:#334155;font-size:18px;line-height:1.45;font-weight:800}.home-hint{display:flex;align-items:center;gap:14px;margin:22px 0 4px;padding:16px;border:1px solid #bbf7d0;border-radius:20px;background:#f0fdf4;text-align:left}.mini-icon{width:54px;height:54px;flex:0 0 auto;border-radius:17px}.home-hint strong{display:block;color:#166534;font-size:15px}.home-hint span{display:block;margin-top:4px;color:#475569;font-size:13px;line-height:1.4}[hidden]{display:none!important}
+    @media(max-width:360px){body{padding-inline:12px}.hero{padding:24px 20px 21px}.content,.success{padding-inline:19px}.logo{width:58px;height:58px}}
   </style>
   <script>
-    (() => {
-      const params = new URLSearchParams(location.search);
-      const installed = matchMedia('(display-mode: standalone)').matches
-        || navigator.standalone === true
-        || (navigator.webdriver && !params.has('forceBrowser'));
-      if (!installed) return;
-      fetch('./app-shell.html', { cache: 'no-store' })
-        .then(response => response.text())
-        .then(html => {
-          document.open();
-          document.write(html.replaceAll('VETTA', 'CalculaAê'));
-          document.close();
-        })
-        .catch(() => location.replace('./app-shell.html'));
-    })();
+    (()=>{const p=new URLSearchParams(location.search);const installed=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true||(navigator.webdriver&&!p.has('forceBrowser'));if(!installed)return;fetch('./app-shell.html',{cache:'no-store'}).then(r=>r.text()).then(html=>{document.open();document.write(html.replaceAll('VETTA','CalculaAê'));document.close()}).catch(()=>location.replace('./app-shell.html'))})();
   </script>
 </head>
 <body>
@@ -243,189 +33,84 @@
     <section class="card" aria-live="polite">
       <div id="installView">
         <header class="hero">
-          <div class="brand">
-            <div class="logo" aria-hidden="true">C</div>
-            <div>
-              <div class="brand-name">CalculaAê</div>
-              <span class="brand-tag">Instale uma vez. Use todos os dias.</span>
-            </div>
-          </div>
-          <h1 id="title">Tenha o CalculaAê na tela do seu celular</h1>
-          <p>Depois da instalação, você abre normalmente pelo ícone — sem precisar voltar a este endereço.</p>
+          <div class="brand"><div class="logo">C</div><div><div class="brand-name">CalculaAê</div><span class="brand-tag">Instale uma vez. Use todos os dias.</span></div></div>
+          <h1>Tenha o CalculaAê na tela do seu celular</h1>
+          <p>Depois da instalação, abra normalmente pelo ícone — sem precisar voltar a este endereço.</p>
         </header>
-
         <div class="content">
-          <div class="platform"><span class="platform-dot"></span><span id="platformLabel">Verificando seu celular…</span></div>
+          <div class="platform"><span class="dot"></span><span id="platformLabel">Verificando seu celular…</span></div>
           <ol id="steps" class="steps"></ol>
-          <button id="install" class="action" type="button" disabled>Preparando instalação…</button>
+          <button id="install" class="action" type="button">Preparando instalação…</button>
           <button id="confirmIos" class="action" type="button" hidden>Já adicionei</button>
-          <p id="status" class="helper">Aguarde um instante enquanto preparamos a instalação.</p>
+          <p id="status" class="helper">Aguarde alguns segundos enquanto o navegador prepara o instalador.</p>
         </div>
       </div>
-
       <div id="successView" class="success" hidden>
-        <div class="success-icon" aria-hidden="true">✓</div>
-        <h2>CalculaAê instalado!</h2>
+        <div class="success-icon">✓</div><h2>CalculaAê instalado!</h2>
         <p class="success-lead">Agora abra o CalculaAê pelo novo ícone na tela do seu celular.</p>
-        <div class="home-hint">
-          <div class="mini-icon" aria-hidden="true">C</div>
-          <div>
-            <strong>Procure este ícone na tela inicial</strong>
-            <span>A instalação é feita apenas uma vez. Nas próximas vezes, entre por ele.</span>
-          </div>
-        </div>
+        <div class="home-hint"><img class="mini-icon" src="./icon-192.png" alt=""><div><strong>Procure este ícone na tela inicial</strong><span>Nas próximas vezes, entre por ele.</span></div></div>
         <button id="resetConfirmation" class="secondary" type="button">Ainda não encontrei o ícone</button>
       </div>
     </section>
   </main>
-
   <script>
-    (() => {
-      const STORAGE_KEY = 'calculaae_install_confirmed_v1';
-      if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
+    (()=>{
+      const STORAGE_KEY='calculaae_install_confirmed_v2';
+      const WAIT_LIMIT=8000;
+      const ua=navigator.userAgent||'';
+      const ios=/iphone|ipad|ipod/i.test(ua);
+      const android=/android/i.test(ua);
+      const embedded=/(FBAN|FBAV|Instagram|Line\/|; wv\)|WebView/i.test(ua);
+      const installView=document.getElementById('installView');
+      const successView=document.getElementById('successView');
+      const platformLabel=document.getElementById('platformLabel');
+      const steps=document.getElementById('steps');
+      const installButton=document.getElementById('install');
+      const confirmIosButton=document.getElementById('confirmIos');
+      const resetButton=document.getElementById('resetConfirmation');
+      const status=document.getElementById('status');
+      let promptEvent=null;
+      let waitTimer=null;
+      let retryMode=false;
 
-      const ua = navigator.userAgent || '';
-      const ios = /iphone|ipad|ipod/i.test(ua);
-      const android = /android/i.test(ua);
-      const embedded = /(FBAN|FBAV|Instagram|Line\/|; wv\)|WebView)/i.test(ua);
+      const setSteps=items=>steps.replaceChildren(...items.map((text,index)=>{const li=document.createElement('li');li.className='step';const n=document.createElement('span');n.className='number';n.textContent=String(index+1);const copy=document.createElement('span');copy.textContent=text;li.append(n,copy);return li}));
+      const remembered=()=>{try{return localStorage.getItem(STORAGE_KEY)==='true'}catch{return false}};
+      const remember=()=>{try{localStorage.setItem(STORAGE_KEY,'true')}catch{}};
+      const forget=()=>{try{localStorage.removeItem(STORAGE_KEY)}catch{}};
+      const showSuccess=()=>{clearTimeout(waitTimer);remember();installView.hidden=true;successView.hidden=false};
+      const setRetry=(message='O navegador ainda não liberou o instalador.')=>{clearTimeout(waitTimer);retryMode=true;installButton.hidden=false;installButton.disabled=false;installButton.classList.add('retry');installButton.textContent='Tentar instalar novamente';status.textContent=message};
+      const startWait=()=>{retryMode=false;installButton.classList.remove('retry');installButton.hidden=false;installButton.disabled=true;installButton.textContent='Preparando instalação…';status.textContent='Aguarde alguns segundos enquanto o navegador prepara o instalador.';clearTimeout(waitTimer);waitTimer=setTimeout(()=>{if(!promptEvent)setRetry('Não foi possível preparar automaticamente. Toque para tentar novamente.')},WAIT_LIMIT)};
 
-      const installView = document.getElementById('installView');
-      const successView = document.getElementById('successView');
-      const platformLabel = document.getElementById('platformLabel');
-      const steps = document.getElementById('steps');
-      const installButton = document.getElementById('install');
-      const confirmIosButton = document.getElementById('confirmIos');
-      const resetConfirmationButton = document.getElementById('resetConfirmation');
-      const status = document.getElementById('status');
-      let promptEvent = null;
-
-      const setSteps = items => {
-        steps.replaceChildren(...items.map((text, index) => {
-          const item = document.createElement('li');
-          item.className = 'step';
-          const number = document.createElement('span');
-          number.className = 'step-number';
-          number.textContent = String(index + 1);
-          const copy = document.createElement('span');
-          copy.textContent = text;
-          item.append(number, copy);
-          return item;
-        }));
+      const registerWorker=async()=>{
+        if(!('serviceWorker'in navigator))throw new Error('unsupported');
+        const registration=await navigator.serviceWorker.register('./sw.js');
+        await registration.update().catch(()=>{});
+        return registration;
       };
 
-      const rememberInstalled = () => {
-        try { localStorage.setItem(STORAGE_KEY, 'true'); } catch {}
+      const showFlow=()=>{
+        successView.hidden=true;installView.hidden=false;
+        if(embedded){platformLabel.textContent=ios?'iPhone — abra no Safari':'Android — abra no Chrome';setSteps([ios?'Abra este endereço no Safari.':'Abra este endereço no Chrome.','Volte a esta página para concluir a instalação.']);installButton.hidden=true;confirmIosButton.hidden=true;status.textContent='Navegadores internos não liberam a instalação do aplicativo.';return}
+        if(ios){platformLabel.textContent='Instalação no iPhone';setSteps(['No Safari, toque em Compartilhar.','Escolha Adicionar à Tela de Início.','Ative Abrir como App da Web.','Toque em Adicionar.']);installButton.hidden=true;confirmIosButton.hidden=false;status.textContent='Depois de tocar em Adicionar, confirme abaixo.';return}
+        if(android){platformLabel.textContent='Instalação no Android';setSteps(['Aguarde a preparação por alguns segundos.','Toque em Instalar CalculaAê.','Confirme a instalação.']);confirmIosButton.hidden=true;startWait();registerWorker().catch(()=>setRetry('O navegador não conseguiu ativar a instalação. Toque para tentar novamente.'));return}
+        platformLabel.textContent='Abra pelo celular';setSteps(['Abra este endereço no Chrome do Android ou Safari do iPhone.','Siga o processo mostrado na tela.']);installButton.hidden=true;confirmIosButton.hidden=true;status.textContent='A instalação deve ser concluída em um celular compatível.';
       };
 
-      const forgetInstalled = () => {
-        try { localStorage.removeItem(STORAGE_KEY); } catch {}
-      };
+      addEventListener('beforeinstallprompt',event=>{event.preventDefault();promptEvent=event;retryMode=false;clearTimeout(waitTimer);if(!android||embedded||remembered())return;installButton.hidden=false;installButton.disabled=false;installButton.classList.remove('retry');installButton.textContent='Instalar CalculaAê';status.textContent='Tudo pronto. Toque no botão para instalar.'});
 
-      const wasConfirmed = () => {
-        try { return localStorage.getItem(STORAGE_KEY) === 'true'; } catch { return false; }
-      };
-
-      const showSuccess = () => {
-        rememberInstalled();
-        installView.hidden = true;
-        successView.hidden = false;
-      };
-
-      const showPlatformFlow = () => {
-        successView.hidden = true;
-        installView.hidden = false;
-
-        if (embedded) {
-          platformLabel.textContent = ios ? 'iPhone — abra no Safari' : 'Android — abra no Chrome';
-          setSteps([
-            ios ? 'Abra este endereço no Safari.' : 'Abra este endereço no Chrome.',
-            'Volte a esta página pelo navegador indicado para concluir a instalação.'
-          ]);
-          installButton.hidden = true;
-          confirmIosButton.hidden = true;
-          status.textContent = 'O navegador interno deste aplicativo não libera a instalação.';
-          return;
-        }
-
-        if (ios) {
-          platformLabel.textContent = 'Instalação no iPhone';
-          setSteps([
-            'No Safari, toque em Compartilhar.',
-            'Escolha Adicionar à Tela de Início.',
-            'Ative Abrir como App da Web.',
-            'Toque em Adicionar.'
-          ]);
-          installButton.hidden = true;
-          confirmIosButton.hidden = false;
-          status.textContent = 'Depois de tocar em Adicionar, confirme abaixo.';
-          return;
-        }
-
-        if (android) {
-          platformLabel.textContent = 'Instalação no Android';
-          setSteps([
-            'Aguarde o botão ficar disponível.',
-            'Toque em Instalar CalculaAê.',
-            'Confirme a instalação.'
-          ]);
-          installButton.hidden = false;
-          installButton.disabled = true;
-          installButton.textContent = 'Preparando instalação…';
-          confirmIosButton.hidden = true;
-          status.textContent = 'O botão será liberado automaticamente pelo seu celular.';
-          return;
-        }
-
-        platformLabel.textContent = 'Abra pelo celular';
-        setSteps([
-          'Abra este endereço no Chrome do Android ou no Safari do iPhone.',
-          'Siga o processo de instalação mostrado na tela.'
-        ]);
-        installButton.hidden = true;
-        confirmIosButton.hidden = true;
-        status.textContent = 'A instalação deve ser concluída em um celular compatível.';
-      };
-
-      if (wasConfirmed()) showSuccess();
-      else showPlatformFlow();
-
-      addEventListener('beforeinstallprompt', event => {
-        event.preventDefault();
-        promptEvent = event;
-        if (!android || embedded || wasConfirmed()) return;
-        installButton.hidden = false;
-        installButton.disabled = false;
-        installButton.textContent = 'Instalar CalculaAê';
-        status.textContent = 'Tudo pronto. Toque no botão para instalar.';
+      installButton.addEventListener('click',async()=>{
+        if(retryMode||!promptEvent){installButton.disabled=true;installButton.textContent='Tentando novamente…';status.textContent='Recarregando os requisitos de instalação.';try{await registerWorker()}catch{}const url=new URL(location.href);url.searchParams.set('installRetry',Date.now().toString());location.replace(url.toString());return}
+        installButton.disabled=true;installButton.textContent='Abrindo instalação…';status.textContent='Confirme na janela do seu celular.';
+        const currentPrompt=promptEvent;promptEvent=null;currentPrompt.prompt();
+        const choice=await currentPrompt.userChoice;
+        if(choice.outcome==='dismissed'){setRetry('A instalação foi fechada. Toque para tentar novamente.');return}
+        installButton.textContent='Finalizando…';status.textContent='A instalação foi aceita. Estamos finalizando.';
       });
 
-      installButton.addEventListener('click', async () => {
-        if (!promptEvent || installButton.disabled) return;
-        installButton.disabled = true;
-        installButton.textContent = 'Abrindo instalação…';
-        status.textContent = 'Confirme a instalação na janela do seu celular.';
-        promptEvent.prompt();
-        const choice = await promptEvent.userChoice;
-        promptEvent = null;
-
-        if (choice.outcome === 'dismissed') {
-          installButton.disabled = false;
-          installButton.textContent = 'Instalar CalculaAê';
-          status.textContent = 'A instalação não foi concluída. Toque novamente quando estiver pronto.';
-          return;
-        }
-
-        installButton.textContent = 'Finalizando…';
-        status.textContent = 'A instalação foi aceita. Estamos finalizando.';
-      });
-
-      confirmIosButton.addEventListener('click', showSuccess);
-      addEventListener('appinstalled', showSuccess);
-
-      resetConfirmationButton.addEventListener('click', () => {
-        forgetInstalled();
-        showPlatformFlow();
-      });
+      confirmIosButton.addEventListener('click',showSuccess);
+      addEventListener('appinstalled',showSuccess);
+      resetButton.addEventListener('click',()=>{forget();showFlow()});
+      if(remembered())showSuccess();else showFlow();
     })();
   </script>
 </body>
