@@ -29,6 +29,17 @@ Para evitar que o proprietário fique sem saber se o trabalho travou:
 - nunca ficar executando uma sequência longa de alterações sem atualização visível;
 - se uma operação for interrompida, ao retomar informar exatamente qual foi a última alteração efetiva e o que ainda não entrou na branch.
 
+## Protocolo de visibilidade do andamento
+
+Em blocos com várias etapas, mostrar progresso por etapas reais, nunca por porcentagem inventada.
+
+- No início, informar `Etapa 1 de N`, o objetivo daquela etapa, o que falta e uma estimativa apenas quando houver base razoável.
+- Atualizar após cada etapa relevante e, em média, após duas ou três chamadas de ferramenta.
+- Antes e depois de gravações no GitHub, deploys ou outras ações externas, informar claramente o que está prestes a mudar e o que efetivamente mudou.
+- Se uma única ferramenta ficar executando, não é possível enviar mensagens durante a chamada; assim que ela retornar, explicar que o tempo foi gasto aguardando a ferramenta.
+- Não prometer atualização a cada cinco segundos, barra contínua ou prazo exato quando a plataforma não oferece esse controle.
+- Se a estimativa mudar, informar a nova faixa e o motivo. Se houver falha, dizer imediatamente em qual etapa parou.
+
 ## Trabalho remoto sincronizado
 
 O GitHub remoto é o espaço principal de trabalho do projeto. Cópias locais ou isoladas podem ser usadas para preparar e testar com segurança, mas não devem virar um estado final separado ou mais novo que a branch remota confirmada.
