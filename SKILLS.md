@@ -6,6 +6,7 @@ Este arquivo é o índice permanente das verificações técnicas do projeto. De
 - `SKILLS.md`: conhecimentos transversais e indicação dos arquivos especializados.
 - `LEARNING_RULES.md`: ciclo obrigatório para preservar incidentes e aprendizados reutilizáveis.
 - arquivos especializados, como `PWA_RULES.md`: regras técnicas de uma área.
+- `tests/README.md`: estratégia de testes, custo-benefício e limites da automação de navegador.
 - `docs/incidents/`: história completa de falhas e descobertas relevantes já confirmadas.
 - `PROJECT_STATE.md`: estado atual, evidências e pendências da branch.
 
@@ -16,6 +17,7 @@ Um aprendizado só entra aqui ou no arquivo especializado quando houver causa co
 - Em todo trabalho técnico: ler `AGENTS.md`, este `SKILLS.md` e `PROJECT_STATE.md`.
 - Antes de encerrar um bloco que encontrou defeito, quase falha ou conhecimento reutilizável: ler e aplicar `LEARNING_RULES.md`.
 - Ao investigar sintoma semelhante a algo já ocorrido: consultar o índice `docs/incidents/README.md` antes de formular a correção.
+- Antes de criar, ampliar ou executar automação de navegador, CI ou teste de interação: ler `tests/README.md` e preservar sua política de custo-benefício.
 - Alteração em instalação, manifesto, service worker, cache, ícones, modo standalone, barreira de acesso ou publicação do PWA: ler `PWA_RULES.md`.
 - Quando surgir uma nova área com regras recorrentes, criar um arquivo operacional específico e registrá-lo aqui e no `AGENTS.md`.
 
@@ -48,6 +50,7 @@ A relevância futura do conhecimento importa tanto quanto o tamanho imediato do 
 - `LEARNING_RULES.md`: critérios, ciclo de aprendizado e equilíbrio entre rigor e praticidade.
 - `docs/incidents/`: sintoma, causa imediata, causa estrutural, falha de detecção, tentativas materiais, prevenção, alcance e evidências.
 - arquivo especializado, como `PWA_RULES.md`: causa técnica confirmada, prevenção e teste obrigatório daquela área.
+- `tests/README.md`: estratégia prática de testes, consumo de recursos e diferença entre prova automatizada e validação física.
 - teste automatizado: prova executável que impede a regressão.
 - `PROJECT_STATE.md`: o que aconteceu nesta branch, qual fotografia foi publicada, validação manual e pendência atual.
 
@@ -59,6 +62,7 @@ O mesmo problema pode gerar registros complementares, mas não cópias desorgani
 |---|---|---|
 | Aprendizado técnico | `LEARNING_RULES.md` | `docs/incidents/README.md` |
 | PWA, instalação e abertura standalone | `PWA_RULES.md` | incidentes `INC-0001` e `INC-0002`; testes de PWA |
+| Automação de navegador e CI | `tests/README.md` | `playwright.config.js`, `tests/e2e-remote/` e workflows aplicáveis |
 
 Não criar arquivos especializados vazios. Uma nova área nasce quando existir ao menos uma regra confirmada e reutilizável que justifique sua manutenção.
 
