@@ -1,6 +1,6 @@
 # Regras permanentes de PWA do CalculaAê
 
-Este arquivo deve ser lido junto com o `AGENTS.md` antes de qualquer mudança em instalação, manifesto, service worker, cache, ícones, modo standalone ou publicação do PWA.
+Este arquivo deve ser lido junto com o `AGENTS.md` e o `SKILLS.md` antes de qualquer mudança em instalação, manifesto, service worker, cache, ícones, modo standalone, barreira de acesso ou publicação do PWA.
 
 ## Checklist obrigatório antes de alterar
 
@@ -22,6 +22,7 @@ Este arquivo deve ser lido junto com o `AGENTS.md` antes de qualquer mudança em
 7. Tratar separadamente Android, iPhone/Safari e navegadores internos de redes sociais.
 8. Não afirmar instalabilidade apenas porque o deploy passou. Exigir teste real no navegador e validação física no celular.
 9. Preservar byte a byte a interface aprovada quando o contrato autorizar apenas mudança de lógica. Não reescrever textos, CSS ou estrutura visual como efeito colateral.
+10. Se houver senha, Edge Function, middleware ou outra barreira, confirmar que os arquivos técnicos públicos do PWA não foram bloqueados.
 
 ## Fonte de verdade da instalação
 
@@ -34,6 +35,26 @@ Este arquivo deve ser lido junto com o `AGENTS.md` antes de qualquer mudança em
   - `appinstalled` após a conclusão.
 - Se o Chrome já considerar o PWA instalado, ele pode não disparar `beforeinstallprompt` nem mostrar a opção de instalação no menu.
 - O manifesto deve declarar o próprio PWA em `related_applications`, com `prefer_related_applications: false`, sem mudar o `id` já usado pelos usuários.
+
+## PWA protegido por acesso
+
+Quando o site tiver senha, login, Edge Function, middleware, redirect ou outra barreira, estes arquivos técnicos devem continuar acessíveis sem autenticação:
+
+- `/manifest.webmanifest`;
+- `/sw.js` — o **service worker**, arquivo que controla instalação, cache e funcionamento offline;
+- `/icon.svg`;
+- `/icon-192.png`;
+- `/icon-512.png`.
+
+A interface, os dados e as páginas do aplicativo continuam protegidos. Somente esses arquivos técnicos ficam fora da barreira. Nenhuma nova proteção global em `/*` pode ser aceita sem revisar explicitamente essas exceções.
+
+### Prova obrigatória da barreira
+
+1. manifesto responde com HTTP `200` e `Content-Type: application/manifest+json`;
+2. service worker responde com HTTP `200` e JavaScript válido;
+3. ícones respondem como imagens;
+4. páginas do aplicativo continuam protegidas;
+5. `tests/pwa-access-boundary.test.mjs` passa.
 
 ## Estados mínimos da tela Android
 
