@@ -7,6 +7,10 @@
   NODE_VERSION = "22"
 
 [[edge_functions]]
+  path = "/__vetta-robot-access"
+  function = "robot-access"
+
+[[edge_functions]]
   path = "/*"
   excludedPath = ["/manifest.webmanifest", "/sw.js", "/icon.svg", "/icon-192.png", "/icon-512.png"]
   function = "calculaae-access-gate"
