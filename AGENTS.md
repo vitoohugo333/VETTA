@@ -134,6 +134,22 @@ Falar como para leigo em programação: didático, direto e curto.
 - Em vez de linguagem mecânica, dizer de forma natural: “o GitHub tem uma atualização mais recente que esta cópia; ela mudou X; para editar sem risco, preciso usar essa versão”.
 - Usar o formato completo de entrega apenas em mudanças, verificações ou publicações. Para conversa e explicação, responder normalmente.
 
+## Clareza obrigatória do próximo passo
+
+Todo `Próximo passo único` e todo pedido de autorização devem ser explicados antes de pedir a decisão do proprietário. Não basta escrever apenas “iniciar o Bloco X”, “seguir”, “publicar” ou outra referência interna.
+
+A explicação deve informar, em linguagem simples:
+
+1. o resultado observável esperado;
+2. as atividades e entregas previstas;
+3. os arquivos, áreas, branch e ambiente que podem ser afetados;
+4. o que permanecerá intocado;
+5. os testes, verificações, deploy automático e validação física envolvidos;
+6. o que a autorização cobre até a conclusão do bloco;
+7. o que continua fora da autorização e exigirá nova decisão.
+
+Quando o próximo passo for apenas diagnóstico ou documentação, declarar expressamente que ele não autoriza mudança no aplicativo. Quando houver escolha ainda não resolvida — como criar branch, tag, ambiente ou alterar publicação — apresentar as opções e aguardar decisão antes de executar.
+
 ## Formato de entrega para trabalho técnico
 
 - Modo executado:
