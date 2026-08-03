@@ -1,7 +1,8 @@
-const CACHE = 'vetta-v3.5.1-offline';
+const CACHE = 'vetta-v3.5.1-pwa-gate-1';
 const APP_SHELL = [
   './',
   './index.html',
+  './app-shell.html',
   './app.js?v=3.5.1',
   './styles.css',
   './manifest.webmanifest',
