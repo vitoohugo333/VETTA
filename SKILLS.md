@@ -21,6 +21,17 @@ Um aprendizado só entra aqui ou no arquivo especializado quando houver causa co
 - Alteração em instalação, manifesto, service worker, cache, ícones, modo standalone, barreira de acesso ou publicação do PWA: ler `PWA_RULES.md`.
 - Quando surgir uma nova área com regras recorrentes, criar um arquivo operacional específico e registrá-lo aqui e no `AGENTS.md`.
 
+## Regra de continuidade sem autorização duplicada
+
+Quando o proprietário já autorizou um bloco completo e a única etapa externa restante é apontar uma branch conhecida no GitHub Pages ou em ambiente equivalente:
+
+- continuar a implementação autorizada sem pedir novo aceite;
+- tratar a troca da branch como etapa operacional de validação, não como nova decisão de produto;
+- pedir nova autorização apenas se mudar o alvo, o risco, a produção, a `main`, dados, cálculos, PWA, credenciais ou o escopo aprovado;
+- depois da implementação, confirmar a fotografia servida quando a fonte permitir e manter mudanças de interface como **aguardando validação física**.
+
+Histórico e prova: `docs/incidents/INC-0004-autorizacao-duplicada-em-deploy-previsivel.md`.
+
 ## Fechamento obrigatório de aprendizado
 
 Ao terminar um bloco técnico relevante, o agente deve registrar uma destas conclusões:
@@ -63,6 +74,7 @@ O mesmo problema pode gerar registros complementares, mas não cópias desorgani
 | Aprendizado técnico | `LEARNING_RULES.md` | `docs/incidents/README.md` |
 | PWA, instalação e abertura standalone | `PWA_RULES.md` | incidentes `INC-0001` e `INC-0002`; testes de PWA |
 | Automação de navegador e CI | `tests/README.md` | `playwright.config.js`, `tests/e2e-remote/` e workflows aplicáveis |
+| Continuidade de blocos e ambientes previsíveis | `AGENTS.md` e este arquivo | `INC-0004`; contratos e validação da branch servida |
 
 Não criar arquivos especializados vazios. Uma nova área nasce quando existir ao menos uma regra confirmada e reutilizável que justifique sua manutenção.
 
