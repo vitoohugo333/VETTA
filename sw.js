@@ -1,4 +1,4 @@
-const CACHE = 'calculaae-install-flow-2';
+const CACHE = 'calculaae-install-flow-3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,7 +6,9 @@ const APP_SHELL = [
   './app.js?v=3.5.1',
   './styles.css',
   './manifest.webmanifest',
-  './icon.svg'
+  './icon.svg',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
