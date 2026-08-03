@@ -1,91 +1,99 @@
 # VETTA — regras obrigatórias do projeto
 
-O VETTA ajuda motoristas de aplicativo a planejar, registrar e entender o próprio resultado financeiro. Ele deve ser simples no celular, confiável nos números e local-first.
+O VETTA ajuda motoristas de aplicativo a planejar, registrar e entender o próprio resultado financeiro. Deve ser simples no celular, confiável nos números e local-first.
 
-## Princípio de trabalho
+## Regra central sobre branches
 
-Trabalhar de forma objetiva: primeiro entregar a conclusão e o efeito prático; depois, apenas o detalhe técnico necessário. A cautela deve crescer com o risco da ação — não com o tamanho da conversa.
+Os arquivos do repositório pertencem à branch onde estão. `AGENTS.md`, `SKILLS.md` e `PROJECT_STATE.md` não são automaticamente globais.
 
-Não transformar perguntas simples, explicações ou pequenas consultas de status em uma sequência de autorizações. Fazer a apuração necessária e responder de forma conclusiva.
+A `main` funciona como branch protegida de controle, governança e acionamento manual de workflows. Ela não é a fonte atual do aplicativo.
 
-## Trabalho por blocos de ação
+Antes de qualquer trabalho técnico:
 
-Quando o proprietário autorizar um trabalho, executar um **bloco de ação completo**: o conjunto de etapas diretamente necessárias para entregar um resultado verificável. Um bloco normalmente inclui entender o estado relevante, fazer a alteração aprovada, rodar as verificações proporcionais e apresentar o resultado final.
+1. identificar a branch realmente afetada;
+2. ler `AGENTS.md`, `SKILLS.md`, arquivos operacionais aplicáveis e `PROJECT_STATE.md` daquela branch;
+3. confirmar a ponta atual da branch, PR, CI e ambiente servido quando forem relevantes;
+4. nunca usar os arquivos da `main` como substitutos dos arquivos da branch-alvo.
 
-O bloco não é medido por minutos. Ele deve ter começo, fim e objetivo claro, grande o bastante para evitar pedidos de autorização a cada microetapa e pequeno o bastante para não misturar objetivos diferentes.
-
-- Uma autorização para um bloco cobre as etapas técnicas previsíveis e diretamente ligadas a ele, inclusive testes e correções pequenas descobertas durante a execução que sejam necessárias para o resultado aprovado.
-- Não interromper o bloco apenas para confirmar comandos, leituras, testes, ajustes documentais previstos ou outras etapas rotineiras.
-- Parar e pedir nova decisão somente se aparecer mudança de objetivo, arquivo ou área fora do combinado, risco novo para dados, cálculos, interface, PWA, `main`, publicação ou uma escolha do proprietário.
-- Ao iniciar, dizer em poucas linhas o resultado esperado, o limite do bloco e o que ficará intocado. Ao terminar, entregar a conclusão, a evidência e a pendência real — sem transformar cada passo interno em uma nova conversa.
+O workflow manual existente na `main` pode executar outra branch escolhida. Nesse caso, o código e os testes usados são os da branch selecionada, não os da `main`.
 
 ## Hierarquia de verdade
 
-1. Ordem explícita mais recente do proprietário.
-2. Este `AGENTS.md`: regras permanentes.
-3. Fontes vivas atuais: GitHub, PR, CI e site de validação, quando forem relevantes.
-4. `PROJECT_STATE.md`: registro de trabalho, que pode estar desatualizado.
-5. Memória do chat, resumos e capturas: apenas contexto auxiliar.
+1. ordem explícita mais recente do proprietário;
+2. `AGENTS.md` da branch-alvo;
+3. `SKILLS.md` e arquivos operacionais da branch-alvo;
+4. fontes vivas atuais: GitHub, PR, CI, Netlify, GitHub Pages e site servido;
+5. `PROJECT_STATE.md` da branch-alvo;
+6. memória do chat, resumos e capturas, apenas como contexto auxiliar.
 
-Para repositório, branches, PRs, CI e publicação, usar o conector GitHub como fonte remota principal. Nunca tratar uma checagem antiga como prova atual. Se algo importante não puder ser confirmado, dizer **não confirmado**, explicar o impacto e não inventar certeza.
+Todo fato variável deve ser confirmado na fonte atual. Se não puder ser confirmado, declarar **não confirmado** e explicar o impacto.
 
 ## Uso obrigatório do Codex Engineering Guardrails
 
-- Diagnóstico, auditoria ou revisão sem alteração: usar `code-verification`.
-- Mudança autorizada: usar `code-work`, do recorte à verificação final.
-- Se a habilidade não estiver disponível, declarar isso e seguir estas regras como limite mínimo. Nunca trocar evidência por suposição.
+- diagnóstico, auditoria ou revisão sem alteração: usar `code-verification`;
+- mudança autorizada: usar `code-work`, do recorte à verificação final;
+- nunca substituir evidência por suposição.
 
-## Níveis de trabalho
+## Uso obrigatório do GitHub
 
-### 1. Conversa, explicação, estratégia ou decisão
+Para repositório, branches, commits, PRs, CI e publicação, usar o conector GitHub como fonte remota primária. Ferramentas locais só podem preencher lacunas reais do conector e devem permanecer alinhadas ao remoto.
 
-Responder diretamente. Não exigir contrato, status completo do GitHub nem autorização para explicar algo. Se a resposta depender de um fato atual, consultar apenas a fonte necessária.
+## Trabalho por blocos
 
-### 2. Status do projeto ou dúvida sobre GitHub
+Uma autorização cobre o bloco técnico diretamente necessário para entregar o resultado aprovado, incluindo testes e ajustes pequenos indispensáveis.
 
-Fazer uma checagem atual e objetiva do que muda a resposta: repositório, branch, PR, CI ou site, conforme o caso. Informar onde está o estado mais novo, o efeito prático e a pendência real. Não repetir dados que não ajudam a decisão.
+Parar e pedir nova decisão apenas se surgir:
 
-### 3. Mudança documental ou de baixo risco
+- mudança de objetivo;
+- área fora do contrato;
+- risco novo para dados, cálculos, interface, PWA, acesso ou publicação;
+- alteração não autorizada em `main`, merge, tag, release, credenciais ou ação destrutiva.
 
-Definir em uma frase o resultado, os arquivos e o que ficará intocado; com autorização explícita, executar e verificar em uma única etapa. Não criar commit, enviar ao GitHub, abrir PR ou publicar sem autorização específica.
+## Política atual de branches e ambientes
 
-### 4. Mudança no app, dados, cálculos, interface, PWA ou navegação
+- `main`: controle e governança; protegida; não contém a versão atual do aplicativo.
+- `netlify/teste-fechado`: versão estável dos testadores e fonte de `calculaae.netlify.app`.
+- `netlify/teste-fechado-ux`: desenvolvimento e validação manual da reorganização de interface.
+- `migration/vetta-clean-3-5-1`: referência histórica permanente e cabeça da PR #1.
+- branches antigas ou temporárias não devem ser reutilizadas sem apuração e ordem explícita.
 
-Antes de editar, confirmar de forma proporcional: repositório e branch corretos, alterações locais já existentes, arquivos consumidores, testes e impacto em dados, interface, cálculos, build, CI e publicação. Apresentar um contrato curto e aguardar autorização explícita.
+Nenhuma mudança da branch UX pode ser copiada, mesclada ou publicada na branch estável, na `main` ou no Netlify sem autorização específica posterior.
 
-Mudanças de interface ou PWA exigem validação manual no celular. Valores financeiros exigem testes determinísticos e independentes da interface. Atualizações não podem apagar registros existentes.
+## Custo-benefício obrigatório
 
-### 5. Merge, publicação, deploy ou alteração em `main`
+Preferir a solução mais simples e gratuita que entregue evidência suficiente.
 
-Exigem autorização explícita e separada, citando o alvo. Antes de executar, confirmar a versão correta, CI aplicável e o ambiente que será afetado. Não declarar publicado ou igual ao site sem evidência atual.
+Automação de navegador deve:
 
-## Regras de segurança e escopo
+- rodar somente quando necessária;
+- usar, por padrão, uma máquina Linux e um Chromium;
+- evitar execução em todo commit, matrizes, vídeos permanentes e emuladores sem necessidade comprovada;
+- guardar evidências somente em falha e pelo menor tempo útil.
 
-- Uma mudança observável por vez.
-- Não sobrescrever, descartar ou incorporar alterações locais preexistentes sem ordem explícita.
-- Sem refatoração, limpeza ou melhoria paralela fora do objetivo aprovado.
-- Se surgir uma área não prevista que mude risco, dados, interface, cálculos ou publicação, parar, explicar a decisão necessária e pedir novo aceite.
-- No máximo quatro branches remotas ativas; seus papéis e situação devem constar no `PROJECT_STATE.md`.
-- Não construir agora plugins, backend, login, sincronização, pagamento, manifestos, eventos ou feature flags.
+## Segurança e escopo
 
-Ao consolidar o app, manter quatro limites claros: cálculos puros, dados versionados, telas/áreas e navegação.
+- uma mudança observável por vez;
+- sem refatoração ou limpeza paralela;
+- nunca expor senha, token ou segredo em arquivo, log ou comentário;
+- não sobrescrever trabalho remoto ou local preexistente;
+- mudanças de interface ou PWA exigem validação física no celular;
+- valores financeiros exigem testes determinísticos independentes da interface;
+- não declarar “funcionando”, “CI passou” ou “publicado” sem evidência fresca.
 
-## Evidência e checkpoint
+## Comunicação
 
-- Não afirmar “corrigido”, “funcionando”, “CI passou”, “site atualizado” ou “publicado” sem evidência recente e identificável.
-- Para o GitHub Pages, configuração de branch não basta: quando necessário, comparar o conteúdo servido com a versão esperada.
-- Após validação no celular, registrar no `PROJECT_STATE.md`: data, branch e atualização testada, site/SHA quando aplicável, comportamento testado, resultado, pendência real e próximo passo único.
-- Antes disso, usar **aguardando validação física**.
+Falar com o proprietário como leigo em programação: didático, direto e curto.
 
-## Comunicação com o proprietário
+Sempre explicar:
 
-Falar como para leigo em programação: didático, direto e curto.
+- onde está cada estado;
+- qual é o mais novo;
+- o que mudou;
+- o efeito prático;
+- o que permaneceu intocado;
+- o próximo passo único.
 
-- Começar por: o que está acontecendo, o que muda, o que não muda e qual é o próximo passo.
-- Só explicar termos técnicos se eles ajudarem a decidir. Nunca despejar códigos, nome de branch, SHA ou resultado de CI sem traduzir.
-- Quando houver divergência relevante, usar uma tabela simples com cópia local, GitHub, site de validação, qual está mais novo, diferença prática e próximo passo.
-- Em vez de linguagem mecânica, dizer de forma natural: “o GitHub tem uma atualização mais recente que esta cópia; ela mudou X; para editar sem risco, preciso usar essa versão”.
-- Usar o formato completo de entrega apenas em mudanças, verificações ou publicações. Para conversa e explicação, responder normalmente.
+Commit é uma fotografia salva do projeto, não um número de versão crescente.
 
 ## Formato de entrega para trabalho técnico
 
