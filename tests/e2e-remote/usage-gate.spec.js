@@ -42,12 +42,13 @@ test('protege o navegador comum e testa o uso interno pelo caminho de automaçã
   expect(protectedResponse?.status(), 'o site deve pedir senha antes de mostrar a instalação').toBe(401);
   await expect(page.locator('[data-vetta-access-gate="true"]')).toBeVisible();
 
-  await page.getByLabel('Senha de acesso').fill(password);
-  await Promise.all([
-    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-    page.getByRole('button', { name: 'Entrar no VETTA' }).click()
-  ]);
+  const robotLogin = await page.context().request.post('/__vetta-robot-access', {
+    form: { password, redirect: '/?forceBrowser=1' },
+    maxRedirects: 0
+  });
+  expect(robotLogin.status(), 'a credencial exclusiva do robô deve criar a sessão').toBe(303);
 
+  await page.goto('/?forceBrowser=1', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('[data-vetta-access-gate="true"]')).toHaveCount(0);
   await expect(page.locator('#installView')).toBeVisible();
   await expect(page.locator('#view-dashboard')).toHaveCount(0);
