@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê
 
 **Atualizado em:** 2026-08-03
-**Estado:** instalação confirmada no celular pelo proprietário.
-**Alteração validada:** mudança de nome para CalculaAê e fluxo de instalação na branch `netlify/teste-fechado`.
+**Estado:** nova experiência de instalação publicada; aguardando validação física no celular.
+**Alteração em curso:** finalização da página inicial de instalação na branch `netlify/teste-fechado`.
 
 ## Estado atual
 
@@ -10,33 +10,35 @@
 |---|---|
 | Repositório | `vitoohugo333/VETTA` |
 | Branch de validação | `netlify/teste-fechado` |
-| Fotografia validada | `7eb37379849e1553e70061cbbacd2786e8653ac4` |
+| Fotografia publicada | `92bb7f72efed042eea50b7937bc84376461165ff` |
 | Site de validação | `https://calculaae.netlify.app/` |
-| Nome exibido | CalculaAê |
-| Instalação no celular | validada pelo proprietário em 2026-08-03 |
+| Deploy do Netlify | pronto e ligado à fotografia publicada |
 | `main` | não alterada |
 
 ## Confirmado agora
 
-- O site de validação está ligado à branch `netlify/teste-fechado`.
-- A fotografia `7eb37379849e1553e70061cbbacd2786e8653ac4` foi publicada pelo Netlify.
-- O botão de instalação voltou a funcionar no celular do proprietário.
-- O aplicativo pode ser instalado e aberto pelo ícone.
-- A mudança de nome para CalculaAê foi aplicada sem trocar as chaves internas de sessão e armazenamento.
-- Cálculos, dados financeiros e navegação não foram alterados neste bloco.
+- A página de instalação foi redesenhada com hierarquia visual maior.
+- Android agora possui estados de preparação, instalação disponível, abertura do instalador, cancelamento e conclusão.
+- O botão de instalação só é ativado depois que o Android libera o instalador nativo.
+- iPhone possui passos próprios e botão `Já adicionei` para abrir o estado de conclusão.
+- O estado concluído mostra `CalculaAê instalado!` em destaque e orienta abrir pelo ícone.
+- O navegador registra a confirmação local e permite voltar ao fluxo por `Ainda não encontrei o ícone`.
+- O cache do service worker foi renovado para reduzir risco de exibição da página anterior.
+- Cálculos, dados financeiros, login, navegação interna e `main` não foram alterados.
 
-## Ainda não confirmado
-
-- Validação física específica em iPhone/Safari.
-- Comportamento em outros modelos e navegadores Android além do aparelho testado pelo proprietário.
-
-## Registro de evidência
+## Evidência técnica
 
 | Data | Ação | Evidência | Resultado |
 |---|---|---|---|
-| 2026-08-03 | Publicação automática no Netlify | deploy da fotografia `7eb37379849e1553e70061cbbacd2786e8653ac4` | concluído |
-| 2026-08-03 | Validação física da instalação | confirmação explícita do proprietário: “Tá funcionando” | aprovada no celular testado |
+| 2026-08-03 | Redesenho do fluxo | commit `1e779207103ea20d6aceddfa8902841d6d370d66` | página e estados implementados |
+| 2026-08-03 | Renovação do cache | commit `92bb7f72efed042eea50b7937bc84376461165ff` | cache atualizado |
+| 2026-08-03 | Publicação automática | deploy Netlify `6a70f2391929cb0008cd3e7a` | pronto, sem erro de build |
+
+## Ainda não confirmado
+
+- Aparência e funcionamento final no celular Android após esta atualização.
+- Fluxo completo no iPhone/Safari.
 
 ## Próximo passo único
 
-Continuar o próximo bloco do aplicativo, mantendo a validação específica em iPhone como pendência futura.
+Validar no celular a nova página, o botão de instalação e o estado visual `CalculaAê instalado!`.
