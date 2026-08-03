@@ -8,7 +8,7 @@
 
 [[edge_functions]]
   path = "/*"
-  function = "access-gate"
+  function = "calculaae-access-gate"
 
 [[redirects]]
   from = "/*"
