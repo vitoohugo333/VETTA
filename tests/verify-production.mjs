@@ -22,7 +22,7 @@ assert.ok(installPage.includes('beforeinstallprompt'));
 assert.ok(installPage.includes('./manifest.webmanifest'));
 assert.ok(!installPage.includes('appRoot'));
 
-assert.ok(sw.includes("calculaae-install-flow-4"));
+assert.ok(sw.includes("calculaae-install-flow-5"));
 assert.ok(sw.includes('const APP_SHELL = ['));
 assert.ok(sw.includes('cache.addAll(APP_SHELL)'));
 assert.ok(sw.includes('cache.put(event.request, response.clone())'));
@@ -30,7 +30,7 @@ assert.ok(sw.includes('caches.match(event.request, { ignoreSearch: true })'));
 assert.ok(sw.includes("caches.match('./index.html')"));
 
 assert.equal(manifest.id, './');
-assert.equal(manifest.start_url, './');
+assert.equal(manifest.start_url, './app-shell.html');
 assert.equal(manifest.scope, './');
 assert.equal(manifest.display, 'standalone');
 assert.ok(manifest.icons.some(icon => icon.src === './icon-192.png'));
