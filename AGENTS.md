@@ -19,6 +19,16 @@ O bloco não é medido por minutos. Ele deve ter começo, fim e objetivo claro, 
 - Parar e pedir nova decisão somente se aparecer mudança de objetivo, arquivo ou área fora do combinado, risco novo para dados, cálculos, interface, PWA, `main`, publicação ou uma escolha do proprietário.
 - Ao iniciar, dizer em poucas linhas o resultado esperado, o limite do bloco e o que ficará intocado. Ao terminar, entregar a conclusão, a evidência e a pendência real — sem transformar cada passo interno em uma nova conversa.
 
+## Atualizações durante operações longas
+
+Para evitar que o proprietário fique sem saber se o trabalho travou:
+
+- enviar um checkpoint curto após cada etapa relevante ou, em média, após duas ou três chamadas de ferramenta;
+- informar o que já foi confirmado, o que está sendo feito e o que falta;
+- declarar imediatamente qualquer desvio, erro de ferramenta ou arquivo temporário criado;
+- nunca ficar executando uma sequência longa de alterações sem atualização visível;
+- se uma operação for interrompida, ao retomar informar exatamente qual foi a última alteração efetiva e o que ainda não entrou na branch.
+
 ## Hierarquia de verdade
 
 1. Ordem explícita mais recente do proprietário.
@@ -28,6 +38,12 @@ O bloco não é medido por minutos. Ele deve ter começo, fim e objetivo claro, 
 5. Memória do chat, resumos e capturas: apenas contexto auxiliar.
 
 Para repositório, branches, PRs, CI e publicação, usar o conector GitHub como fonte remota principal. Nunca tratar uma checagem antiga como prova atual. Se algo importante não puder ser confirmado, dizer **não confirmado**, explicar o impacto e não inventar certeza.
+
+## Arquivos operacionais obrigatórios
+
+- Antes de qualquer alteração em instalação, manifesto, service worker, cache, ícones, modo standalone ou publicação do PWA, ler também `PWA_RULES.md`.
+- Erros recorrentes devem virar regra preventiva no arquivo operacional correspondente, não permanecer apenas no chat.
+- `PROJECT_STATE.md` registra o estado e a evidência; arquivos de regras registram como evitar repetição do erro.
 
 ## Uso obrigatório do Codex Engineering Guardrails
 
