@@ -1,9 +1,9 @@
 # Estado oficial — VETTA
 
 **Atualizado em:** 2026-08-03
-**Estado:** a base candidata permanece validada no celular pelo proprietário; o Bloco 1 de navegação secundária está em uma branch remota separada, aguardando CI própria e validação física.
-**Alteração em curso:** Bloco 1 — fundação da navegação secundária, sem alteração de cálculo, dados, PWA, `main` ou publicação.
-**Validação física:** aprovada pelo proprietário em 2026-08-02, no site de validação abaixo.
+**Estado:** o bloqueio de uso fora do PWA foi implementado na branch do Bloco 1; aguardando CI e validação física no celular.
+**Alteração em curso:** gate obrigatório de instalação do PWA sobre a branch do Bloco 1, sem alteração de cálculos, dados, `main` ou Netlify.
+**Validação física:** a base anterior foi aprovada pelo proprietário em 2026-08-02; o novo gate ainda aguarda teste no celular.
 
 ## Repositório e publicação
 
@@ -11,43 +11,47 @@
 |---|---|
 | Repositório Git | `vitoohugo333/VETTA` |
 | Branch de origem | `CALCULA-MOTORA/main` em `f4817fb0b8fd753b8d51f077837a65ac6a92d6c6` |
-| Branch de trabalho | `migration/vetta-clean-3-5-1` (PR #1 em rascunho) |
+| Branch de trabalho atual | `feature/bloco-1-navegacao-secundaria` |
 | Base do app validada | `aa58e4d5257713d7db5ceb7570f016cc2ffdc966` — inclui a proteção de acesso do Netlify |
-| Atualizações posteriores da PR | regras de trabalho e checkpoint documental; não alteram o app, cálculos, dados, interface, PWA ou publicação |
+| Bloco 1 anterior | `7ab1464063c22b0f74c9600364ffabd275c8523a` |
+| Gate obrigatório do PWA | implementação principal em `99e729554c77c5588a8c9e20a4897338202a18c2`; regra operacional do Pages em `8427e05da5e4da4e5a6d717682066a25ccf3c3b1` |
 | Site de validação | `https://vitoohugo333.github.io/VETTA/` |
-| Conteúdo servido | confirmado em 2026-08-02: `index.html`, `app.js`, `styles.css`, `sw.js` e `manifest.webmanifest` são idênticos à base validada `aa58e4d` |
-| Configuração do Pages | a origem configurada (branch e pasta) não foi confirmada por API nesta checagem; a correspondência direta do conteúdo com a branch foi confirmada |
-| Produção | `main` permanece em `67361493784548dc31f063fb5bf76cbd1f247bd4`; não recebeu a versão validada |
+| Atualização do Pages | a branch configurada alimenta o site automaticamente; o conteúdo servido após esta mudança ainda não foi confirmado |
+| Produção | `main` permanece fora deste bloco; não foi alterada |
 
-## Verdades confirmadas
+## Verdades confirmadas agora
 
-- A origem aprovada foi a `main` 3.5.1 do CALCULA-MOTORA, na fotografia indicada acima.
-- O proprietário validou no celular a interface e o funcionamento da versão exposta no site de validação.
-- A checagem de 2026-08-02 comparou cinco arquivos públicos do site com a fotografia atual da branch e confirmou igualdade de conteúdo.
-- A base validada inclui a proteção de acesso do Netlify; isso não muda o conteúdo que foi validado no GitHub Pages.
-- A atualização de regras alterou apenas `AGENTS.md`. A checagem de produção passou; a falha documental foi causada por referências antigas no script e foi corrigida nesta PR.
-- Arquivos de governança do VETTA permanecem próprios: `AGENTS.md`, este estado e a verificação de governança.
+- O navegador comum recebe uma página própria de instalação e não carrega `app.js` nem a interface financeira.
+- O aplicativo atual foi preservado integralmente em `app-shell.html` e é aberto somente em modo instalado/standalone.
+- Android usa o evento nativo de instalação quando disponível; iPhone recebe instruções de Safari, Compartilhar e Adicionar à Tela de Início.
+- Após `appinstalled`, a página orienta abrir pelo ícone do VETTA; não existe promessa de botão capaz de abrir automaticamente o PWA instalado.
+- O service worker passou a armazenar também `app-shell.html` e usa um novo nome de cache.
+- Cálculos, armazenamento local, histórico, onboarding e navegação do Bloco 1 não foram editados.
+- O `AGENTS.md` registra que atualizar a branch configurada no GitHub Pages atualiza automaticamente o site, mantendo a conferência final como prova.
 
 ## Branches remotas ativas
 
 | Branch | Papel | Situação |
 |---|---|---|
-| `main` | fundação protegida | ativa |
-| `migration/vetta-clean-3-5-1` | migração byte a byte em PR #1 | ativa; Governança aprovada, mas a verificação completa atual falha em teste anterior de custos |
-| `feature/bloco-1-navegacao-secundaria` | Bloco 1: abrir tela secundária e voltar preservando contexto | ativa no GitHub; aguardando CI e validação física |
+| `main` | fundação protegida | ativa e intocada neste bloco |
+| `migration/vetta-clean-3-5-1` | migração byte a byte em PR #1 | ativa |
+| `feature/bloco-1-navegacao-secundaria` | Bloco 1 e gate obrigatório do PWA | atualizada; aguardando CI e validação física |
+| `tmp/pwa-gate-apply` | branch temporária criada durante tentativa de aplicação | sem mudança funcional; precisa ser removida |
+| `tmp/pwa-gate-apply-2` | branch temporária criada durante tentativa de aplicação | sem mudança funcional; precisa ser removida |
+
+**Divergência:** existem cinco branches remotas, acima do limite de quatro. As duas branches `tmp/` foram criadas por engano durante a operação e não alimentam o site. A ferramenta disponível nesta sessão não oferece exclusão de branch; a limpeza permanece pendente e não deve ser ocultada.
 
 ## Próximo passo único
 
-Executar a CI da branch do Bloco 1 e, se aprovada, validar a navegação no celular, sem abrir PR, alterar `main` ou publicar.
+Validar no celular que o navegador mostra somente a instalação e que o VETTA aberto pelo ícone carrega normalmente, preservando dados e navegação.
 
 ## Registro de evidência
 
 | Data | Ação | Evidência | Resultado |
 |---|---|---|---|
 | 2026-08-02 | Referência de origem confirmada | commit `f4817fb0b8fd753b8d51f077837a65ac6a92d6c6` | aprovada pelo proprietário |
-| 2026-08-02 | Site de validação | hashes SHA-256 de `index.html`, `app.js`, `styles.css`, `sw.js` e `manifest.webmanifest` comparados à fotografia `aa58e4d` | conteúdos idênticos |
-| 2026-08-02 | Validação física | confirmação explícita do proprietário no celular | aprovada |
-| 2026-08-02 | CI da fotografia atual | GitHub Actions: Governança (execução 10) e Verify VETTA Production (execução 3) | ambas aprovadas |
-| 2026-08-02 | CI da atualização documental `2ba6acad` | GitHub Actions: Verify VETTA Production (execução 4) | aprovada; Governança falhou por referências antigas no script e será corrigida nesta atualização |
-| 2026-08-03 | CI da fotografia atual da PR #1 `d5fd586` | GitHub Actions: Governança (execução 15) e Verify VETTA Production (execução 6) | Governança aprovada; Verify VETTA Production falhou em teste anterior de custos, fora do Bloco 1 |
-| 2026-08-03 | Bloco 1 enviado ao GitHub | commit `7ab1464063c22b0f74c9600364ffabd275c8523a` na nova branch; `app.js`, `index.html` e teste de navegação | aguardando CI e validação física |
+| 2026-08-02 | Site de validação anterior | hashes SHA-256 de `index.html`, `app.js`, `styles.css`, `sw.js` e `manifest.webmanifest` comparados à fotografia `aa58e4d` | conteúdos idênticos naquele momento |
+| 2026-08-02 | Validação física da base anterior | confirmação explícita do proprietário no celular | aprovada |
+| 2026-08-03 | Bloco 1 enviado ao GitHub | commit `7ab1464063c22b0f74c9600364ffabd275c8523a` | aguardava CI e validação física |
+| 2026-08-03 | Gate obrigatório do PWA | `index.html`, `app-shell.html`, `sw.js` e teste focado no commit `99e729554c77c5588a8c9e20a4897338202a18c2` | implementação gravada; CI ainda não confirmada |
+| 2026-08-03 | Regra automática do GitHub Pages | `AGENTS.md` no commit `8427e05da5e4da4e5a6d717682066a25ccf3c3b1` | regra registrada |
