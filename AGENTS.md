@@ -70,6 +70,11 @@ Exigem autorização explícita e separada, citando o alvo. Antes de executar, c
 
 Ao consolidar o app, manter quatro limites claros: cálculos puros, dados versionados, telas/áreas e navegação.
 
+## GitHub Pages nesta operação
+
+- Quando o GitHub Pages estiver configurado para servir a branch de trabalho, atualizar essa branch já atualiza automaticamente o site de validação. Não tratar isso como uma etapa manual separada de publicação.
+- Mesmo assim, após a atualização da branch, confirmar que o conteúdo servido corresponde à nova fotografia antes de afirmar que o site foi atualizado.
+
 ## Evidência e checkpoint
 
 - Não afirmar “corrigido”, “funcionando”, “CI passou”, “site atualizado” ou “publicado” sem evidência recente e identificável.
