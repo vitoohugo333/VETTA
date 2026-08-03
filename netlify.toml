@@ -8,6 +8,7 @@
 
 [[edge_functions]]
   path = "/*"
+  excludedPath = ["/manifest.webmanifest", "/sw.js", "/icon.svg", "/icon-192.png", "/icon-512.png"]
   function = "calculaae-access-gate"
 
 [[redirects]]
