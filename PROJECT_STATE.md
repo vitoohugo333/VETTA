@@ -1,7 +1,7 @@
 # Estado oficial — VETTA
 
 **Atualizado em:** 2026-08-03
-**Estado:** a base candidata permanece validada no celular pelo proprietário; o Bloco 1 de navegação secundária está em uma branch separada, aguardando envio ao GitHub, CI própria e validação física.
+**Estado:** a base candidata permanece validada no celular pelo proprietário; o Bloco 1 de navegação secundária está em uma branch remota separada, aguardando CI própria e validação física.
 **Alteração em curso:** Bloco 1 — fundação da navegação secundária, sem alteração de cálculo, dados, PWA, `main` ou publicação.
 **Validação física:** aprovada pelo proprietário em 2026-08-02, no site de validação abaixo.
 
@@ -34,11 +34,11 @@
 |---|---|---|
 | `main` | fundação protegida | ativa |
 | `migration/vetta-clean-3-5-1` | migração byte a byte em PR #1 | ativa; Governança aprovada, mas a verificação completa atual falha em teste anterior de custos |
-| `feature/bloco-1-navegacao-secundaria` | Bloco 1: abrir tela secundária e voltar preservando contexto | local, aguardando envio ao GitHub |
+| `feature/bloco-1-navegacao-secundaria` | Bloco 1: abrir tela secundária e voltar preservando contexto | ativa no GitHub; aguardando CI e validação física |
 
 ## Próximo passo único
 
-Enviar a branch do Bloco 1 ao GitHub e confirmar sua CI, sem abrir PR, alterar `main` ou publicar.
+Executar a CI da branch do Bloco 1 e, se aprovada, validar a navegação no celular, sem abrir PR, alterar `main` ou publicar.
 
 ## Registro de evidência
 
@@ -50,4 +50,4 @@ Enviar a branch do Bloco 1 ao GitHub e confirmar sua CI, sem abrir PR, alterar `
 | 2026-08-02 | CI da fotografia atual | GitHub Actions: Governança (execução 10) e Verify VETTA Production (execução 3) | ambas aprovadas |
 | 2026-08-02 | CI da atualização documental `2ba6acad` | GitHub Actions: Verify VETTA Production (execução 4) | aprovada; Governança falhou por referências antigas no script e será corrigida nesta atualização |
 | 2026-08-03 | CI da fotografia atual da PR #1 `d5fd586` | GitHub Actions: Governança (execução 15) e Verify VETTA Production (execução 6) | Governança aprovada; Verify VETTA Production falhou em teste anterior de custos, fora do Bloco 1 |
-| 2026-08-03 | Bloco 1 preparado localmente | nova branch `feature/bloco-1-navegacao-secundaria`; `app.js`, `index.html` e teste de navegação | aguardando envio, CI e validação física |
+| 2026-08-03 | Bloco 1 enviado ao GitHub | commit `7ab1464063c22b0f74c9600364ffabd275c8523a` na nova branch; `app.js`, `index.html` e teste de navegação | aguardando CI e validação física |
