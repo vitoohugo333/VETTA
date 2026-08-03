@@ -65,6 +65,9 @@ Cada bloco é uma mudança observável independente. Um bloco só começa depois
 
 ### Bloco 0 — Referência e proteção da base
 
+**Situação:** levantamento concluído em 2026-08-03. A separação operacional entre testadores e desenvolvimento depende de decisão antes do Bloco 1.  
+**Relatório:** [`01-BLOCO-0-REFERENCIA-E-PROTECAO-DA-BASE.md`](./01-BLOCO-0-REFERENCIA-E-PROTECAO-DA-BASE.md)
+
 Entregas:
 
 - confirmar branch e fotografia funcional de referência;
@@ -78,7 +81,16 @@ Critério de aceite:
 - existe uma referência clara de antes e depois;
 - nenhum trabalho depende apenas de memória ou captura antiga.
 
+Resultado:
+
+- referência, telas, fluxos, invariantes, branches, testes, lacunas e contrato do Bloco 1 foram registrados;
+- nenhuma tela ou lógica do aplicativo foi alterada;
+- foram encontradas seis branches remotas, quatro delas antigas ou temporárias e sem trabalho exclusivo mais novo;
+- a limpeza dessas branches e a escolha do ambiente separado continuam fora do bloco concluído e exigem decisão do proprietário.
+
 ### Bloco 1 — Navegação e tela Hoje
+
+**Situação:** não iniciado. Contrato proposto no relatório do Bloco 0; aguarda decisão de branches/ambientes e autorização específica.
 
 Entregas:
 
@@ -278,10 +290,17 @@ Esses temas serão tratados somente em planos posteriores e separados.
 
 ## 9. Estado atual
 
-- Plano criado e marcado como ativo.
-- Nenhum bloco de interface foi iniciado por este documento.
-- A validação física atual do PWA continua sendo uma atividade separada já em curso.
+- O Plano 01 permanece ativo.
+- O Bloco 0 foi concluído como levantamento e contrato, sem alteração do aplicativo.
+- A instalação e a abertura do PWA foram validadas no Android.
+- O Bloco 1 não foi iniciado.
+- Antes do Bloco 1, o proprietário deve decidir como limpar as branches antigas e separar a versão dos testadores do ambiente de desenvolvimento.
 
 ## 10. Próximo passo único
 
-Executar o **Bloco 0 — Referência e proteção da base**, produzindo o contrato do Bloco 1 sem alterar ainda a interface.
+O proprietário deve escolher entre duas formas de trabalhar no Bloco 1:
+
+1. **Separação recomendada:** autorizar a remoção das quatro branches antigas ou temporárias, manter `netlify/teste-fechado` congelada para os testadores e criar uma nova branch com endereço separado para desenvolver a nova navegação; ou
+2. **Caminho simples:** desenvolver diretamente em `netlify/teste-fechado`, interrompendo temporariamente os testes externos porque `calculaae.netlify.app` mudará a cada commit.
+
+Essa decisão ainda não autoriza o Bloco 1. Depois da escolha do ambiente, será apresentada a autorização específica para reorganizar `Hoje | Histórico | Planejar | Mais`, com testes de proteção dos cálculos e dos dados, sem alterar `main`, PWA, acesso ou fórmulas financeiras.
