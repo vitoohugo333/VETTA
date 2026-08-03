@@ -19,6 +19,7 @@ Registrar somente conhecimento com causa confirmada e valor futuro. Hipóteses, 
 |---|---|---|---|---|
 | [INC-0001](./INC-0001-barreira-de-acesso-bloqueou-arquivos-do-pwa.md) | Incidente | Barreira de acesso bloqueou arquivos técnicos do PWA | PWA reutilizável; aplicação web reutilizável | Confirmado |
 | [INC-0002](./INC-0002-piscada-na-abertura-standalone.md) | Incidente | Tela de instalação apareceu antes do app instalado | PWA reutilizável | Confirmado |
+| [INC-0003](./INC-0003-automacao-remota-sem-burlar-instalacao.md) | Aprendizado preventivo | Navegador automatizado testa o app sem liberar acesso comum | PWA reutilizável; aplicação web reutilizável | Confirmado |
 
 ## Numeração
 
