@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê
 
 **Atualizado em:** 2026-08-03
-**Estado:** nova experiência de instalação publicada; aguardando validação física no celular.
-**Alteração em curso:** finalização da página inicial de instalação na branch `netlify/teste-fechado`.
+**Estado:** tela de instalação aprovada restaurada e lógica Android corrigida; aguardando validação física.
+**Alteração em curso:** validação da detecção real de PWA instalado na branch `netlify/teste-fechado`.
 
 ## Estado atual
 
@@ -10,35 +10,38 @@
 |---|---|
 | Repositório | `vitoohugo333/VETTA` |
 | Branch de validação | `netlify/teste-fechado` |
-| Fotografia publicada | `92bb7f72efed042eea50b7937bc84376461165ff` |
+| Fotografia funcional publicada | `d92a663f9adc29f58f2774d613d98914b8a91f8c` |
 | Site de validação | `https://calculaae.netlify.app/` |
-| Deploy do Netlify | pronto e ligado à fotografia publicada |
+| Deploy do Netlify | pronto e ligado à fotografia funcional |
 | `main` | não alterada |
 
 ## Confirmado agora
 
-- A página de instalação foi redesenhada com hierarquia visual maior.
-- Android agora possui estados de preparação, instalação disponível, abertura do instalador, cancelamento e conclusão.
-- O botão de instalação só é ativado depois que o Android libera o instalador nativo.
-- iPhone possui passos próprios e botão `Já adicionei` para abrir o estado de conclusão.
-- O estado concluído mostra `CalculaAê instalado!` em destaque e orienta abrir pelo ícone.
-- O navegador registra a confirmação local e permite voltar ao fluxo por `Ainda não encontrei o ícone`.
-- O cache do service worker foi renovado para reduzir risco de exibição da página anterior.
-- Cálculos, dados financeiros, login, navegação interna e `main` não foram alterados.
+- A aparência e os textos da tela foram restaurados a partir da fotografia aprovada `1e779207103ea20d6aceddfa8902841d6d370d66`.
+- A versão genérica posterior foi removida.
+- `localStorage` deixou de ser a fonte principal para dizer se o PWA está instalado.
+- No Android, a página agora consulta `navigator.getInstalledRelatedApps()` quando disponível.
+- O manifesto declara o próprio PWA em `related_applications` sem trocar seu `id`.
+- O evento `beforeinstallprompt` continua sendo usado somente quando o Chrome realmente libera o instalador.
+- Se nenhuma prova chegar, a espera termina e o botão vira `Verificar novamente`, sem recarregamento em loop.
+- O cache do service worker foi renovado para `calculaae-install-flow-4`.
+- Cálculos, dados financeiros, login, navegação interna, `app-shell.html` e `main` não foram alterados.
 
 ## Evidência técnica
 
 | Data | Ação | Evidência | Resultado |
 |---|---|---|---|
-| 2026-08-03 | Redesenho do fluxo | commit `1e779207103ea20d6aceddfa8902841d6d370d66` | página e estados implementados |
-| 2026-08-03 | Renovação do cache | commit `92bb7f72efed042eea50b7937bc84376461165ff` | cache atualizado |
-| 2026-08-03 | Publicação automática | deploy Netlify `6a70f2391929cb0008cd3e7a` | pronto, sem erro de build |
+| 2026-08-03 | Autorrelação do PWA no manifesto | commit `80e6903cc2c17ae2e47782df17031faeea6a5b3d` | manifesto preparado para consultar instalação no Chrome Android |
+| 2026-08-03 | Restauração visual e nova lógica | commit `b073335269daef25f8f5fa34a0f6400efbe97375` | tela aprovada restaurada e memória local removida da decisão principal |
+| 2026-08-03 | Renovação do cache | commit `d92a663f9adc29f58f2774d613d98914b8a91f8c` | novos arquivos de instalação publicados pelo service worker |
+| 2026-08-03 | Publicação automática | deploy Netlify `6a7101ea63c8d2000843df3f` | pronto e ligado a `d92a663f9adc29f58f2774d613d98914b8a91f8c` |
 
 ## Ainda não confirmado
 
-- Aparência e funcionamento final no celular Android após esta atualização.
+- Se o Chrome do aparelho do proprietário reconhece imediatamente uma instalação antiga do mesmo PWA pela nova autorrelação.
+- Se, com o aplicativo realmente desinstalado, o Chrome libera `beforeinstallprompt` e o botão `Instalar CalculaAê`.
 - Fluxo completo no iPhone/Safari.
 
 ## Próximo passo único
 
-Validar no celular a nova página, o botão de instalação e o estado visual `CalculaAê instalado!`.
+Validar no Android os dois estados reais: aplicativo já instalado e aplicativo desinstalado.
