@@ -14,6 +14,16 @@ Um aprendizado só entra aqui ou no arquivo especializado quando houver causa co
 - Alteração em instalação, manifesto, service worker, cache, ícones, modo standalone, barreira de acesso ou publicação do PWA: ler `PWA_RULES.md`.
 - Quando surgir uma nova área com regras recorrentes, criar um arquivo operacional específico e registrá-lo aqui e no `AGENTS.md`.
 
+## Onde cada aprendizado deve ser registrado
+
+- `AGENTS.md`: autorização, escopo, comunicação, checkpoints e forma de operar.
+- `SKILLS.md`: índice dos conhecimentos permanentes e regra para localizar o arquivo especializado correto.
+- arquivo especializado, como `PWA_RULES.md`: causa técnica confirmada, prevenção e teste obrigatório daquela área.
+- teste automatizado: prova executável que impede a regressão.
+- `PROJECT_STATE.md`: o que aconteceu nesta branch, qual fotografia foi publicada, validação manual e pendência atual.
+
+O mesmo problema pode gerar registros complementares, mas não cópias desorganizadas: a regra operacional fica no arquivo da área; a evidência atual fica no `PROJECT_STATE.md`; a prevenção executável fica no teste.
+
 ## Sincronização remota e deploy ligado à branch
 
 A branch remota confirmada é a fonte de trabalho em tempo real. Uma cópia local pode preparar e testar, mas o bloco só termina depois de sincronizar a alteração autorizada no GitHub e verificar o resultado remoto.
