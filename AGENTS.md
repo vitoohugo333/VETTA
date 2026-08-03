@@ -110,13 +110,18 @@ Exigem autorização explícita e separada, citando o alvo. O deploy automático
 - No máximo quatro branches remotas ativas; seus papéis e situação devem constar no `PROJECT_STATE.md`.
 - Não construir agora plugins, backend, login, sincronização, pagamento, manifestos, eventos ou feature flags.
 
-## Política permanente de branches
+## Política permanente de branches e ambientes
 
 - `main` é a branch protegida e não pode ser alterada, mesclada ou publicada sem autorização explícita separada.
-- `netlify/teste-fechado` é a branch ativa de desenvolvimento e validação. Seus commits acionam o deploy automático conhecido em `calculaae.netlify.app`.
+- `netlify/teste-fechado` é a branch estável dos testadores. Ela alimenta `calculaae.netlify.app` e não deve receber o Bloco 1 nem mudanças de interface enquanto os testes externos estiverem em curso.
+- `netlify/teste-fechado-ux` é a branch ativa de desenvolvimento e validação manual do Plano 01. Mudanças de interface autorizadas devem ser feitas somente nela até nova decisão.
+- O GitHub Pages será o ambiente de validação da branch UX depois que o proprietário selecionar manualmente essa branch e a pasta aplicável nas configurações do repositório.
+- A configuração de Pages, sozinha, não prova publicação. Confirmar URL, branch, pasta, fotografia atual e conteúdo efetivamente servido antes de declarar o ambiente pronto.
 - `migration/vetta-clean-3-5-1` é uma referência histórica permanente. Ela nunca pode ser excluída, renomeada, movida para outro commit ou reutilizada para desenvolvimento, salvo ordem explícita do proprietário revogando esta regra.
 - Branch temporária ou superada só pode ser excluída após comparação fresca provar que não possui trabalho exclusivo, confirmação de que nenhuma PR depende dela e autorização explícita do proprietário.
+- As branches antigas existentes serão ignoradas por enquanto; sua limpeza não bloqueia o Bloco 1.
 - A PR #1 permanece ligada à `migration/vetta-clean-3-5-1` e não deve ser fechada, mesclada ou alterada sem autorização específica.
+- Nenhuma mudança da branch UX pode ser copiada, mesclada ou publicada na branch estável, na `main` ou no Netlify sem autorização específica posterior.
 
 Ao consolidar o app, manter quatro limites claros: cálculos puros, dados versionados, telas/áreas e navegação.
 
