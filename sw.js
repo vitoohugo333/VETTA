@@ -1,4 +1,4 @@
-const CACHE = 'vetta-v3.5.1-pwa-gate-1';
+const CACHE = 'calculaae-install-flow-2';
 const APP_SHELL = [
   './',
   './index.html',
