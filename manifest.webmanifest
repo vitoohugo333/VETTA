@@ -3,7 +3,7 @@
   "name": "CalculaAê",
   "short_name": "CalculaAê",
   "description": "Metas, custos, histórico e inteligência financeira para motoristas de aplicativo.",
-  "start_url": "./",
+  "start_url": "./app-shell.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#F8FAFC",
