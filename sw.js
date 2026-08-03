@@ -1,4 +1,4 @@
-const CACHE = 'calculaae-install-flow-4';
+const CACHE = 'calculaae-install-flow-5';
 const APP_SHELL = [
   './',
   './index.html',
