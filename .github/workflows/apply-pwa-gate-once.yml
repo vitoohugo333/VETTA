@@ -1,0 +1,198 @@
+name: Apply PWA gate once
+
+on:
+  push:
+    branches:
+      - feature/bloco-1-navegacao-secundaria
+    paths:
+      - .github/workflows/apply-pwa-gate-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/bloco-1-navegacao-secundaria
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Apply approved PWA gate
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          index = Path('index.html')
+          text = index.read_text()
+          head_marker = '<link href="./styles.css" rel="stylesheet"></head>'
+          gate_head = '''<link href="./styles.css" rel="stylesheet"><style id="pwaGateCritical">html:not(.vetta-standalone) body{margin:0;background:#f8fafc;min-height:100dvh}html:not(.vetta-standalone) body>:not(#pwaInstallGate):not(script){display:none!important}html.vetta-standalone #pwaInstallGate{display:none!important}#pwaInstallGate{min-height:100dvh;display:grid;place-items:center;padding:24px;font-family:Arial,sans-serif;color:#0b1121;background:linear-gradient(180deg,#f8fafc,#eef2ff)}#pwaInstallGate .gate-card{width:min(100%,420px);background:#fff;border:1px solid #e2e8f0;border-radius:28px;padding:28px;box-shadow:0 18px 60px rgba(15,23,42,.12)}#pwaInstallGate .gate-logo{width:56px;height:56px;border-radius:18px;background:#0b1121;color:#fff;display:grid;place-items:center;font-weight:900;font-size:24px;margin-bottom:20px}#pwaInstallGate h1{font-size:28px;line-height:1.1;margin:0 0 12px}#pwaInstallGate p{font-size:15px;line-height:1.55;color:#475569;margin:0 0 16px}#pwaInstallGate ol{padding-left:20px;color:#475569;line-height:1.55}#pwaInstallGate button{width:100%;border:0;border-radius:18px;padding:16px;background:#2563eb;color:white;font-weight:800;font-size:15px}#pwaInstallGate .gate-note{font-size:12px;color:#64748b;margin-top:14px}#pwaInstallGate [hidden]{display:none!important}</style><script>(()=>{const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;document.documentElement.classList.add(standalone?'vetta-standalone':'vetta-browser');window.__VETTA_STANDALONE__=standalone;})();</script></head>'''
+          if head_marker not in text:
+              raise SystemExit('index head marker not found')
+          text = text.replace(head_marker, gate_head, 1)
+          body_marker = '<body class="min-h-[100dvh] flex flex-col padding-bottom-nav font-sans antialiased selection:bg-blue-100">'
+          gate = '''<body class="min-h-[100dvh] flex flex-col padding-bottom-nav font-sans antialiased selection:bg-blue-100"><section id="pwaInstallGate" aria-labelledby="pwaGateTitle"><div class="gate-card"><div class="gate-logo">V</div><h1 id="pwaGateTitle">Instale o VETTA para continuar</h1><p id="pwaGateMessage">O VETTA funciona como aplicativo instalado. Seus dados continuam salvos neste aparelho.</p><ol id="pwaGateSteps"></ol><button id="pwaGateInstallButton" type="button">Instalar VETTA</button><p id="pwaGateStatus" class="gate-note">Depois de instalar, abra pelo ícone do VETTA na tela inicial.</p></div></section>'''
+          if body_marker not in text:
+              raise SystemExit('index body marker not found')
+          text = text.replace(body_marker, gate, 1)
+          script_marker = '<script src="./app.js?v=3.5.1" defer></script>'
+          if script_marker not in text:
+              raise SystemExit('app script marker not found')
+          text = text.replace(script_marker, '<script src="./install-gate.js?v=1" defer></script>', 1)
+          index.write_text(text)
+
+          Path('install-gate.js').write_text(r'''(() => {
+            const standalone = window.__VETTA_STANDALONE__ === true;
+            if (standalone) {
+              const script = document.createElement('script');
+              script.src = './app.js?v=3.5.1';
+              script.defer = true;
+              document.body.appendChild(script);
+              return;
+            }
+
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+
+            const ua = navigator.userAgent || '';
+            const isIOS = /iphone|ipad|ipod/i.test(ua);
+            const isAndroid = /android/i.test(ua);
+            const isEmbedded = /(FBAN|FBAV|Instagram|Line\/|; wv\)|WebView)/i.test(ua);
+            const button = document.getElementById('pwaGateInstallButton');
+            const steps = document.getElementById('pwaGateSteps');
+            const status = document.getElementById('pwaGateStatus');
+            let deferredPrompt = null;
+
+            const setSteps = items => {
+              steps.innerHTML = '';
+              items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                steps.appendChild(li);
+              });
+            };
+
+            if (isEmbedded) {
+              button.hidden = true;
+              setSteps([isIOS ? 'Abra esta página no Safari.' : 'Abra esta página no Chrome.', 'Use o menu do navegador para instalar ou adicionar à tela inicial.']);
+              status.textContent = 'Navegadores internos de redes sociais não conseguem instalar o aplicativo corretamente.';
+            } else if (isIOS) {
+              button.hidden = true;
+              setSteps(['No Safari, toque em Compartilhar.', 'Toque em Adicionar à Tela de Início.', 'Ative Abrir como App, quando aparecer.', 'Toque em Adicionar e depois abra pelo ícone do VETTA.']);
+              status.textContent = 'O iPhone não oferece um botão automático de instalação nesta página.';
+            } else if (isAndroid) {
+              setSteps(['Toque em Instalar VETTA.', 'Confirme a instalação.', 'Abra o VETTA pelo ícone criado na tela inicial.']);
+            } else {
+              button.hidden = true;
+              setSteps(['Abra esta página no Chrome ou Safari do celular.', 'Use a opção Instalar aplicativo ou Adicionar à Tela de Início.']);
+            }
+
+            window.addEventListener('beforeinstallprompt', event => {
+              event.preventDefault();
+              deferredPrompt = event;
+              if (!isIOS && !isEmbedded) button.hidden = false;
+            });
+
+            button.addEventListener('click', async () => {
+              if (!deferredPrompt) {
+                status.textContent = 'Use o menu do Chrome e toque em Instalar aplicativo.';
+                return;
+              }
+              deferredPrompt.prompt();
+              await deferredPrompt.userChoice;
+              deferredPrompt = null;
+            });
+
+            window.addEventListener('appinstalled', () => {
+              button.hidden = true;
+              status.textContent = 'VETTA instalado. Agora abra pelo ícone do VETTA na tela inicial.';
+            });
+          })();
+          ''')
+
+          sw = Path('sw.js')
+          sw_text = sw.read_text().replace("const CACHE = 'vetta-v3.5.1-offline';", "const CACHE = 'vetta-v3.5.1-pwa-gate-1';")
+          sw_text = sw_text.replace("  './app.js?v=3.5.1',", "  './install-gate.js?v=1',\n  './app.js?v=3.5.1',")
+          sw.write_text(sw_text)
+
+          agents = Path('AGENTS.md')
+          agents_text = agents.read_text()
+          marker = '## Evidência e checkpoint\n'
+          pages_rule = '''## GitHub Pages nesta operação\n\n- Quando o GitHub Pages estiver configurado para servir a branch de trabalho, atualizar essa branch já atualiza automaticamente o site de validação. Não tratar isso como uma etapa manual separada de publicação.\n- Mesmo assim, após a atualização da branch, confirmar que o conteúdo servido corresponde à nova fotografia antes de afirmar que o site foi atualizado.\n\n'''
+          if pages_rule not in agents_text:
+              agents_text = agents_text.replace(marker, pages_rule + marker, 1)
+          agents.write_text(agents_text)
+
+          state = Path('PROJECT_STATE.md')
+          state_text = state.read_text()
+          state_text = state_text.replace('**Estado:** a base candidata permanece validada no celular pelo proprietário; o Bloco 1 de navegação secundária está em uma branch remota separada, aguardando CI própria e validação física.', '**Estado:** o bloqueio de uso fora do PWA foi implementado na branch do Bloco 1; aguardando CI e validação física no celular.')
+          state_text = state_text.replace('**Alteração em curso:** Bloco 1 — fundação da navegação secundária, sem alteração de cálculo, dados, PWA, `main` ou publicação.', '**Alteração em curso:** gate de instalação do PWA sobre a branch do Bloco 1, sem alteração de cálculos, dados, `main` ou Netlify.')
+          state_text = state_text.replace('Executar a CI da branch do Bloco 1 e, se aprovada, validar a navegação no celular, sem abrir PR, alterar `main` ou publicar.', 'Validar no celular que o navegador mostra apenas a tela de instalação e que o app instalado abre normalmente, preservando dados e navegação.')
+          if '| 2026-08-03 | Gate obrigatório do PWA' not in state_text:
+              state_text += '\n| 2026-08-03 | Gate obrigatório do PWA | `index.html`, `install-gate.js`, `sw.js`, testes e regras operacionais | aguardando CI e validação física |\n'
+          state.write_text(state_text)
+
+          tests = Path('tests/e2e')
+          tests.mkdir(parents=True, exist_ok=True)
+          for spec in tests.glob('*.spec.js'):
+              content = spec.read_text()
+              if 'VETTA_STANDALONE_TEST_SETUP' in content:
+                  continue
+              lines = content.splitlines()
+              insert_at = 1 if lines and lines[0].startswith('import ') else 0
+              setup = ["", "// VETTA_STANDALONE_TEST_SETUP", "test.beforeEach(async ({ page }) => {", "  await page.addInitScript(() => {", "    const originalMatchMedia = window.matchMedia.bind(window);", "    window.matchMedia = query => query === '(display-mode: standalone)' ? { matches: true, media: query, onchange: null, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent() { return false; } } : originalMatchMedia(query);", "    Object.defineProperty(navigator, 'standalone', { configurable: true, value: true });", "  });", "});", ""]
+              lines[insert_at:insert_at] = setup
+              spec.write_text('\n'.join(lines) + '\n')
+
+          Path('tests/e2e/pwa-gate.spec.js').write_text(r'''import { test, expect } from '@playwright/test';
+
+test('browser comum mostra somente o gate e não carrega o app', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#pwaInstallGate')).toBeVisible();
+  await expect(page.locator('main')).toBeHidden();
+  await expect(page.locator('script[src*="app.js"]')).toHaveCount(0);
+});
+
+test('modo instalado carrega o aplicativo e oculta o gate', async ({ page }) => {
+  await page.addInitScript(() => {
+    const originalMatchMedia = window.matchMedia.bind(window);
+    window.matchMedia = query => query === '(display-mode: standalone)' ? { matches: true, media: query, onchange: null, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent() { return false; } } : originalMatchMedia(query);
+    Object.defineProperty(navigator, 'standalone', { configurable: true, value: true });
+  });
+  await page.goto('/');
+  await expect(page.locator('#pwaInstallGate')).toBeHidden();
+  await expect(page.locator('#view-dashboard')).toBeVisible();
+});
+
+test('evento de instalação confirma e orienta abrir pelo ícone', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => window.dispatchEvent(new Event('appinstalled')));
+  await expect(page.locator('#pwaGateStatus')).toContainText('abra pelo ícone');
+});
+''')
+
+          workflow = Path('.github/workflows/apply-pwa-gate-once.yml')
+          workflow.unlink()
+          PY
+      - name: Verify syntax and focused behavior
+        run: |
+          node --check install-gate.js
+          node --check sw.js
+          npm ci
+          rm -rf _site
+          mkdir _site
+          cp index.html app.js install-gate.js styles.css sw.js manifest.webmanifest icon.svg _site/
+          npx playwright install --with-deps chromium
+          npx playwright test tests/e2e/pwa-gate.spec.js
+      - name: Save approved implementation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: require installed PWA before loading VETTA"
+          git push origin HEAD:feature/bloco-1-navegacao-secundaria
