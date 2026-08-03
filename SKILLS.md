@@ -4,25 +4,63 @@ Este arquivo é o índice permanente das verificações técnicas do projeto. De
 
 - `AGENTS.md`: autoridade, escopo e forma de trabalhar.
 - `SKILLS.md`: conhecimentos transversais e indicação dos arquivos especializados.
+- `LEARNING_RULES.md`: ciclo obrigatório para preservar incidentes e aprendizados reutilizáveis.
 - arquivos especializados, como `PWA_RULES.md`: regras técnicas de uma área.
+- `docs/incidents/`: história completa de falhas e descobertas relevantes já confirmadas.
 - `PROJECT_STATE.md`: estado atual, evidências e pendências da branch.
 
 Um aprendizado só entra aqui ou no arquivo especializado quando houver causa confirmada e regra reutilizável. Hipótese não vira regra.
 
-## Arquivos especializados obrigatórios
+## Leitura obrigatória por tipo de trabalho
 
+- Em todo trabalho técnico: ler `AGENTS.md`, este `SKILLS.md` e `PROJECT_STATE.md`.
+- Antes de encerrar um bloco que encontrou defeito, quase falha ou conhecimento reutilizável: ler e aplicar `LEARNING_RULES.md`.
+- Ao investigar sintoma semelhante a algo já ocorrido: consultar o índice `docs/incidents/README.md` antes de formular a correção.
 - Alteração em instalação, manifesto, service worker, cache, ícones, modo standalone, barreira de acesso ou publicação do PWA: ler `PWA_RULES.md`.
 - Quando surgir uma nova área com regras recorrentes, criar um arquivo operacional específico e registrá-lo aqui e no `AGENTS.md`.
+
+## Fechamento obrigatório de aprendizado
+
+Ao terminar um bloco técnico relevante, o agente deve registrar uma destas conclusões:
+
+- `Nenhum aprendizado permanente novo`, com justificativa breve;
+- `Aprendizado fechado`, citando incidente/aprendizado, regra e teste ou prova;
+- `Aprendizado pendente`, quando a causa ainda não estiver confirmada, mantendo a investigação no `PROJECT_STATE.md`.
+
+Esse fechamento faz parte do bloco já autorizado. Não exige nova autorização e não deve interromper mitigação urgente.
+
+## Quando preservar conhecimento
+
+Além de falhas graves, registrar descobertas que tenham valor claro para:
+
+- outras áreas do CalculaAê;
+- outros PWAs;
+- outras aplicações web;
+- projetos futuros;
+- práticas gerais de engenharia.
+
+A relevância futura do conhecimento importa tanto quanto o tamanho imediato do erro. Os critérios completos estão em `LEARNING_RULES.md`.
 
 ## Onde cada aprendizado deve ser registrado
 
 - `AGENTS.md`: autorização, escopo, comunicação, checkpoints e forma de operar.
 - `SKILLS.md`: índice dos conhecimentos permanentes e regra para localizar o arquivo especializado correto.
+- `LEARNING_RULES.md`: critérios, ciclo de aprendizado e equilíbrio entre rigor e praticidade.
+- `docs/incidents/`: sintoma, causa imediata, causa estrutural, falha de detecção, tentativas materiais, prevenção, alcance e evidências.
 - arquivo especializado, como `PWA_RULES.md`: causa técnica confirmada, prevenção e teste obrigatório daquela área.
 - teste automatizado: prova executável que impede a regressão.
 - `PROJECT_STATE.md`: o que aconteceu nesta branch, qual fotografia foi publicada, validação manual e pendência atual.
 
-O mesmo problema pode gerar registros complementares, mas não cópias desorganizadas: a regra operacional fica no arquivo da área; a evidência atual fica no `PROJECT_STATE.md`; a prevenção executável fica no teste.
+O mesmo problema pode gerar registros complementares, mas não cópias desorganizadas: a história fica em `docs/incidents/`; a regra operacional fica no arquivo da área; a evidência atual fica no `PROJECT_STATE.md`; a prevenção executável fica no teste.
+
+## Arquivos especializados atuais
+
+| Área | Arquivo obrigatório | Histórico e provas |
+|---|---|---|
+| Aprendizado técnico | `LEARNING_RULES.md` | `docs/incidents/README.md` |
+| PWA, instalação e abertura standalone | `PWA_RULES.md` | incidentes `INC-0001` e `INC-0002`; testes de PWA |
+
+Não criar arquivos especializados vazios. Uma nova área nasce quando existir ao menos uma regra confirmada e reutilizável que justifique sua manutenção.
 
 ## Sincronização remota e deploy ligado à branch
 
