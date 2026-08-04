@@ -194,3 +194,11 @@ if (!document.querySelector('script[data-vetta-module="history-4"]')) {
   historyScript.dataset.vettaModule = 'history-4';
   document.head.appendChild(historyScript);
 }
+
+if (!document.querySelector('script[data-vetta-module="more-5"]')) {
+  const moreScript = document.createElement('script');
+  moreScript.src = './more-5.js?v=1';
+  moreScript.async = false;
+  moreScript.dataset.vettaModule = 'more-5';
+  document.head.appendChild(moreScript);
+}
