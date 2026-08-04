@@ -32,6 +32,7 @@ test('GitHub Pages serve o Bloco 1C e mantêm os destinos acessíveis', async ({
   await page.goto(url('app-shell.html'), { waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.locator('#view-dashboard').getAttribute('data-block1c')).toBe('ready');
   await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
+  await expect.poll(() => page.locator('#view-history').getAttribute('data-block4')).toBe('ready');
 
   await expect(page.locator('#kpiGrossDaily')).toBeVisible();
   await expect(page.locator('[data-view="day"]').first()).toBeVisible();
@@ -55,7 +56,8 @@ test('GitHub Pages serve o Bloco 1C e mantêm os destinos acessíveis', async ({
   await expect(page.locator('#planningHub')).toBeVisible();
 
   await page.locator('#view-planning > div:first-child [data-back]').click();
-  await page.locator('[data-view="history"]').first().click();
-  await page.locator('[data-history-tab="analysis"]').click();
+  await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
+  await expect(page.locator('#historyHub')).toBeVisible();
+  await page.locator('[data-history-section-open="week"]').click();
   await expect(page.locator('#historyWeekStatusTitle')).toBeVisible();
 });
