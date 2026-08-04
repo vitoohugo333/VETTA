@@ -17,8 +17,18 @@ const initialState = {
 };
 
 async function waitForFinalNavigation(page) {
-  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
-  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
+  await page.waitForURL(/app-shell\.html(?:$|[?#])/);
+  await expect.poll(async () => {
+    try {
+      const before = page.url();
+      const navigation = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
+      const planning = await page.locator('#view-planning').getAttribute('data-block3');
+      await page.waitForTimeout(150);
+      return navigation === 'ready' && planning === 'ready' && before === page.url() ? 'stable' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('stable');
 }
 
 async function openSection(page, key) {
