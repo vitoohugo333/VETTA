@@ -23,16 +23,16 @@ assert.match(shell, /data-secondary-view="planning"/, 'O atalho para Planejar de
 
 for (const sourceId of ['targetProfitDisplay', 'weekStatusTitle', 'revenueChart']) {
   assert.match(shell, new RegExp(`id="${sourceId}"`), `O fallback ${sourceId} deve permanecer no HTML.`);
-  assert.match(today, new RegExp(`getElementById\('${sourceId}'\)`), `O Bloco 1C deve tratar somente a duplicação ${sourceId}.`);
+  assert.ok(today.includes(`getElementById('${sourceId}')`), `O Bloco 1C deve tratar somente a duplicação ${sourceId}.`);
 }
 
 for (const planningId of ['planningTargetInput', 'planningDaysOffInput', 'planningRevenueChart', 'planningDreGross']) {
   assert.match(planning, new RegExp(`id="${planningId}"`), `Planejar deve manter o destino ${planningId}.`);
-  assert.match(today, new RegExp(`getElementById\('${planningId}'\)`), `O Bloco 1C deve validar o destino ${planningId}.`);
+  assert.ok(today.includes(`getElementById('${planningId}')`), `O Bloco 1C deve validar o destino ${planningId}.`);
 }
 for (const historyId of ['historyAnalysisPanel', 'historyWeekStatusTitle', 'historyWeekTarget']) {
   assert.match(history, new RegExp(`id="${historyId}"`), `Histórico deve manter o destino ${historyId}.`);
-  assert.match(today, new RegExp(`getElementById\('${historyId}'\)`), `O Bloco 1C deve validar o destino ${historyId}.`);
+  assert.ok(today.includes(`getElementById('${historyId}')`), `O Bloco 1C deve validar o destino ${historyId}.`);
 }
 
 assert.match(today, /item\.source\.hidden = true/, 'As duplicações devem sair visualmente por atributo nativo e reversível.');
