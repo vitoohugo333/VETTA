@@ -186,3 +186,11 @@ if (!document.querySelector('script[data-vetta-module="record-2"]')) {
   recordScript.dataset.vettaModule = 'record-2';
   document.head.appendChild(recordScript);
 }
+
+if (!document.querySelector('script[data-vetta-module="history-4"]')) {
+  const historyScript = document.createElement('script');
+  historyScript.src = './history-4.js?v=1';
+  historyScript.async = false;
+  historyScript.dataset.vettaModule = 'history-4';
+  document.head.appendChild(historyScript);
+}
