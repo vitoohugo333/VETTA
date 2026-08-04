@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê (`netlify/teste-fechado-ux`)
 
 **Atualizado em:** 2026-08-04, horário de Brasília  
-**Estado:** Bloco 2 — Registro diário implementado, aprovado pela CI e pelo GitHub Pages; aguardando validação física no celular.  
-**Alteração em curso:** validação manual do novo fluxo de registro.
+**Estado:** Bloco 2 validado fisicamente; Bloco 3 — refinamento de Planejar aprovado tecnicamente e aguardando validação física.  
+**Alteração em curso:** validação manual do Planejar organizado por assuntos.
 
 ## Estado atual
 
@@ -11,16 +11,14 @@
 | Repositório | `vitoohugo333/VETTA` |
 | Branch | `netlify/teste-fechado-ux` |
 | Papel | desenvolvimento e validação de interface |
-| Fotografia integral testada | `7d256d6a701ea7a0794610fc9abb7da8478e8e12` |
-| Execução automática integral | `30921060861` |
-| Fotografia funcional de referência | `25441d5c44bbf0673ba7f7082cfc29203b29b923` |
-| Execução funcional de referência | `30918538960` |
+| Fotografia funcional do Bloco 3 | `0c6f7b3d57ff94cbd4681f6d6323703861c6233b` |
+| Execução automática funcional | `30927631513` |
 | GitHub Pages | `https://vitoohugo333.github.io/VETTA/` |
 | Branch estável | `netlify/teste-fechado` |
 | Netlify estável | `https://calculaae.netlify.app/` |
 | Plano ativo | `docs/planos/01-CONSOLIDACAO-DA-EXPERIENCIA.md` |
 
-## Blocos concluídos fisicamente
+## Blocos validados fisicamente
 
 ### Bloco 1A — Planejar
 
@@ -36,7 +34,13 @@ Concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente em 2026-0
 
 ### Bloco 1D — Navegação final
 
-Concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
+Concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente em 2026-08-04.
+
+### Bloco 2 — Registro diário
+
+Concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
+
+O fluxo mantém faturamento e quilômetros como essenciais, preserva horas e combustível em detalhes opcionais, confirma o salvamento e atualiza a mesma data sem duplicação.
 
 A barra permanece:
 
@@ -44,81 +48,71 @@ A barra permanece:
 Hoje | Histórico | Planejar | Mais
 ```
 
-## Bloco 2 — Registro diário
+## Bloco 3 — Refinamento de Planejar
 
-O fluxo aberto por `Hoje → Registrar meu dia` foi reorganizado sem substituir o formulário nem a gravação original.
+Planejar deixou de ser uma rolagem única comprida e passou a abrir como um resumo curto, sem criar outra fonte de dados.
 
 ### Comportamento entregue
 
-- data permanece visível;
-- faturamento e quilômetros aparecem como informações essenciais;
-- horas online e combustível gasto permanecem no formulário, dentro de `Detalhes opcionais`;
-- os opcionais começam recolhidos em um registro novo;
-- ao editar um dia que possui horas ou combustível, os opcionais abrem preenchidos;
-- a prévia continua usando os cálculos existentes e destaca o líquido;
-- salvar chama a gravação canônica de `app.js`;
-- uma data nova cria um registro;
-- salvar novamente a mesma data atualiza o registro existente;
-- a confirmação diferencia `Dia registrado` de `Dia atualizado`;
-- a confirmação mostra faturamento, quilômetros e líquido;
-- `Editar este dia` reabre o mesmo registro;
-- `Concluir` retorna para Hoje;
-- editar pelo Histórico continua abrindo o mesmo formulário;
-- se faltar qualquer elemento obrigatório, o módulo não reorganiza a tela e preserva o formulário anterior.
+- resumo principal mostra a pergunta `O que você quer planejar?`;
+- sete ilhas permanecem visíveis:
+  - Metas;
+  - Agenda;
+  - Operação;
+  - Custos e reservas;
+  - Distribuição;
+  - Aprendizado;
+  - Opções avançadas;
+- cada ilha abre uma tela própria;
+- cada tela usa os mesmos campos, listas, gráfico e botões que já existiam;
+- nenhum recurso foi apagado ou recriado em duplicidade;
+- resumos das ilhas acompanham meta, dias, combustível, custos e projeção atuais;
+- editar uma área e abrir outra preserva os valores;
+- Distribuição redesenha o gráfico quando fica visível;
+- `Voltar para Planejar` retorna ao resumo;
+- o botão Voltar do Android ou navegador também retorna ao resumo;
+- Planejar aberto pela barra continua sendo área principal;
+- Planejar aberto pelo atalho de Hoje mantém o retorno para Hoje depois que o usuário volta ao resumo;
+- se faltar qualquer elemento original obrigatório, o refinamento não ativa e a tela longa anterior permanece disponível.
 
 ## Arquivos funcionais e de proteção
 
-- `record-2.js`: reorganiza o formulário e acrescenta a confirmação, delegando a gravação ao aplicativo original;
-- `today-1c.js`: carrega o módulo do Bloco 2 depois da navegação consolidada;
-- `ci/branch-policy.json`: inclui `record-2.js` na prova do site publicado;
-- `tests/record-block-2-contract.test.mjs`: protege campos, armazenamento, uma data por registro, retorno seguro e seletores estáveis;
-- `tests/e2e/record-block-2.spec.js`: testa registro novo, opcionais, confirmação, atualização sem duplicação e edição pelo Histórico;
-- `tests/e2e-remote/record-block-2-published.spec.js`: prova o fluxo no GitHub Pages;
-- testes de navegação passaram a tolerar a recarga normal do PWA sem enfraquecer as verificações de tela, rascunho ou botão Voltar.
+- `planning-3.js`: cria o resumo e as telas por assunto, movendo os próprios elementos originais;
+- `today-1c.js`: carrega `planning-3.js` antes do módulo de Registro;
+- `ci/branch-policy.json`: inclui `planning-3.js` na prova do site publicado;
+- `tests/planning-block-3-contract.test.mjs`: protege elementos, armazenamento, fallback e navegação;
+- `tests/e2e/planning-block-3.spec.js`: testa ilhas, edição, custos, gráfico e retornos;
+- `tests/e2e-remote/planning-block-3-published.spec.js`: prova o fluxo no GitHub Pages;
+- testes anteriores de Planejar, Hoje, navegação e custos foram atualizados para abrir a ilha correta antes de acessar o mesmo recurso original.
 
 ## Evidência automática
 
-Execução integral final: `30921060861`.
+Execução funcional final: `30927631513`.
 
-A execução verificou exatamente a fotografia `7d256d6a701ea7a0794610fc9abb7da8478e8e12` e concluiu com sucesso:
+A execução verificou exatamente a fotografia `0c6f7b3d57ff94cbd4681f6d6323703861c6233b` e concluiu com sucesso:
 
 - governança, sintaxe, JSON e todos os testes Node;
 - Chromium;
 - Firefox;
 - WebKit;
-- prioridade dos campos essenciais;
-- abertura e preenchimento dos opcionais;
-- prévia financeira;
-- confirmação depois de salvar;
-- criação e atualização da mesma data sem duplicação;
-- edição pelo Histórico;
-- preservação de rascunho e comportamento do botão Voltar;
-- paridade dos arquivos públicos com o GitHub Pages;
-- interação no próprio site publicado.
+- sete ilhas e respectivas telas;
+- edição de meta, agenda e combustível;
+- cadastro e preservação de custos;
+- gráfico de distribuição visível e atualizado;
+- retorno por botão e histórico do navegador;
+- atalho de Hoje com retorno previsível;
+- paridade dos arquivos públicos com a branch;
+- interação no próprio GitHub Pages.
 
-## Defeitos encontrados e aprendizado fechado
+## Aprendizado do bloco
 
-### Classe visual usada como seletor
+Não houve novo defeito permanente do produto que exigisse incidente próprio.
 
-A primeira implementação usou uma classe Tailwind com colchetes diretamente em `querySelector`. Os navegadores rejeitaram o seletor. A correção passou a usar a estrutura real da tela e a confirmar o título verdadeiro `Como foi seu dia?` antes de reorganizar qualquer elemento.
-
-### Estado de teste apagado pela própria recarga
-
-O teste de edição pelo Histórico preparava um registro e recarregava a página. O script inicial do teste restaurava o estado vazio. O cenário passou a iniciar diretamente com o registro esperado e a aguardar o botão de edição.
-
-### Espera instável durante a recarga normal do PWA
-
-Testes antigos de navegação presumiam que o documento permaneceria estável imediatamente após a abertura ou ao usar Voltar. Firefox e WebKit podem trocar o contexto durante a ativação do service worker. As verificações passaram a esperar um estado observável estável, mantendo as mesmas exigências funcionais.
-
-Registro principal: `docs/incidents/INC-0007-classe-tailwind-usada-como-seletor-css.md`.
-
-Aprendizado relacionado à abertura do PWA: `docs/incidents/INC-0005-comparacao-de-dados-durante-abertura-pwa.md`.
-
-Prevenção executável: contratos e testes de Registro, navegação final e navegação secundária.
+As primeiras falhas vieram de testes antigos que ainda esperavam a rolagem única. A correção foi atualizar os caminhos dos testes para reproduzir a nova navegação: abrir a ilha e então usar o mesmo elemento original. Nenhuma fórmula, dado ou comportamento financeiro foi alterado para fazer os testes passarem.
 
 ## Proteções confirmadas
 
-Não foram alterados pelo Bloco 2:
+Não foram alterados pelo Bloco 3:
 
 - `app.js` e fórmulas financeiras;
 - `styles.css`;
@@ -132,21 +126,23 @@ Não foram alterados pelo Bloco 2:
 
 ## Validação física pendente
 
-O Bloco 2 permanece **aguardando validação física**.
+O Bloco 3 permanece **aguardando validação física**.
 
 No celular, validar:
 
-1. abrir `Hoje → Registrar meu dia`;
-2. confirmar que data, faturamento e quilômetros estão visíveis;
-3. confirmar que `Detalhes opcionais` começa recolhido;
-4. abrir os detalhes e preencher horas e combustível gasto;
-5. confirmar que o líquido da prévia muda ao preencher os números;
-6. salvar e conferir a tela `Dia registrado`;
-7. tocar em `Editar este dia`, mudar o faturamento e salvar novamente;
-8. conferir `Dia atualizado` e apenas uma ocorrência daquela data no Histórico;
-9. tocar em `Concluir` e voltar para Hoje;
-10. verificar cortes, sobreposições, travamentos e preservação dos dados.
+1. abrir Planejar pela barra inferior;
+2. confirmar que a primeira tela é curta e mostra sete ilhas;
+3. abrir Metas, editar o objetivo e voltar para Planejar;
+4. confirmar que o resumo da ilha reflete a nova meta;
+5. abrir Agenda e conferir dias da semana e folgas;
+6. abrir Operação e conferir combustível e receita por km;
+7. abrir Custos e reservas e conferir a lista e o botão de adicionar custo;
+8. abrir Distribuição e confirmar gráfico e detalhamento;
+9. abrir Aprendizado e Opções avançadas, sem executar restauração durante o teste;
+10. dentro de uma ilha, usar o botão Voltar do Android e confirmar retorno ao resumo;
+11. abrir Planejar pelo atalho de Hoje, entrar em uma ilha, voltar ao resumo e depois voltar para Hoje;
+12. verificar cortes, sobreposições, travamentos e preservação dos valores.
 
 ## Próximo passo único
 
-O proprietário deve validar o Bloco 2 no celular pelo GitHub Pages. O Bloco 3 — refinamento de Planejar — não está autorizado.
+O proprietário deve validar o Bloco 3 no celular pelo GitHub Pages. O Bloco 4 — refinamento de Histórico — não está autorizado.
