@@ -34,9 +34,12 @@ test('modal fecha e salva uma despesa sem carregar patches no navegador', async 
   }, { key: STORAGE_KEY, state: initialState });
 
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.waitForURL(/app-shell\.html/);
   await expect(page.locator('#appVersionLabel')).toHaveText('Versão 3.5.1');
 
   await page.locator('[data-view="settings"]').first().click();
+  await expect(page.locator('#view-settings')).toBeVisible();
+  await expect(page.locator('#addCostButton')).toBeVisible();
   await page.locator('#addCostButton').click();
 
   const modal = page.locator('#costModal');
