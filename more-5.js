@@ -9,10 +9,11 @@
   const compareDetails = $('compareDetails');
   const reportCard = $('reportButton')?.closest('.card-vetta');
   const dataCard = $('exportButton')?.closest('.card-vetta');
+  const importInput = $('importInput');
   const radarCard = $('addEventButton')?.closest('.card-vetta');
   const installCard = $('installCardButton');
 
-  const required = [hero, compareDetails, reportCard, dataCard, radarCard, installCard];
+  const required = [hero, compareDetails, reportCard, dataCard, importInput, radarCard, installCard];
   const originalHosts = [compareDetails, reportCard, dataCard, radarCard, installCard];
 
   if (
