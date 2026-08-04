@@ -21,7 +21,8 @@
   const optionalGrid = hoursInput?.closest('.grid');
   const previewCard = previewCost?.closest('.card-vetta');
   const previewGrid = previewCost?.closest('.grid');
-  const hero = Array.from(root.children).find(element => element.querySelector('h2')?.textContent.trim() === 'Registro do dia');
+  const hero = root.firstElementChild;
+  const heroTitle = hero?.querySelector('h2');
   const heroText = hero?.querySelector('p');
 
   const required = [
@@ -43,10 +44,11 @@
     previewCard,
     previewGrid,
     hero,
+    heroTitle,
     heroText,
   ];
 
-  if (required.some(item => !item)) {
+  if (required.some(item => !item) || heroTitle.textContent.trim() !== 'Como foi seu dia?') {
     console.warn('Bloco 2 não aplicado: o formulário original foi preservado porque falta um elemento obrigatório.');
     return;
   }
