@@ -1,7 +1,7 @@
 # Plano 01 — Consolidação da experiência
 
-**Estado:** ATIVO — Blocos 1A concluído e 1B implementado  
-**Atualizado em:** 2026-08-03, horário de Brasília  
+**Estado:** ATIVO — Blocos 1A e 1B concluídos; Bloco 1C aprovado tecnicamente e aguardando validação física  
+**Atualizado em:** 2026-08-04, horário de Brasília  
 **Branch de desenvolvimento:** `netlify/teste-fechado-ux`  
 **Ambiente de validação:** GitHub Pages  
 **Princípio:** simplificar sem apagar, esconder ou perder recursos
@@ -16,7 +16,7 @@ Navegação-alvo:
 Hoje | Histórico | Planejar | Mais
 ```
 
-`Registrar meu dia` continua como ação destacada e acessível, mas não ocupa uma quinta aba.
+`Registrar meu dia` continuará como ação destacada em Hoje, sem ocupar uma quinta aba.
 
 ## 2. Regra obrigatória de escopo
 
@@ -33,11 +33,11 @@ Nenhum elemento existente pode ser removido, escondido, recolhido ou movido sem 
 
 As únicas situações permitidas são:
 
-- **permanece visível**;
-- **muda de área com caminho visível**;
-- **fica recolhido, mas com botão ou resumo visível**;
-- **é substituído por solução equivalente ou melhor, após autorização específica**;
-- **é removido permanentemente, após autorização explícita citando o item**.
+- permanece visível;
+- muda de área com caminho visível;
+- fica recolhido, mas com botão ou resumo visível;
+- é substituído por solução equivalente ou melhor após autorização específica;
+- é removido permanentemente após autorização explícita citando o item.
 
 Ocultar por CSS sem destino visível é proibido.
 
@@ -55,175 +55,154 @@ O Plano 01 não altera:
 - `main`;
 - branch estável e Netlify dos testadores.
 
-## 4. Mapa completo dos elementos atuais
+## 4. Mapa completo dos elementos
 
-### 4.1 Tela Início atual → área Hoje
+### 4.1 Hoje
 
-| Elemento atual | Destino aprovado | Forma de acesso | Situação no futuro |
-|---|---|---|---|
-| Meta de faturamento por dia | Hoje, primeiro cartão | visível ao abrir | permanece visível |
-| Líquido planejado | Hoje, dentro do resumo principal | visível | permanece visível |
-| Rodagem estimada | Hoje, dentro do resumo principal | visível | permanece visível |
-| Preço/custo de combustível por km | Hoje, resumo compacto; edição em Planejar | visível no resumo | não some |
-| Texto de situação da meta | Hoje | visível | permanece |
-| Registrar meu dia | Hoje, ação principal fixa após o resumo | botão visível | permanece sempre acessível |
-| Objetivo mensal líquido | Planejar → Metas | resumo visível; edição ao abrir | sai de Hoje somente depois de existir em Planejar |
-| Seletor 5, 6 ou 7 dias | Planejar → Agenda | controle visível ao editar | não pode ser ocultado antes da realocação |
-| Folgas extras | Planejar → Agenda | resumo e edição | permanece acessível |
-| Situação do mês | Hoje, segundo bloco | visível | permanece |
-| Progresso do mês | Hoje | visível | permanece |
-| Líquido gerado | Hoje | visível | permanece |
-| Projeção | Hoje | visível | permanece |
-| Dias restantes | Hoje | visível | permanece |
-| Situação da semana | Histórico → Análise semanal | visível em Início e na aba Análise durante a transição | só sai de Hoje em contrato posterior, após validação física do destino |
-| Meta, realizado e média/km da semana | Histórico → Análise semanal | visíveis em Início e em Análise | não ficam inacessíveis |
-| Gráfico de pizza Distribuição da meta | Planejar → Distribuição da meta | cartão visível em Planejar | obrigatório; não pode ser ocultado |
-| Faturamento bruto necessário | Planejar → Distribuição da meta | junto ao gráfico | permanece |
-| Rodagem mensal estimada | Planejar → Distribuição da meta | junto ao gráfico | permanece |
-| Combustível | Planejar → Distribuição da meta | junto ao gráfico | permanece |
-| Custos por km | Planejar → Distribuição da meta | junto ao gráfico | permanece |
-| Taxas percentuais | Planejar → Distribuição da meta | junto ao gráfico | permanece |
-| Obrigações e reservas | Planejar → Distribuição da meta | junto ao gráfico | permanece |
-| Objetivo líquido | Planejar → Distribuição da meta | junto ao gráfico | permanece |
-| Leitura do VETTA | Hoje, terceiro bloco | visível | permanece |
-| Razões da recomendação | Hoje, recolhíveis sob a leitura | botão ou expansão visível | não podem desaparecer |
-| Ver planejamento do mês | Hoje, atalho para Planejar | botão visível até a navegação consolidada | só pode sair quando Planejar estiver acessível pela barra |
+| Elemento | Destino permanente | Estado atual após 1C |
+|---|---|---|
+| Meta de faturamento por dia | Hoje | visível |
+| Líquido planejado | Hoje | visível |
+| Rodagem estimada | Hoje | visível |
+| Custo de combustível por km | Hoje; edição em Planejar | visível |
+| Texto de situação da meta | Hoje | visível |
+| Registrar meu dia | Hoje | visível |
+| Situação do mês | Hoje | visível |
+| Progresso do mês | Hoje | visível |
+| Líquido gerado | Hoje | visível |
+| Projeção | Hoje | visível |
+| Dias restantes | Hoje | visível |
+| Leitura do VETTA | Hoje | visível |
+| Razões da recomendação | Hoje | visíveis quando existentes |
+| Ver planejamento do mês | Hoje até a navegação final | visível |
+| Objetivo mensal líquido | Planejar → Metas | retirado visualmente de Hoje |
+| Seletor 5, 6 ou 7 dias | Planejar → Agenda | retirado visualmente de Hoje |
+| Folgas extras | Planejar → Agenda | retirado visualmente de Hoje |
+| Situação e números da semana | Histórico → Análise → Semana atual | retirados visualmente de Hoje |
+| Gráfico Distribuição da meta | Planejar → Distribuição da meta | retirado visualmente de Hoje |
+| Faturamento bruto, rodagem, custos e objetivo do gráfico | Planejar → Distribuição da meta | retirados visualmente de Hoje |
+
+As duplicações retiradas continuam no HTML como retorno seguro para os consumidores atuais. O módulo só as oculta depois de confirmar todos os destinos. Se uma origem ou destino faltar, Hoje permanece completo.
 
 ### 4.2 Registro do dia
 
-| Elemento | Destino | Forma de acesso | Situação |
-|---|---|---|---|
-| Data | Registrar meu dia | visível e preenchida | permanece |
-| Faturamento | Registrar meu dia | visível | permanece |
-| Quilômetros | Registrar meu dia | visível | permanece |
-| Horas online | Registrar meu dia → Opcionais | seção recolhível visível | não é removido |
-| Combustível gasto | Registrar meu dia → Opcionais | seção recolhível visível | não é removido |
-| Prévia bruto/custos/líquido | Registrar meu dia | visível antes de salvar | permanece |
-| Salvar | Registrar meu dia | ação principal | permanece |
-| Limpar | Registrar meu dia | ação secundária | permanece |
+| Elemento | Destino | Regra |
+|---|---|---|
+| Data | Registrar meu dia | permanece |
+| Faturamento | Registrar meu dia | permanece |
+| Quilômetros | Registrar meu dia | permanece |
+| Horas online | Registro → Opcionais | não remover |
+| Combustível gasto | Registro → Opcionais | não remover |
+| Prévia bruto/custos/líquido | Registrar meu dia | permanece |
+| Salvar | Registrar meu dia | permanece |
+| Limpar | Registrar meu dia | permanece |
 
 ### 4.3 Histórico
 
-| Elemento | Destino | Forma de acesso | Situação |
-|---|---|---|---|
-| Lista de dias | Histórico → Dias | primeira área | permanece |
-| Editar dia | Histórico → Dias | ação no registro | permanece |
-| Excluir dia | Histórico → Dias | ação com confirmação | permanece |
-| Quantidade de dias | Histórico → Análise → Resumo | botão Análise | permanece |
-| Média de faturamento/km | Histórico → Análise → Resumo | botão Análise | permanece |
-| Líquido acumulado | Histórico → Análise → Resumo | botão Análise | permanece |
-| Gráfico de evolução | Histórico → Análise | botão Análise | permanece |
-| Comparação entre dias | Histórico → Análise | botão Análise | permanece |
-| Situação semanal | Histórico → Análise → Semana atual | botão Análise | duplicada sem retirar o cartão de Início |
+| Elemento | Destino | Estado |
+|---|---|---|
+| Lista de dias | Histórico → Dias | disponível |
+| Editar dia | Histórico → Dias | disponível |
+| Excluir dia | Histórico → Dias | disponível |
+| Quantidade de dias | Histórico → Análise → Resumo | disponível |
+| Média de faturamento/km | Histórico → Análise → Resumo | disponível |
+| Líquido acumulado | Histórico → Análise → Resumo | disponível |
+| Gráfico de evolução | Histórico → Análise | disponível |
+| Comparação entre dias | Histórico → Análise | disponível |
+| Situação semanal | Histórico → Análise → Semana atual | destino permanente disponível |
 
-### 4.4 Ajustes atuais → Planejar
+### 4.4 Planejar
 
-| Elemento | Destino | Forma de acesso | Situação |
-|---|---|---|---|
-| Objetivo líquido | Planejar → Metas | resumo + editar | permanece |
-| Dias da semana | Planejar → Agenda | resumo + editar | permanece |
-| Folgas extras | Planejar → Agenda | resumo + editar | permanece |
-| Tipo de combustível | Planejar → Combustível | resumo + editar | permanece |
-| Nome, preço e rendimento | Planejar → Combustível | editar | permanece |
-| Receita média por km | Planejar → Operação | editar | permanece |
-| Custos mensais | Planejar → Custos | lista | permanece |
-| Custos semanais | Planejar → Custos | lista | permanece |
-| Custos únicos | Planejar → Custos | lista | permanece |
-| Custos por km | Planejar → Custos | lista | permanece |
-| Custos percentuais | Planejar → Custos | lista | permanece |
-| Reservas | Planejar → Custos e reservas | lista | permanece |
-| Aprendizado local | Planejar → Aprendizado | resumo e confirmação | permanece |
-| Restaurar padrões | Planejar → Opções avançadas | ação protegida | permanece |
-| Gráfico de pizza | Planejar → Distribuição da meta | cartão visível | incluído e preservado |
+| Elemento | Destino | Estado |
+|---|---|---|
+| Objetivo líquido | Planejar → Metas | disponível |
+| Dias da semana e atalhos 5/6/7 | Planejar → Agenda | disponíveis |
+| Folgas extras | Planejar → Agenda | disponível |
+| Tipo, nome, preço e rendimento do combustível | Planejar → Operação e combustível | disponíveis |
+| Receita média por km | Planejar → Operação | disponível |
+| Custos mensais, semanais, únicos, por km e percentuais | Planejar → Custos e reservas | disponíveis |
+| Reservas | Planejar → Custos e reservas | disponíveis |
+| Aprendizado local | Planejar → Aprendizado | disponível |
+| Restaurar padrões | Planejar → Opções avançadas | disponível e protegido |
+| Gráfico de pizza e detalhamento | Planejar → Distribuição da meta | disponíveis |
 
 ### 4.5 Mais
 
-| Elemento | Destino | Forma de acesso | Situação |
-|---|---|---|---|
-| Comparação Gasolina × GNV | Mais → Ferramentas | item visível | permanece |
-| Relatório mensal | Mais → Relatórios | item visível | permanece |
-| Exportar dados | Mais → Dados | item visível | permanece |
-| Importar dados | Mais → Dados | item visível | permanece |
-| Radar de eventos | Mais → Radar | item visível | permanece |
-| Criar, editar e excluir evento | Mais → Radar | ações visíveis | permanecem |
-| Instalação | Mais → Aplicativo | item visível | permanece |
-| Versão do app | Mais → Aplicativo | informação visível | permanece |
+| Elemento | Destino | Regra |
+|---|---|---|
+| Comparação Gasolina × GNV | Mais → Ferramentas | permanece |
+| Relatório mensal | Mais → Relatórios | permanece |
+| Exportar e importar | Mais → Dados | permanecem |
+| Radar de eventos | Mais → Radar | permanece |
+| Criar, editar e excluir evento | Mais → Radar | permanecem |
+| Instalação | Mais → Aplicativo | permanece |
+| Versão do app | Mais → Aplicativo | permanece |
 
 ### 4.6 Elementos globais
 
 | Elemento | Destino | Regra |
 |---|---|---|
-| Cabeçalho VETTA | todas as áreas principais | permanece |
-| Botão Instalar | Mais → Aplicativo; pode existir alerta global quando necessário | não pode sumir sem substituição clara |
-| Navegação inferior | Hoje, Histórico, Planejar, Mais | quatro áreas após realocação completa |
-| Botão voltar | telas secundárias | preserva origem e formulário |
-| Modais de custo, evento e instalação | suas áreas correspondentes | permanecem funcionais |
-| Onboarding | fluxo inicial | tratado no Bloco 6 |
+| Cabeçalho VETTA | áreas principais | permanece |
+| Botão Instalar | Mais → Aplicativo; pode existir alerta global | não retirar sem substituição |
+| Navegação inferior | Hoje, Histórico, Planejar, Mais | somente no Bloco 1D |
+| Botão voltar | telas secundárias | preservar origem e formulário |
+| Modais de custo, evento e instalação | áreas correspondentes | permanecem |
+| Onboarding | fluxo inicial | Bloco 6 |
 
-## 5. Ordem correta de execução
+## 5. Ordem de execução
 
-A navegação de quatro áreas só pode ser ativada depois que todos os destinos necessários existirem.
+### Bloco 1A — Construir Planejar
 
-### Bloco 1A — Construir Planejar sem retirar nada de Hoje
+**Estado:** concluído, aprovado pela CI e validado fisicamente.
 
-**Estado:** concluído, aprovado pela CI e validado fisicamente no celular.
-
-Entregas:
-
-- criar a área Planejar completa;
-- levar para ela meta, agenda, folgas, combustível, receita/km, custos, reservas e aprendizado;
-- incluir o gráfico de pizza e todos os números da distribuição da meta;
-- manter temporariamente os elementos originais em Hoje enquanto o novo destino é validado.
-
-Aceite alcançado:
-
-- todo conteúdo de Planejar funciona;
-- gráfico de pizza visível;
-- nenhum conteúdo anterior desapareceu;
-- cálculos idênticos;
-- validação no celular concluída.
+- Planejar completo foi construído;
+- gráfico de pizza e números associados estão acessíveis;
+- usa a mesma fonte de dados do aplicativo.
 
 ### Bloco 1B — Construir Histórico com Dias e Análise
 
-**Estado:** implementado e aprovado pela CI; aguardando validação física no celular.
+**Estado:** concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente em 2026-08-04.
 
-Entregas:
-
-- separar Dias e Análise;
-- manter lista, edição e exclusão de registros em Dias;
-- reunir resumo, gráfico de evolução, comparação entre dias e situação semanal em Análise;
-- duplicar a situação semanal em Análise sem retirar o cartão original de Início;
-- não criar novo estado persistido nem novo formato de dados.
-
-Aceite técnico alcançado:
-
-- todos os gráficos e análises possuem acesso visível;
-- editar e excluir continuam funcionando sem duplicar registros;
-- a semana exibida em Histórico coincide com a semana de Início;
-- Chromium, Firefox e WebKit passaram;
-- arquivos e interações do GitHub Pages passaram na prova publicada.
-
-Aceite ainda pendente:
-
-- validação física no celular.
+- Dias preserva lista, edição e exclusão;
+- Análise reúne resumo, gráfico, comparação e semana atual;
+- não criou novo estado persistido.
 
 ### Bloco 1C — Consolidar Hoje
 
-Somente após 1A e 1B aprovados fisicamente:
+**Estado:** implementado, aprovado pela CI e pelo GitHub Pages; aguardando validação física.
 
-- manter em Hoje o resumo diário;
-- manter Registrar meu dia;
-- manter progresso mensal;
-- manter leitura do VETTA;
-- retirar duplicações que já existam e estejam comprovadamente acessíveis em Planejar ou Histórico.
+Entregas executadas:
 
-Para cada retirada, o relatório deve citar o destino já validado. Nenhuma retirada está autorizada pelo Bloco 1B.
+- Hoje mantém resumo diário, Registro do dia, situação mensal e leitura do VETTA;
+- objetivo mensal e agenda aparecem somente em Planejar;
+- semana aparece em Histórico → Análise;
+- gráfico e detalhamento aparecem em Planejar;
+- o atalho para Planejar continua em Hoje;
+- navegação inferior continua com cinco itens;
+- retirada reversível e condicionada à existência dos destinos;
+- nenhuma regra de CSS específica, remoção física ou alteração de dados.
+
+Aceite técnico alcançado:
+
+- testes determinísticos aprovados;
+- Chromium, Firefox e WebKit aprovados;
+- dados financeiros e de uso preservados;
+- GitHub Pages com arquivos e interação aprovados.
+
+Aceite pendente:
+
+- validação física da tela Hoje consolidada.
 
 ### Bloco 1D — Ativar navegação final
 
+**Estado:** não autorizado.
+
+Somente depois da validação física do Bloco 1C:
+
 - trocar `Início | Dia | Histórico | Ajustes | Mais` por `Hoje | Histórico | Planejar | Mais`;
-- retirar Dia da barra apenas porque Registrar meu dia já está validado em Hoje;
-- verificar botão voltar, estado ativo e preservação do formulário.
+- retirar Dia da barra apenas porque `Registrar meu dia` está acessível em Hoje;
+- retirar Ajustes da barra apenas porque Planejar está completo;
+- preservar botão voltar, estado ativo e formulário não salvo.
 
 ### Bloco 2 — Registro diário
 
@@ -234,8 +213,6 @@ Para cada retirada, o relatório deve citar o destino já validado. Nenhuma reti
 
 ### Blocos 3 a 8
 
-Após a consolidação estrutural:
-
 - Bloco 3: refinamento de Planejar;
 - Bloco 4: refinamento de Histórico;
 - Bloco 5: organização de Mais;
@@ -243,36 +220,39 @@ Após a consolidação estrutural:
 - Bloco 7: acessibilidade e acabamento;
 - Bloco 8: regressão completa e versão candidata.
 
-Esses blocos não podem ser usados como promessa vaga de restaurar algo removido antes. Todo recurso deve continuar acessível durante cada transição.
+Esses blocos não podem ser usados como promessa vaga para restaurar algo retirado antes.
 
-## 6. Critério obrigatório para cada contrato futuro
+## 6. Critério obrigatório para contratos futuros
 
-Antes de qualquer alteração de interface, apresentar uma tabela:
+Antes de qualquer alteração de interface, apresentar:
 
 | Elemento | Estado atual | Mudança | Destino | Como acessar | Pode ficar oculto? | Teste |
 |---|---|---|---|---|---|---|
 
-O contrato falha e não pode ser executado se algum elemento afetado não estiver nessa tabela.
+O contrato falha se algum elemento afetado não estiver na tabela.
 
 ## 7. Testes mínimos por bloco
 
-- inventário automático dos elementos antes e depois;
-- prova de que nenhum ID funcional desapareceu sem substituição;
+- inventário dos elementos antes e depois;
+- prova de que nenhum recurso desapareceu sem destino;
 - navegação e botão voltar;
 - preservação do formulário não salvo;
-- cálculos determinísticos independentes da interface;
+- cálculos determinísticos;
 - dados antigos carregando;
 - criação, edição e exclusão aplicáveis;
+- Chromium, Firefox e WebKit para interface;
+- prova do ambiente publicado quando aplicável;
 - validação física no Android.
 
 ## 8. Estado atual
 
-- o Bloco 1A está concluído e validado fisicamente;
-- o Bloco 1B está implementado na branch UX e aprovado pela CI e pela prova do GitHub Pages;
-- Histórico abre em `Dias` e oferece a área `Análise` por botão visível;
-- a situação semanal permanece em Início e também aparece em Análise;
-- nenhum conteúdo de Início, Ajustes ou Planejar foi retirado;
-- `app.js`, `styles.css`, dados, cálculos e PWA permanecem intocados pelo Bloco 1B;
-- o Bloco 1B permanece **aguardando validação física**;
-- o próximo passo é validar `Dias | Análise` no celular;
-- este plano não autoriza o Bloco 1C nem qualquer retirada automática.
+- Bloco 1A concluído e validado fisicamente;
+- Bloco 1B concluído e validado fisicamente;
+- Bloco 1C aprovado tecnicamente e publicado no GitHub Pages;
+- Hoje está consolidado sem retirar acesso aos recursos;
+- Planejar mantém meta, agenda e distribuição;
+- Histórico → Análise mantém a semana;
+- navegação ainda possui cinco itens;
+- `app.js`, `styles.css`, cálculos, dados e PWA permanecem intocados pelo Bloco 1C;
+- Bloco 1C permanece **aguardando validação física**;
+- Bloco 1D não está autorizado.
