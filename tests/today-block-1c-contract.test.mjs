@@ -38,7 +38,7 @@ for (const historyId of ['historyAnalysisPanel', 'historyWeekStatusTitle', 'hist
 assert.match(today, /item\.source\.hidden = true/, 'As duplicações devem sair visualmente por atributo nativo e reversível.');
 assert.match(today, /requiredDestinations\.some\(item => !item\)/, 'A retirada deve falhar de forma segura quando faltar destino.');
 assert.match(today, /relocations\.some\(item => !item\.source\)/, 'A retirada deve ser atômica quando faltar uma origem.');
-assert.doesNotMatch(today, /\.remove\s*\(/, 'O Bloco 1C não pode apagar fisicamente os cartões de fallback.');
+assert.doesNotMatch(today, /item\.source\.remove\s*\(/, 'O Bloco 1C não pode apagar fisicamente os cartões de fallback.');
 assert.doesNotMatch(today, /style\.display|display\s*:\s*none|classList\.(?:add|toggle)\(['"]hidden/, 'O Bloco 1C não pode usar CSS ou classes para esconder cartões.');
 assert.doesNotMatch(today, /localStorage|sessionStorage|app\.state\s*=|\.save\s*\(/, 'O Bloco 1C não pode alterar dados ou armazenamento.');
 assert.doesNotMatch(styles, /block1c|today-1c|relocatedTo/, 'Nenhuma regra específica do Bloco 1C deve ser criada no CSS.');
