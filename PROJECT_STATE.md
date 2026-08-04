@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê (`netlify/teste-fechado-ux`)
 
-**Atualizado em:** 2026-08-03  
-**Estado:** tentativa visual anterior revertida; interface original restaurada; CI Universal Adaptativa instalada.  
-**Alteração em curso:** nenhuma mudança nova de produto; primeira prova automática da branch e do GitHub Pages.
+**Atualizado em:** 2026-08-03, horário de Brasília  
+**Estado:** Bloco 1A — Planejar implementado e aprovado pela CI; aguardando validação física no celular.  
+**Alteração em curso:** validação manual da nova área Planejar no GitHub Pages.
 
 ## Estado atual
 
@@ -11,60 +11,118 @@
 | Repositório | `vitoohugo333/VETTA` |
 | Branch | `netlify/teste-fechado-ux` |
 | Papel | desenvolvimento e validação de interface |
+| Fotografia funcional testada | `7710f7db7be4485aab31bcbf96d51443d9f932a4` |
 | GitHub Pages | `https://vitoohugo333.github.io/VETTA/` |
 | Branch estável | `netlify/teste-fechado` |
 | Netlify estável | `https://calculaae.netlify.app/` |
 | Plano ativo | `docs/planos/01-CONSOLIDACAO-DA-EXPERIENCIA.md` |
 
-## Estado do produto
+## Bloco 1A — Planejar
 
-A alteração visual anterior foi revertida. Permanecem restaurados:
+Foi construída uma área Planejar completa, acessada pelo botão `Ver planejamento do mês` existente em Início.
 
-- navegação original `Início | Dia | Histórico | Ajustes | Mais`;
-- cartões originais da tela Início;
-- gráfico de distribuição da meta;
-- situação semanal;
-- controle do objetivo mensal;
-- seletor de dias de trabalho;
-- atalho de planejamento.
+A área reúne:
 
-O próximo trabalho de produto continua sendo o contrato do Bloco 1A — construir Planejar sem retirar nada de Hoje.
+- resumo do plano;
+- objetivo mensal;
+- agenda, dias específicos e folgas extras;
+- operação e combustível;
+- custos e reservas;
+- gráfico de pizza `Distribuição da meta` e todos os valores associados;
+- aprendizado local;
+- restauração protegida dos parâmetros.
 
-## O que mudou neste bloco
+Todos os controles usam o mesmo estado, as mesmas funções e a mesma chave de dados já usados pelo aplicativo. Não foi criada uma segunda fonte de dados.
 
-Somente infraestrutura de engenharia:
+## Transição sem retirada
 
-- regras canônicas sincronizadas;
-- workflow autônomo;
-- política do GitHub Pages em `ci/branch-policy.json`;
-- Playwright multi-navegador;
-- prova local e publicada baseada na própria branch.
+Durante o Bloco 1A:
 
-## O que permaneceu intocado
+- Início continua completo;
+- Ajustes continua completo;
+- o gráfico de pizza continua em Início e também aparece em Planejar;
+- a navegação permanece `Início | Dia | Histórico | Ajustes | Mais`;
+- nenhum elemento foi ocultado, removido ou recolhido no local original;
+- a duplicação é temporária e só poderá ser retirada em bloco posterior após validação explícita do destino.
 
-- `styles.css`, `app.js`, cálculos, dados e armazenamento;
+## Arquivos funcionais
+
+- `planning-1a.js`: estrutura, renderização e interações da nova área Planejar;
+- `app-shell.html`: carrega `planning-1a.js` depois do aplicativo principal;
+- `ci/branch-policy.json`: inclui o novo módulo na prova de paridade do GitHub Pages.
+
+## Testes adicionados e ajustados
+
+- `tests/planning-block-1a-contract.test.mjs`:
+  - preserva a chave `vetta-driver-intelligence-v3`;
+  - exige o gráfico e os controles do Planejar;
+  - exige que os elementos originais continuem presentes;
+  - impede IDs de elementos duplicados;
+  - impede ocultação ou remoção de Início e Ajustes pelo módulo.
+
+- `tests/e2e/planning-block-1a.spec.js`:
+  - abre Planejar e confere todos os destinos principais;
+  - confirma o gráfico de pizza visível;
+  - altera meta, agenda e combustível usando o mesmo estado;
+  - cria exatamente um custo e confirma o mesmo item em Planejar e Ajustes;
+  - volta para Início e confirma que os elementos originais continuam visíveis.
+
+- `tests/e2e/cost-modal.spec.js`:
+  - passou a esperar Ajustes ficar visível antes de abrir o modal de custos;
+  - nenhuma lógica do aplicativo foi alterada por esse ajuste.
+
+## Evidência automática
+
+Execução final: `30867200539`.
+
+A execução verificou exatamente a fotografia funcional `7710f7db7be4485aab31bcbf96d51443d9f932a4` e concluiu com sucesso:
+
+- governança, sintaxe, JSON e todos os testes Node;
+- Chromium;
+- Firefox;
+- WebKit;
+- comparação dos arquivos públicos com o GitHub Pages, incluindo `planning-1a.js`;
+- testes de interação no próprio site publicado.
+
+Duas falhas anteriores foram classificadas antes do fechamento:
+
+1. um teste estático confundia `data-cost-id` com `id` de elemento; o teste foi corrigido;
+2. uma execução concorrente foi cancelada enquanto instalava Firefox; a execução final sem concorrência passou integralmente.
+
+## Proteções confirmadas
+
+Não foram alterados:
+
+- `app.js` e as fórmulas financeiras;
+- chave ou formato dos dados locais;
+- registros, eventos, importação e exportação;
+- `styles.css`;
 - manifesto, service worker, cache, instalação e acesso;
-- branch estável e Netlify;
+- branch `netlify/teste-fechado` e Netlify dos testadores;
 - `main` como aplicativo;
 - PR #1.
 
-## Validação automática
+## Validação física pendente
 
-A branch passa a receber automaticamente:
+O Bloco 1A permanece **aguardando validação física**.
 
-- todos os testes Node descobertos;
-- Chromium móvel e desktop para mudanças funcionais;
-- Firefox e WebKit para interface, navegação, armazenamento, cálculos integrados e PWA;
-- comparação de arquivos relevantes com o GitHub Pages quando a mudança exigir prova publicada.
+No celular, validar:
 
-## Validação física
-
-A interface restaurada ainda deve ser recarregada no celular para confirmação visual do estado anterior. Futuras mudanças de interface continuarão exigindo validação física após a CI.
+1. abrir Início e tocar em `Ver planejamento do mês`;
+2. conferir o resumo, Metas, Agenda, Operação e combustível, Custos e reservas, Distribuição da meta, Aprendizado e Opções avançadas;
+3. conferir o gráfico de pizza visível;
+4. alterar um valor simples e verificar a atualização no restante do aplicativo;
+5. abrir e fechar as seções recolhíveis;
+6. usar Voltar e confirmar retorno para Início;
+7. confirmar ausência de cortes, sobreposições ou travamentos;
+8. confirmar que Início e Ajustes continuam completos.
 
 ## Aprendizado
 
-**Aprendizado fechado:** cada branch precisa ser testável de forma independente. A hospedagem é uma evidência adicional, não a origem da estratégia.
+**Nenhum aprendizado permanente novo.**
+
+O bloco aplicou regras já registradas: destino explícito antes de retirada, uma fonte única de dados, espera por estado observável nos testes e validação publicada independente da validação física.
 
 ## Próximo passo único
 
-Confirmar a primeira CI automática e a paridade do GitHub Pages; depois retomar apenas o contrato do Bloco 1A, sem implementar produto dentro deste bloco de infraestrutura.
+O proprietário deve validar o Bloco 1A no celular pelo GitHub Pages. Somente depois dessa confirmação o Bloco 1A pode ser encerrado e o contrato do Bloco 1B — Histórico com Dias e Análise — pode ser apresentado. Nenhuma retirada de conteúdo de Início ou Ajustes está autorizada por este estado.
