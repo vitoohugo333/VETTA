@@ -93,7 +93,7 @@ test('consolidação visual não altera dados e usa a navegação final', async 
 
   const nav = page.locator('nav.fixed.bottom-0');
   await expect(nav.locator('[data-view]')).toHaveCount(4);
-  expect(await nav.locator('[data-view] span').allTextContents()).toEqual(['Hoje', 'Histórico', 'Planejar', 'Mais']);
+  await expect(nav.locator('[data-view] span')).toHaveText(['Hoje', 'Histórico', 'Planejar', 'Mais']);
   await expect(nav.locator('[data-view="day"]')).toHaveCount(0);
   await expect(nav.locator('[data-view="settings"]')).toHaveCount(0);
 
