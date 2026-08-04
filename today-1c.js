@@ -171,6 +171,14 @@
   if (consolidateToday()) activateFinalNavigation();
 })();
 
+if (!document.querySelector('script[data-vetta-module="planning-3"]')) {
+  const planningScript = document.createElement('script');
+  planningScript.src = './planning-3.js?v=1';
+  planningScript.async = false;
+  planningScript.dataset.vettaModule = 'planning-3';
+  document.head.appendChild(planningScript);
+}
+
 if (!document.querySelector('script[data-vetta-module="record-2"]')) {
   const recordScript = document.createElement('script');
   recordScript.src = './record-2.js?v=1';
