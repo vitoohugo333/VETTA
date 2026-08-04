@@ -197,7 +197,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: falha-${{ inputs.target_branch }}-${{ matrix.browser }}
+          name: falha-${{ needs.inspect.outputs.target_sha }}-${{ matrix.browser }}
           path: |
             target/playwright-report/
             target/test-results/
@@ -282,7 +282,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: falha-publicada-${{ inputs.target_branch }}
+          name: falha-publicada-${{ needs.inspect.outputs.target_sha }}
           path: |
             target/playwright-report/
             target/test-results/
