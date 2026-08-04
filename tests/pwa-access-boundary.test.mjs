@@ -27,15 +27,23 @@ for (const asset of ['./manifest.webmanifest', './icon.svg', './icon-192.png', '
   assert.ok(worker.includes(`'${asset}'`), `${asset} deve permanecer no cache do PWA`);
 }
 
-assert.ok(existsSync('SKILLS.md'), 'SKILLS.md deve existir');
-const skills = readFileSync('SKILLS.md', 'utf8');
-assert.ok(skills.includes('PWA_RULES.md'));
-assert.ok(skills.includes('Sincronização remota'));
+const canonicalFiles = ['AGENTS.md', 'SKILLS.md', 'TESTING_RULES.md', 'PWA_RULES.md', 'LEARNING_RULES.md', 'START_HERE.md'];
+for (const file of canonicalFiles) {
+  assert.ok(existsSync(file), `${file} deve existir`);
+  assert.ok(
+    readFileSync(file, 'utf8').includes('VETTA_GOVERNANCE_VERSION: 2026-08-03.2'),
+    `${file} deve declarar a versão canônica de governança`,
+  );
+}
 
-assert.ok(existsSync('PWA_RULES.md'), 'PWA_RULES.md deve existir');
+const skills = readFileSync('SKILLS.md', 'utf8');
+assert.ok(skills.includes('TESTING_RULES.md'));
+assert.ok(skills.includes('PWA_RULES.md'));
+assert.ok(skills.includes('PROJECT_STATE.md'));
+
 const pwaRules = readFileSync('PWA_RULES.md', 'utf8');
-assert.ok(pwaRules.includes('PWA protegido por acesso'));
-assert.ok(pwaRules.includes('/manifest.webmanifest'));
-assert.ok(pwaRules.includes('/sw.js'));
+assert.ok(pwaRules.includes('automação de navegador e instalação física são provas diferentes'));
+assert.ok(pwaRules.includes('Configuração de branch não prova publicação'));
+assert.ok(pwaRules.includes('aguardando validação física'));
 
 console.log('PWA access boundary contract passed');
