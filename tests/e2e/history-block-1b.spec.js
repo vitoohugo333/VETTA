@@ -99,7 +99,7 @@ test('Histórico abre em Dias e editar ou excluir não duplica registros', async
   expect(saved.records[0].date).toBe(monday);
 });
 
-test('Análise reúne resumo, gráfico, comparação e a mesma semana de Início', async ({ page }) => {
+test('Análise reúne resumo, gráfico, comparação e assume a semana retirada de Início', async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   const { monday, tuesday } = currentWeekDates();
@@ -124,7 +124,7 @@ test('Análise reúne resumo, gráfico, comparação e a mesma semana de Início
 
   await page.locator('[data-view="dashboard"]').first().click();
   await expect(page.locator('#view-dashboard')).toBeVisible();
-  await expect(page.locator('#weekStatusTitle')).toBeVisible();
+  await expect(page.locator('#weekStatusTitle')).toBeHidden();
   const dashboardWeek = await page.evaluate(() => ({
     title: document.getElementById('weekStatusTitle').textContent,
     pill: document.getElementById('weekStatusPill').textContent,
