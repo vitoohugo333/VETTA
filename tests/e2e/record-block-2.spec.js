@@ -16,11 +16,43 @@ const state = {
   closings: [],
 };
 
+async function waitForStableApp(page) {
+  await expect.poll(async () => {
+    try {
+      const before = page.url();
+      const navigationReady = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
+      const recordReady = await page.locator('#view-day').getAttribute('data-block2');
+      await page.waitForTimeout(150);
+      return navigationReady === 'ready' && recordReady === 'ready' && page.url() === before ? 'stable' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('stable');
+}
+
 async function openApp(page, initialState = state) {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: initialState });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
-  await expect.poll(() => page.locator('#view-day').getAttribute('data-block2')).toBe('ready');
+  await waitForStableApp(page);
+}
+
+async function openHistoryDays(page) {
+  await expect.poll(async () => {
+    try {
+      const historyView = page.locator('#view-history');
+      if (!await historyView.isVisible()) {
+        const historyNav = page.locator('nav.fixed.bottom-0 [data-view="history"]');
+        if (await historyNav.isVisible()) await historyNav.click();
+        return 'waiting';
+      }
+
+      const daysTab = page.locator('[data-history-tab="days"]');
+      if (await daysTab.isVisible()) await daysTab.click();
+      return await page.locator('#historyDaysPanel').isVisible() ? 'ready' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('ready');
 }
 
 async function records(page) {
@@ -103,8 +135,9 @@ test('edição pelo Histórico continua usando o mesmo formulário e a mesma dat
   };
 
   await openApp(page, stateWithRecord);
-  await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
-  const editButton = page.locator('[data-action="edit"][data-date="2026-08-03"]');
+  await openHistoryDays(page);
+
+  const editButton = page.locator('#historyDaysPanel [data-action="edit"][data-date="2026-08-03"]');
   await expect(editButton).toBeVisible();
   await editButton.click();
 
