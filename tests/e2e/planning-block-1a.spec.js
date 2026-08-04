@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: STORAGE_KEY, state: initialState });
 });
 
-test('Planejar reúne todos os destinos sem retirar Início e Ajustes', async ({ page }) => {
+test('Planejar reúne todos os destinos e Hoje mantém somente o essencial', async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -35,8 +35,10 @@ test('Planejar reúne todos os destinos sem retirar Início e Ajustes', async ({
 
   await page.locator('[data-back]').click();
   await expect(page.locator('#view-dashboard')).toBeVisible();
-  await expect(page.locator('#revenueChart')).toBeVisible();
-  await expect(page.locator('#targetProfitDisplay')).toBeVisible();
+  await expect(page.locator('#revenueChart')).toBeHidden();
+  await expect(page.locator('#targetProfitDisplay')).toBeHidden();
+  await expect(page.locator('#kpiGrossDaily')).toBeVisible();
+  await expect(page.locator('[data-secondary-view="planning"]')).toBeVisible();
 
   await page.locator('[data-view="settings"]').first().click();
   await expect(page.locator('#fuelType')).toBeVisible();
@@ -74,6 +76,7 @@ test('edições em Planejar usam o mesmo estado e o mesmo cadastro de custos', a
 
   await page.locator('[data-back]').click();
   await expect(page.locator('#targetProfitDisplay')).toContainText('5.000');
+  await expect(page.locator('#targetProfitDisplay')).toBeHidden();
   await page.locator('[data-view="settings"]').first().click();
   await expect(page.locator('#fuelPrice')).toHaveValue('5.55');
   await expect(page.locator('#costList').getByText('Seguro Planejar')).toHaveCount(1);
