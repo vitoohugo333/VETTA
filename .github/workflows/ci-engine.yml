@@ -145,7 +145,7 @@ jobs:
   browser:
     name: Navegador — ${{ matrix.browser }}
     needs: [inspect, quality]
-    if: ${{ needs.inspect.outputs.browser_matrix != '[]' }}
+    if: ${{ needs.inspect.outputs.app == 'true' && needs.inspect.outputs.browser_matrix != '[]' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
@@ -210,6 +210,7 @@ jobs:
     if: >-
       ${{
         always()
+        && needs.inspect.outputs.app == 'true'
         && inputs.allow_published
         && needs.inspect.outputs.published_required == 'true'
         && needs.inspect.outputs.published_url != ''
