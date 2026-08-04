@@ -108,11 +108,8 @@
     todayLabel.textContent = 'Hoje';
     todayNav.setAttribute('aria-label', 'Hoje');
 
-    dayNav.hidden = true;
-    dayNav.setAttribute('aria-hidden', 'true');
-    dayNav.tabIndex = -1;
     dayNav.dataset.relocatedTo = 'Hoje → Registrar meu dia';
-    dayNav.classList.remove('active');
+    dayNav.remove();
 
     planningNav.dataset.view = 'planning';
     planningNav.dataset.relocatedFrom = 'Ajustes';
