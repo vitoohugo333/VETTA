@@ -21,7 +21,7 @@ for (const planningId of ['planningTargetInput', 'planningDaysOffInput', 'planni
 assert.match(planning, /Início e Ajustes continuam completos/, 'A transição deve declarar que os destinos antigos permanecem.');
 assert.doesNotMatch(planning, /display\s*:\s*none[^\n]*(view-dashboard|view-settings)|remove\(\)[^\n]*(view-dashboard|view-settings)/, 'O módulo não pode ocultar ou remover Início e Ajustes.');
 
-const declaredIds = [...planning.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
+const declaredIds = [...planning.matchAll(/(?:^|\s)id="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(declaredIds).size, declaredIds.length, 'O módulo Planejar não pode declarar IDs duplicados.');
 
 console.log('Contrato do Bloco 1A validado: Planejar completo, gráfico visível e áreas originais preservadas.');
