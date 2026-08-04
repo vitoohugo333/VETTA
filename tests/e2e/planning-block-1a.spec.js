@@ -16,6 +16,10 @@ const initialState = {
   closings: [],
 };
 
+async function waitForFinalNavigation(page) {
+  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
+}
+
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: STORAGE_KEY, state: initialState });
 });
@@ -24,6 +28,7 @@ test('Planejar reúne todos os destinos e Hoje mantém somente o essencial', asy
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await waitForFinalNavigation(page);
   await page.locator('[data-secondary-view="planning"]').click();
 
   await expect(page.locator('#view-planning')).toBeVisible();
@@ -32,22 +37,25 @@ test('Planejar reúne todos os destinos e Hoje mantém somente o essencial', asy
   await expect(page.locator('#planningTargetInput')).toHaveValue('4000');
   await expect(page.locator('#planningCostList')).toContainText('Manutenção');
   await expect(page.locator('#planningLearningText')).toBeVisible();
+  await expect(page.locator('#view-planning [data-back]')).toBeVisible();
 
-  await page.locator('[data-back]').click();
+  await page.locator('#view-planning [data-back]').click();
   await expect(page.locator('#view-dashboard')).toBeVisible();
   await expect(page.locator('#revenueChart')).toBeHidden();
   await expect(page.locator('#targetProfitDisplay')).toBeHidden();
   await expect(page.locator('#kpiGrossDaily')).toBeVisible();
   await expect(page.locator('[data-secondary-view="planning"]')).toBeVisible();
 
-  await page.locator('[data-view="settings"]').first().click();
-  await expect(page.locator('#fuelType')).toBeVisible();
-  await expect(page.locator('#costList')).toContainText('Manutenção');
+  await page.locator('nav.fixed.bottom-0 [data-view="planning"]').click();
+  await expect(page.locator('#view-planning')).toBeVisible();
+  await expect(page.locator('#view-planning [data-back]')).toBeHidden();
+  await expect(page.locator('#planningCostList')).toContainText('Manutenção');
   expect(errors).toEqual([]);
 });
 
 test('edições em Planejar usam o mesmo estado e o mesmo cadastro de custos', async ({ page }) => {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await waitForFinalNavigation(page);
   await page.locator('[data-secondary-view="planning"]').click();
 
   await page.locator('#planningTargetInput').fill('5000');
@@ -74,10 +82,11 @@ test('edições em Planejar usam o mesmo estado e o mesmo cadastro de custos', a
   expect(saved.fuel.price).toBe(5.55);
   expect(saved.costs.filter(cost => cost.name === 'Seguro Planejar')).toHaveLength(1);
 
-  await page.locator('[data-back]').click();
+  await page.locator('#view-planning [data-back]').click();
   await expect(page.locator('#targetProfitDisplay')).toContainText('5.000');
   await expect(page.locator('#targetProfitDisplay')).toBeHidden();
-  await page.locator('[data-view="settings"]').first().click();
-  await expect(page.locator('#fuelPrice')).toHaveValue('5.55');
-  await expect(page.locator('#costList').getByText('Seguro Planejar')).toHaveCount(1);
+
+  await page.locator('nav.fixed.bottom-0 [data-view="planning"]').click();
+  await expect(page.locator('#planningFuelPrice')).toHaveValue('5.55');
+  await expect(page.locator('#planningCostList').getByText('Seguro Planejar')).toHaveCount(1);
 });
