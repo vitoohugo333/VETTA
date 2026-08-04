@@ -13,8 +13,9 @@
   const radarCard = $('addEventButton')?.closest('.card-vetta');
   const eventList = $('eventList');
   const installCard = $('installCardButton');
+  const appVersionLabel = $('appVersionLabel');
 
-  const required = [hero, compareDetails, reportCard, dataCard, importInput, radarCard, eventList, installCard];
+  const required = [hero, compareDetails, reportCard, dataCard, importInput, radarCard, eventList, installCard, appVersionLabel];
   const originalHosts = [compareDetails, reportCard, dataCard, radarCard, installCard];
 
   if (
@@ -25,17 +26,6 @@
     console.warn('Bloco 5 não aplicado: Mais anterior foi preservado porque um recurso obrigatório não foi encontrado.');
     return;
   }
-
-  const versionCard = document.createElement('div');
-  versionCard.id = 'moreAppVersionCard';
-  versionCard.className = 'card-vetta p-5 flex items-center justify-between gap-4';
-  versionCard.innerHTML = `
-    <div>
-      <span class="label-micro !text-vetta-900">Versão instalada</span>
-      <strong id="appVersionLabel" class="block text-lg">Versão ${app.state?.release || '3.5.1'}</strong>
-      <p class="text-xs text-slate-500 mt-1">Informação do aplicativo em uso neste aparelho.</p>
-    </div>
-    <span class="w-11 h-11 shrink-0 rounded-2xl bg-slate-100 text-slate-600 grid place-items-center"><i class="fas fa-code-branch"></i></span>`;
 
   const definitions = [
     {
@@ -81,7 +71,7 @@
       description: 'Instale o VETTA e consulte a versão atual.',
       icon: 'fa-mobile-screen-button',
       tone: 'text-slate-700 bg-slate-100',
-      hosts: [installCard, versionCard],
+      hosts: [installCard],
     },
   ];
 
@@ -180,8 +170,7 @@
       if (target) target.textContent = value;
     }
 
-    const versionLabel = $('appVersionLabel');
-    if (versionLabel) versionLabel.textContent = `Versão ${release}`;
+    appVersionLabel.textContent = `Versão ${release}`;
   };
 
   const showHub = ({ scroll = false } = {}) => {
