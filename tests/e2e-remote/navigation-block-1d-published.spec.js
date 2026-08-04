@@ -31,6 +31,7 @@ test('GitHub Pages servem a navegação final e preservam as rotas secundárias'
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
   await page.goto(url('app-shell.html'), { waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
+  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
 
   const nav = page.locator('nav.fixed.bottom-0');
   await expect(nav.locator('[data-view]')).toHaveCount(4);
@@ -38,7 +39,9 @@ test('GitHub Pages servem a navegação final e preservam as rotas secundárias'
 
   await nav.locator('[data-view="planning"]').click();
   await expect(page.locator('#view-planning')).toBeVisible();
-  await expect(page.locator('#view-planning [data-back]')).toBeHidden();
+  await expect(page.locator('#planningHub')).toBeVisible();
+  await expect(page.locator('#view-planning > div:first-child [data-back]')).toBeHidden();
+  await page.locator('[data-planning-section-open="distribution"]').click();
   await expect(page.locator('#planningRevenueChart')).toBeVisible();
 
   await nav.locator('[data-view="dashboard"]').click();
