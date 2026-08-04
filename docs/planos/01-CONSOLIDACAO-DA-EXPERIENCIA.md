@@ -1,6 +1,6 @@
 # Plano 01 — Consolidação da experiência
 
-**Estado:** ATIVO — Blocos 1A, 1B e 1C concluídos; Bloco 1D aprovado tecnicamente e aguardando validação física  
+**Estado:** ATIVO — Blocos 1A a 1D concluídos e validados fisicamente; Bloco 2 aprovado tecnicamente e aguardando validação física  
 **Atualizado em:** 2026-08-04, horário de Brasília  
 **Branch de desenvolvimento:** `netlify/teste-fechado-ux`  
 **Ambiente de validação:** GitHub Pages  
@@ -10,7 +10,7 @@
 
 Reorganizar o CalculaAê para que o motorista encontre rapidamente o que precisa, sem perder recursos, cálculos, dados ou caminhos de acesso.
 
-Navegação final implementada:
+Navegação final:
 
 ```text
 Hoje | Histórico | Planejar | Mais
@@ -86,26 +86,33 @@ As duplicações retiradas de Hoje continuam no HTML como retorno seguro para os
 
 ### 4.2 Registro do dia
 
-| Elemento | Destino | Regra |
+| Elemento | Destino | Estado após Bloco 2 |
 |---|---|---|
-| Acesso principal | Hoje → Registrar meu dia | permanece visível |
-| Botão `Dia` da barra antiga | Hoje → Registrar meu dia | retirado somente da barra final |
-| Tela e formulário do registro | Registrar meu dia | permanecem no HTML e funcionais |
-| Data | Registrar meu dia | permanece |
-| Faturamento | Registrar meu dia | permanece |
-| Quilômetros | Registrar meu dia | permanece |
-| Horas online | Registro → Opcionais | não remover |
-| Combustível gasto | Registro → Opcionais | não remover |
-| Prévia bruto/custos/líquido | Registrar meu dia | permanece |
-| Salvar | Registrar meu dia | permanece |
-| Limpar | Registrar meu dia | permanece |
+| Acesso principal | Hoje → Registrar meu dia | visível |
+| Tela e formulário do registro | Registrar meu dia | preservados |
+| Data | área essencial | visível |
+| Faturamento | área essencial | visível e prioritário |
+| Quilômetros | área essencial | visível e prioritário |
+| Horas online | Detalhes opcionais | recolhido, mas acessível |
+| Combustível gasto | Detalhes opcionais | recolhido, mas acessível |
+| Prévia de custos | Resultado antes de salvar | visível |
+| Líquido calculado | Resultado antes de salvar | destacado |
+| Receita por km e diferença da meta | Resultado antes de salvar | visíveis |
+| Salvar | Registro | permanece e usa a gravação original |
+| Limpar | Registro | permanece |
+| Confirmação após salvar | Registro concluído | mostra faturamento, quilômetros e líquido |
+| Editar depois de salvar | Registro concluído → Editar este dia | reabre a mesma data |
+| Concluir | Registro concluído → Hoje | retorna para Hoje |
+| Edição pelo Histórico | Histórico → Dias → Editar | usa o mesmo formulário |
+
+O Bloco 2 não criou outra persistência. A regra canônica continua sendo um registro por data: salvar novamente a mesma data atualiza o registro existente.
 
 ### 4.3 Histórico
 
 | Elemento | Destino | Estado |
 |---|---|---|
 | Lista de dias | Histórico → Dias | disponível |
-| Editar dia | Histórico → Dias | disponível |
+| Editar dia | Histórico → Dias | disponível e integrado ao Bloco 2 |
 | Excluir dia | Histórico → Dias | disponível |
 | Quantidade de dias | Histórico → Análise → Resumo | disponível |
 | Média de faturamento/km | Histórico → Análise → Resumo | disponível |
@@ -151,7 +158,7 @@ Ao abrir Planejar diretamente pela barra, não existe botão Voltar porque a ár
 |---|---|---|
 | Cabeçalho VETTA | áreas principais | permanece |
 | Botão Instalar | Mais → Aplicativo; pode existir alerta global | não retirar sem substituição |
-| Navegação inferior | Hoje, Histórico, Planejar, Mais | implementada no Bloco 1D |
+| Navegação inferior | Hoje, Histórico, Planejar, Mais | implementada e validada |
 | Botão voltar | telas secundárias | preserva origem e formulário |
 | Modais de custo, evento e instalação | áreas correspondentes | permanecem |
 | Onboarding | fluxo inicial | Bloco 6 |
@@ -187,9 +194,7 @@ Ao abrir Planejar diretamente pela barra, não existe botão Voltar porque a ár
 
 ### Bloco 1D — Ativar navegação final
 
-**Estado:** implementado, aprovado pela CI e pelo GitHub Pages; aguardando validação física.
-
-Entregas executadas:
+**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
 
 - a barra possui estruturalmente quatro áreas: `Hoje | Histórico | Planejar | Mais`;
 - o botão `Dia` saiu somente da barra;
@@ -201,28 +206,36 @@ Entregas executadas:
 - a navegação antiga é preservada se algum destino validado não carregar;
 - nenhuma fórmula, dado, armazenamento ou arquivo do PWA foi alterado.
 
+### Bloco 2 — Registro diário
+
+**Estado:** implementado, aprovado pela CI e pelo GitHub Pages; aguardando validação física.
+
+Entregas executadas:
+
+- data, faturamento e quilômetros permanecem visíveis;
+- faturamento e quilômetros receberam prioridade visual;
+- horas online e combustível gasto foram movidos para `Detalhes opcionais` sem serem removidos;
+- a prévia passou a destacar o líquido calculado, preservando custos, receita por km e diferença da meta;
+- salvar continua delegando à gravação canônica do aplicativo;
+- a mesma data continua sendo atualizada, sem duplicação;
+- a confirmação mostra se o dia foi registrado ou atualizado;
+- `Editar este dia` reabre o registro salvo;
+- `Concluir` retorna para Hoje;
+- edição pelo Histórico continua usando o mesmo formulário;
+- se a estrutura esperada da tela não existir, o formulário original permanece intacto.
+
 Aceite técnico alcançado:
 
-- testes determinísticos aprovados;
+- contratos de armazenamento e interface aprovados;
+- criação e atualização da mesma data aprovadas;
+- opcionais recolhidos e recuperados na edição aprovados;
 - Chromium, Firefox e WebKit aprovados;
-- interação, voltar e formulário não salvo aprovados;
-- GitHub Pages com arquivos e interação aprovados;
-- exatamente quatro itens reais comprovados na barra.
+- paridade e interação no GitHub Pages aprovadas;
+- `app.js`, cálculos, formato dos dados e PWA preservados.
 
 Aceite pendente:
 
-- validação física da navegação no celular.
-
-### Bloco 2 — Registro diário
-
-**Estado:** não autorizado.
-
-Direção prevista:
-
-- priorizar faturamento e quilômetros;
-- recolher opcionais sem removê-los;
-- aprimorar prévia e confirmação;
-- preservar edição e um registro por data.
+- validação física do novo fluxo de registro no Android.
 
 ### Blocos 3 a 8
 
@@ -259,12 +272,12 @@ O contrato falha se algum elemento afetado não estiver na tabela.
 
 ## 8. Estado atual
 
-- Blocos 1A, 1B e 1C concluídos e validados fisicamente;
-- Bloco 1D aprovado tecnicamente e publicado no GitHub Pages;
-- navegação final possui `Hoje | Histórico | Planejar | Mais`;
-- Registro do dia continua acessível em Hoje;
-- Planejar é uma área principal;
-- Hoje, Histórico, Planejar e Mais preservam seus conteúdos aprovados;
-- `app.js`, `styles.css`, cálculos, dados e PWA permanecem intocados pelo Bloco 1D;
-- Bloco 1D permanece **aguardando validação física**;
-- Bloco 2 não está autorizado.
+- Blocos 1A a 1D concluídos e validados fisicamente;
+- Bloco 2 aprovado tecnicamente e publicado no GitHub Pages;
+- Registro do dia prioriza faturamento e quilômetros;
+- horas e combustível continuam acessíveis em detalhes opcionais;
+- salvar mostra confirmação e editar preserva uma única data;
+- navegação final continua `Hoje | Histórico | Planejar | Mais`;
+- `app.js`, `styles.css`, cálculos, formato dos dados e PWA permanecem intocados pelo Bloco 2;
+- Bloco 2 permanece **aguardando validação física**;
+- Bloco 3 não está autorizado.
