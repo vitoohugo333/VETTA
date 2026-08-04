@@ -34,6 +34,10 @@ assert.match(record, /this\.state\.records\.some\(record => record\.date === dra
 assert.match(record, /app\.state\.records\.find\(item => item\.date === date\)/, 'Editar após salvar deve recuperar o registro existente.');
 assert.match(record, /Bloco 2 não aplicado:[^]*formulário original foi preservado/, 'A falta de pré-requisito deve manter o formulário anterior como retorno seguro.');
 
+assert.match(record, /const hero = root\.firstElementChild/, 'O cabeçalho deve ser localizado pela estrutura estável da própria tela.');
+assert.match(record, /heroTitle\.textContent\.trim\(\) !== 'Como foi seu dia\?'/, 'A reorganização deve confirmar o título real antes de agir.');
+assert.doesNotMatch(record, /querySelector\([^\n]*rounded-\[/, 'Classes Tailwind com colchetes não podem ser usadas diretamente como seletor CSS.');
+
 assert.doesNotMatch(record, /localStorage|sessionStorage/, 'O módulo visual não pode criar outra persistência.');
 assert.doesNotMatch(record, /state\.records\.push|state\.records\s*=|splice\(/, 'O módulo visual não pode implementar uma segunda gravação.');
 assert.doesNotMatch(record, /\.remove\(\)/, 'Nenhum campo ou botão original pode ser removido.');
