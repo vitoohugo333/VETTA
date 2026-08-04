@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê (`netlify/teste-fechado-ux`)
 
 **Atualizado em:** 2026-08-04, horário de Brasília  
-**Estado:** Bloco 1C — Hoje consolidado, aprovado pela CI e pelo GitHub Pages; aguardando validação física no celular.  
-**Alteração em curso:** validação manual da tela Hoje consolidada.
+**Estado:** Bloco 1D — navegação final implementada, aprovada pela CI e pelo GitHub Pages; aguardando validação física no celular.  
+**Alteração em curso:** validação manual da barra `Hoje | Histórico | Planejar | Mais`.
 
 ## Estado atual
 
@@ -11,14 +11,14 @@
 | Repositório | `vitoohugo333/VETTA` |
 | Branch | `netlify/teste-fechado-ux` |
 | Papel | desenvolvimento e validação de interface |
-| Fotografia funcional testada | `a73d8807849a903dc1faa442d9eb1afb1a778d99` |
-| Execução automática final | `30907975939` |
+| Fotografia funcional testada | `c49862ba473876d08967cb718b957279abd8fd70` |
+| Execução automática funcional | `30913206515` |
 | GitHub Pages | `https://vitoohugo333.github.io/VETTA/` |
 | Branch estável | `netlify/teste-fechado` |
 | Netlify estável | `https://calculaae.netlify.app/` |
 | Plano ativo | `docs/planos/01-CONSOLIDACAO-DA-EXPERIENCIA.md` |
 
-## Blocos anteriores
+## Blocos concluídos fisicamente
 
 ### Bloco 1A — Planejar
 
@@ -28,129 +28,107 @@ Planejar reúne meta, agenda, combustível, custos, reservas, gráfico de pizza,
 
 ### Bloco 1B — Histórico com Dias e Análise
 
-Concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
+Concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente em 2026-08-04.
 
 Histórico abre em `Dias` e oferece `Análise` com resumo, gráfico, comparação e situação semanal.
 
-## Bloco 1C — Consolidar Hoje
+### Bloco 1C — Consolidar Hoje
 
-A tela Início foi reduzida ao conteúdo de uso diário.
+Concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
 
-### Permanece visível em Hoje
+Hoje mantém meta diária, registro, acompanhamento mensal e leitura do VETTA. Objetivo e distribuição permanecem em Planejar; a semana permanece em Histórico → Análise.
 
-- meta de faturamento por dia;
-- líquido planejado;
-- rodagem estimada;
-- custo de combustível por quilômetro;
-- texto de situação da meta;
-- botão `Registrar meu dia`;
-- situação e progresso do mês;
-- líquido gerado;
-- projeção;
-- dias restantes;
-- leitura do VETTA e suas razões;
-- botão `Ver planejamento do mês`.
+## Bloco 1D — Navegação final
 
-### Duplicações retiradas de Hoje
-
-| Elemento | Destino validado |
-|---|---|
-| objetivo mensal, seletor 5/6/7 dias e folgas | Planejar → Metas e Agenda |
-| situação, meta, realizado e média por km da semana | Histórico → Análise → Semana atual |
-| gráfico de pizza e detalhamento da distribuição | Planejar → Distribuição da meta |
-
-Os cartões antigos permanecem no HTML como retorno seguro porque `app.js` continua atualizando seus identificadores. Eles são ocultados por atributo nativo somente depois que todos os destinos são encontrados.
-
-Se Planejar, Histórico ou alguma origem necessária não carregar, o Bloco 1C não é aplicado e Início permanece completo. Nenhum recurso fica sem acesso.
-
-## Navegação durante a transição
-
-A navegação continua:
+A barra inferior foi consolidada em quatro áreas reais:
 
 ```text
-Início | Dia | Histórico | Ajustes | Mais
+Hoje | Histórico | Planejar | Mais
 ```
 
-O botão para Planejar permanece visível em Início. A navegação final de quatro áreas pertence exclusivamente ao Bloco 1D, que não está autorizado.
+### Comportamento entregue
 
-## Arquivos funcionais
+- `Início` passou a se chamar `Hoje`;
+- o botão `Dia` saiu somente da barra inferior;
+- `Registrar meu dia` continua visível em Hoje;
+- a tela e o formulário de registro continuam preservados;
+- ao abrir o registro, Hoje permanece como área principal ativa;
+- `Ajustes` saiu da barra porque Planejar passou a ser uma área principal;
+- a tela antiga de Ajustes permanece como fallback interno;
+- rotas antigas de Ajustes convergem para Planejar;
+- Planejar aberto diretamente pela barra não mostra Voltar;
+- Planejar aberto pelo atalho de Hoje mostra Voltar e retorna para Hoje;
+- o formulário não salvo continua preenchido depois de voltar;
+- Histórico e Mais continuam como áreas principais;
+- se algum destino validado não carregar, a navegação anterior é preservada.
 
-- `today-1c.js`: consolida Hoje somente depois de confirmar todos os destinos;
-- `history-1b.js`: carrega o módulo do Bloco 1C após Planejar e Histórico;
-- `ci/branch-policy.json`: inclui `today-1c.js` na prova de paridade publicada.
+## Arquivos funcionais e de proteção
 
-## Testes adicionados e ajustados
-
-- `tests/today-block-1c-contract.test.mjs`:
-  - exige a permanência dos elementos essenciais de Hoje;
-  - exige destinos válidos antes de qualquer retirada;
-  - impede remoção física, CSS específico, alteração de dados e armazenamento;
-  - preserva a chave `vetta-driver-intelligence-v3`.
-
-- `tests/e2e/today-block-1c.spec.js`:
-  - confirma Hoje mais curto e os elementos essenciais visíveis;
-  - confirma as três duplicações ocultas e seus destinos registrados;
-  - abre Planejar e Histórico para provar que os recursos continuam acessíveis;
-  - preserva a navegação de cinco itens;
-  - compara integralmente os dados financeiros e de uso antes e depois.
-
-- `tests/e2e-remote/today-block-1c-published.spec.js`:
-  - confirma `today-1c.js` servido pelo GitHub Pages;
-  - valida Hoje, Planejar e Histórico no site publicado.
-
-- testes dos Blocos 1A e 1B foram atualizados para o novo estado consolidado sem reduzir suas proteções.
+- `today-1c.js`: mantém a consolidação de Hoje e ativa a navegação final somente depois de confirmar os destinos;
+- `tests/navigation-block-1d-contract.test.mjs`: protege a estrutura real de quatro áreas e a permanência do registro;
+- `tests/e2e/navigation-block-1d.spec.js`: testa barra, estado ativo, voltar e formulário não salvo;
+- `tests/e2e-remote/navigation-block-1d-published.spec.js`: prova o mesmo comportamento no GitHub Pages;
+- `tests/e2e/cost-modal.spec.js`: usa o caminho oficial de custos por Planejar;
+- testes dos Blocos 1A e 1C foram atualizados para a navegação final sem reduzir suas proteções.
 
 ## Evidência automática
 
-Execução final: `30907975939`.
+Execução funcional final: `30913206515`.
 
-A execução verificou exatamente a fotografia funcional `a73d8807849a903dc1faa442d9eb1afb1a778d99` e concluiu com sucesso:
+A execução verificou exatamente a fotografia `c49862ba473876d08967cb718b957279abd8fd70` e concluiu com sucesso:
 
 - governança, sintaxe, JSON e todos os testes Node;
 - Chromium;
 - Firefox;
 - WebKit;
-- paridade dos arquivos públicos com o GitHub Pages, incluindo `today-1c.js`;
+- exatamente quatro itens reais na barra;
+- navegação entre as quatro áreas;
+- abertura do Registro do dia por Hoje;
+- preservação do formulário não salvo;
+- comportamento do botão Voltar em Planejar;
+- paridade dos arquivos públicos com o GitHub Pages;
 - interação no próprio site publicado.
 
-As falhas intermediárias foram classificadas como defeitos dos testes, não do produto. Elas envolviam seleção incorreta da navegação, preenchimento de progresso em 0%, recarga normal do PWA e metadados internos de migração. Nenhuma correção funcional foi feita para mascarar esses resultados.
+## Defeitos encontrados e resolvidos no bloco
+
+### Botão Dia ainda visível
+
+A primeira implementação usou o atributo `hidden`, mas o estilo existente da barra fez o botão continuar aparecendo. A solução correta foi retirar somente esse botão da barra depois de confirmar todos os destinos, mantendo a tela e o acesso por Hoje.
+
+### Leitura durante recarga do PWA
+
+Testes do WebKit e do site publicado faziam leitura instantânea dos nomes da barra durante uma recarga normal do PWA. Eles passaram a aguardar o estado esperado sem alterar o aplicativo.
+
+Registro completo: `docs/incidents/INC-0006-hidden-sobrescrito-na-navegacao-final.md`.
 
 ## Proteções confirmadas
 
-Não foram alterados pelo Bloco 1C:
+Não foram alterados pelo Bloco 1D:
 
-- `app.js` e as fórmulas financeiras;
+- `app.js` e fórmulas financeiras;
 - `styles.css`;
-- formato e chave dos dados locais;
+- chave e formato dos dados locais;
 - registros, custos, eventos, fechamentos, importação e exportação;
 - manifesto, service worker, cache, instalação e acesso;
 - branch `netlify/teste-fechado` e Netlify dos testadores;
 - `main`;
 - PR #1.
 
-## Aprendizado
-
-**Aprendizado fechado:** testes de armazenamento durante a abertura de um PWA devem esperar a interface ficar pronta, tolerar a recarga normal do service worker e separar dados de negócio de metadados internos de migração.
-
-Registro completo: `docs/incidents/INC-0005-comparacao-de-dados-durante-abertura-pwa.md`.
-
-Prevenção executável: `tests/e2e/today-block-1c.spec.js`.
-
 ## Validação física pendente
 
-O Bloco 1C permanece **aguardando validação física**.
+O Bloco 1D permanece **aguardando validação física**.
 
 No celular, validar:
 
-1. Início ficou mais curto;
-2. meta diária, mês, Registrar meu dia e leitura do VETTA continuam visíveis;
-3. objetivo mensal, semana e gráfico de pizza não aparecem mais em Início;
-4. `Ver planejamento do mês` continua abrindo Planejar;
-5. Planejar mantém meta, agenda e gráfico de pizza;
-6. Histórico → Análise mantém a situação semanal;
-7. a navegação continua com cinco itens;
+1. a barra mostra exatamente `Hoje | Histórico | Planejar | Mais`;
+2. Hoje abre e fica destacado corretamente;
+3. `Registrar meu dia` abre o formulário e mantém Hoje destacado;
+4. preencher faturamento e quilômetros, voltar e abrir novamente preserva o rascunho;
+5. Planejar pela barra abre sem botão Voltar;
+6. `Ver planejamento do mês` em Hoje abre Planejar com botão Voltar;
+7. Histórico e Mais abrem e ficam destacados;
 8. não existem cortes, sobreposições, travamentos ou perda de dados.
 
 ## Próximo passo único
 
-O proprietário deve validar o Bloco 1C no celular pelo GitHub Pages. O Bloco 1D — navegação final — não está autorizado.
+O proprietário deve validar o Bloco 1D no celular pelo GitHub Pages. O Bloco 2 — Registro diário — não está autorizado.
