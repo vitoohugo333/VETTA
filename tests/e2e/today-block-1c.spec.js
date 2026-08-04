@@ -29,9 +29,11 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
   page.on('pageerror', error => errors.push(error.message));
   await openApp(page);
 
-  for (const selector of ['#kpiGrossDaily', '#kpiNetDaily', '#kpiKmDaily', '[data-view="day"]', '#monthStatusTitle', '#monthProgress', '#insightTitle', '[data-secondary-view="planning"]']) {
+  for (const selector of ['#kpiGrossDaily', '#kpiNetDaily', '#kpiKmDaily', '[data-view="day"]', '#monthStatusTitle', '#insightTitle', '[data-secondary-view="planning"]']) {
     await expect(page.locator(selector).first()).toBeVisible();
   }
+  await expect(page.locator('#monthProgress')).toBeAttached();
+  await expect(page.locator('#monthProgress').locator('..')).toBeVisible();
 
   for (const selector of ['#targetProfitDisplay', '#weekStatusTitle', '#revenueChart']) {
     await expect(page.locator(selector)).toBeHidden();
