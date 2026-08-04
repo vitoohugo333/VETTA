@@ -170,3 +170,11 @@
 
   if (consolidateToday()) activateFinalNavigation();
 })();
+
+if (!document.querySelector('script[data-vetta-module="record-2"]')) {
+  const recordScript = document.createElement('script');
+  recordScript.src = './record-2.js?v=1';
+  recordScript.async = false;
+  recordScript.dataset.vettaModule = 'record-2';
+  document.head.appendChild(recordScript);
+}
