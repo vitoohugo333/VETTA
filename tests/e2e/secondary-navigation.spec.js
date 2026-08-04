@@ -19,23 +19,26 @@ const initialState = {
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: STORAGE_KEY, state: initialState });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
 });
 
 test('uma ilha abre tela própria e voltar preserva o formulário', async ({ page }) => {
-  await page.locator('[data-view="day"]').first().click();
+  await page.locator('#view-dashboard button[data-view="day"]').click();
+  await expect(page.locator('nav.fixed.bottom-0 [data-view="dashboard"]')).toHaveClass(/active/);
   await page.locator('#recordGross').fill('321.50');
   await page.locator('#recordKm').fill('120');
 
-  await page.locator('[data-view="dashboard"]').first().click();
+  await page.locator('nav.fixed.bottom-0 [data-view="dashboard"]').click();
   await page.locator('[data-secondary-view="planning"]').click();
   await expect(page.locator('#view-planning')).toBeVisible();
   await expect(page.locator('#planningTarget')).toHaveText('R$ 4.000');
+  await expect(page.locator('#view-planning [data-back]')).toBeVisible();
 
-  await page.locator('[data-back]').click();
+  await page.locator('#view-planning [data-back]').click();
   await expect(page.locator('#view-dashboard')).toBeVisible();
-  await expect(page.locator('[data-view="dashboard"]').first()).toHaveClass(/active/);
+  await expect(page.locator('nav.fixed.bottom-0 [data-view="dashboard"]')).toHaveClass(/active/);
 
-  await page.locator('[data-view="day"]').first().click();
+  await page.locator('#view-dashboard button[data-view="day"]').click();
   await expect(page.locator('#recordGross')).toHaveValue('321.50');
   await expect(page.locator('#recordKm')).toHaveValue('120');
 });
@@ -46,5 +49,5 @@ test('o voltar do navegador ou Android retorna da tela secundária para sua áre
 
   await page.goBack();
   await expect(page.locator('#view-dashboard')).toBeVisible();
-  await expect(page.locator('[data-view="dashboard"]').first()).toHaveClass(/active/);
+  await expect(page.locator('nav.fixed.bottom-0 [data-view="dashboard"]')).toHaveClass(/active/);
 });
