@@ -21,13 +21,22 @@ for (const legacyId of [
   'historyWeekTarget', 'historyWeekActual', 'historyWeekRevenueKm', 'historyChart', 'historyInsight',
 ]) {
   assert.match(history1b, new RegExp(`id="${legacyId}"`), `O fallback anterior deve preservar ${legacyId}.`);
-  assert.ok(history4.includes(`$('${legacyId}')`) || history4.includes(`getElementById('${legacyId}')`), `O Bloco 4 deve reutilizar ${legacyId}.`);
+}
+
+for (const movedAnchor of [
+  'historyDaysTab', 'historyAnalysisTab', 'historyDaysPanel', 'historyAnalysisPanel',
+  'historyDays', 'historyWeekStatusTitle', 'historyChart', 'historyInsight',
+]) {
+  assert.ok(
+    history4.includes(`$('${movedAnchor}')`) || history4.includes(`getElementById('${movedAnchor}')`),
+    `O Bloco 4 deve localizar o contêiner estrutural de ${movedAnchor}.`,
+  );
 }
 
 for (const key of ['days', 'summary', 'week', 'comparison']) {
   assert.match(history4, new RegExp(`key: '${key}'`), `Histórico deve declarar a área ${key}.`);
-  assert.match(history4, new RegExp(`historyPage-\\$\\{definition\\.key\\}`), 'As áreas devem abrir em páginas próprias.');
 }
+assert.match(history4, /historyPage-\$\{definition\.key\}/, 'As áreas devem abrir em páginas próprias.');
 
 assert.match(history4, /id = 'historyHub'/, 'Histórico deve ter um resumo curto.');
 assert.match(history4, /O que você quer consultar\?/, 'O resumo deve orientar a escolha do usuário.');
