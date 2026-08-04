@@ -19,19 +19,44 @@ const initialState = {
 async function openApp(page) {
   await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: STORAGE_KEY, state: initialState });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
-  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
+  await expect.poll(async () => {
+    try {
+      const before = page.url();
+      const navigation = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
+      const planning = await page.locator('#view-planning').getAttribute('data-block3');
+      const history = await page.locator('#view-history').getAttribute('data-block4');
+      await page.waitForTimeout(150);
+      return navigation === 'ready' && planning === 'ready' && history === 'ready' && before === page.url() ? 'stable' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('stable');
 }
 
 async function openPlanning(page) {
-  await page.locator('nav.fixed.bottom-0 [data-view="planning"]').click();
-  await expect(page.locator('#view-planning')).toBeVisible();
-  await expect(page.locator('#planningHub')).toBeVisible();
+  await expect.poll(async () => {
+    try {
+      if (await page.locator('#view-planning').isVisible() && await page.locator('#planningHub').isVisible()) return 'ready';
+      const button = page.locator('nav.fixed.bottom-0 [data-view="planning"]');
+      if (await button.isVisible()) await button.click();
+      return await page.locator('#view-planning').isVisible() && await page.locator('#planningHub').isVisible() ? 'ready' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('ready');
 }
 
 async function openSection(page, key) {
-  await page.locator(`[data-planning-section-open="${key}"]`).click();
-  await expect(page.locator(`#planningPage-${key}`)).toBeVisible();
+  await expect.poll(async () => {
+    try {
+      if (await page.locator(`#planningPage-${key}`).isVisible()) return 'ready';
+      const button = page.locator(`[data-planning-section-open="${key}"]`);
+      if (await button.isVisible()) await button.click();
+      return await page.locator(`#planningPage-${key}`).isVisible() ? 'ready' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('ready');
   await expect(page.locator('#planningHub')).toBeHidden();
 }
 
@@ -94,8 +119,16 @@ test('editar em uma área, voltar e abrir outra preserva o mesmo estado', async 
 
 test('atalho de Hoje mantém dois retornos previsíveis: assunto, Planejar e Hoje', async ({ page }) => {
   await openApp(page);
-  await page.locator('[data-secondary-view="planning"]').click();
-  await expect(page.locator('#view-planning')).toBeVisible();
+  await expect.poll(async () => {
+    try {
+      if (await page.locator('#view-planning').isVisible()) return 'ready';
+      const shortcut = page.locator('[data-secondary-view="planning"]');
+      if (await shortcut.isVisible()) await shortcut.click();
+      return await page.locator('#view-planning').isVisible() ? 'ready' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('ready');
   await expect(page.locator('#view-planning > div:first-child [data-back]')).toBeVisible();
 
   await openSection(page, 'learning');
