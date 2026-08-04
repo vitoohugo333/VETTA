@@ -15,6 +15,7 @@ const state = {
   events: [],
   closings: [],
 };
+const expectedBusinessState = JSON.stringify(state);
 
 async function openApp(page) {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
@@ -24,21 +25,23 @@ async function openApp(page) {
   await expect.poll(() => page.locator('#view-dashboard').getAttribute('data-block1c')).toBe('ready');
 }
 
-async function storedState(page) {
+async function businessState(page) {
   try {
-    return await page.evaluate(key => localStorage.getItem(key), STORAGE_KEY);
+    return await page.evaluate(key => {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const value = JSON.parse(raw);
+      delete value.release;
+      value.costs = (value.costs || []).map(cost => {
+        const clean = { ...cost };
+        delete clean.legacySource;
+        return clean;
+      });
+      return JSON.stringify(value);
+    }, STORAGE_KEY);
   } catch {
     return null;
   }
-}
-
-async function waitForStoredState(page) {
-  let confirmed = null;
-  await expect.poll(async () => {
-    confirmed = await storedState(page);
-    return confirmed;
-  }, { timeout: 10000 }).not.toBeNull();
-  return confirmed;
 }
 
 test('Hoje mantém o essencial e retira somente duplicações com destino validado', async ({ page }) => {
@@ -85,12 +88,12 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
 
 test('consolidação visual não altera dados nem a navegação atual', async ({ page }) => {
   await openApp(page);
-  const normalizedBefore = await waitForStoredState(page);
+  await expect.poll(() => businessState(page), { timeout: 10000 }).toBe(expectedBusinessState);
 
   await expect(page.locator('nav.fixed.bottom-0 [data-view]')).toHaveCount(5);
   await expect(page.locator('[data-view="dashboard"]').first()).toContainText('Início');
   await expect(page.locator('[data-view="day"]').last()).toContainText('Dia');
   await expect(page.locator('[data-view="settings"]').first()).toContainText('Ajustes');
 
-  await expect.poll(() => storedState(page), { timeout: 10000 }).toBe(normalizedBefore);
+  await expect.poll(() => businessState(page), { timeout: 10000 }).toBe(expectedBusinessState);
 });
