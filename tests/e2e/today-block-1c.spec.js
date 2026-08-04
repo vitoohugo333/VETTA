@@ -24,6 +24,7 @@ async function openApp(page) {
   await expect(page.locator('#view-dashboard')).toBeVisible();
   await expect.poll(() => page.locator('#view-dashboard').getAttribute('data-block1c')).toBe('ready');
   await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
+  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
 }
 
 async function businessState(page) {
@@ -73,11 +74,20 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
 
   await page.locator('[data-secondary-view="planning"]').click();
   await expect(page.locator('#view-planning')).toBeVisible();
+  await expect(page.locator('#planningHub')).toBeVisible();
+
+  await page.locator('[data-planning-section-open="goals"]').click();
   await expect(page.locator('#planningTargetInput')).toBeVisible();
+  await page.locator('#planningPage-goals [data-planning-section-back]').click();
+  await expect(page.locator('#planningHub')).toBeVisible();
+
+  await page.locator('[data-planning-section-open="distribution"]').click();
   await expect(page.locator('#planningRevenueChart')).toBeVisible();
   await expect(page.locator('#planningDreGross')).toBeVisible();
+  await page.locator('#planningPage-distribution [data-planning-section-back]').click();
+  await expect(page.locator('#planningHub')).toBeVisible();
 
-  await page.locator('#view-planning [data-back]').click();
+  await page.locator('#view-planning > div:first-child [data-back]').click();
   await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
   await expect(page.locator('#historyDaysPanel')).toBeVisible();
   await page.locator('[data-history-tab="analysis"]').click();
