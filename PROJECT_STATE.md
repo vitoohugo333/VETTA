@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê
 
 **Atualizado em:** 2026-08-03  
-**Estado:** branch UX separada; Bloco 1 implementado; versão estável dos testadores preservada.  
-**Alteração em curso:** Bloco 1 aguardando validação física no celular pelo GitHub Pages.
+**Estado:** tentativa anterior do Bloco 1 revertida; interface restaurada; plano reescrito com destino explícito de cada elemento.  
+**Alteração em curso:** nenhuma no aplicativo; próximo bloco ainda depende de autorização específica.
 
 ## Estado atual
 
@@ -12,68 +12,73 @@
 | Branch estável dos testadores | `netlify/teste-fechado` |
 | Site estável dos testadores | `https://calculaae.netlify.app` |
 | Branch de desenvolvimento UX | `netlify/teste-fechado-ux` |
-| Origem da branch UX | fotografia `c1cca4cd573004b332fb04a2c57c992b2ce8364a` da branch estável |
-| Ambiente UX | GitHub Pages selecionado manualmente pelo proprietário; conteúdo servido ainda precisa de validação física |
+| Ambiente UX | GitHub Pages apontado manualmente para a branch UX |
 | Plano ativo | `docs/planos/01-CONSOLIDACAO-DA-EXPERIENCIA.md` |
 | Branch histórica permanente | `migration/vetta-clean-3-5-1` |
-| `main` | protegida e não alterada; `2a42c39612ec161bf58f16bbbbbd26521f28d30a` |
 
-## Bloco 1 — navegação e tela Hoje
+## Reversão concluída
 
-### Resultado implementado
+A mudança visual anterior do Bloco 1 foi retirada da branch UX.
 
-- navegação principal apresentada como `Hoje | Histórico | Planejar | Mais`;
-- a aba `Dia` saiu da navegação principal;
-- `Registrar meu dia` continua acessível dentro de Hoje;
-- a tela Hoje foi reduzida a:
-  1. meta ou situação de hoje;
-  2. progresso do mês;
-  3. leitura ou recomendação contextual;
-- detalhamento semanal, gráfico de distribuição, controle direto da meta e atalho secundário de planejamento deixaram de competir na tela Hoje;
-- Ajustes foi apresentado como Planejar sem trocar os IDs e funções internas existentes.
+Foram restaurados:
 
-### Proteções mantidas
+- navegação original `Início | Dia | Histórico | Ajustes | Mais`;
+- todos os cartões originais da tela Início;
+- gráfico de pizza `Distribuição da meta`;
+- situação semanal;
+- controle de objetivo mensal;
+- seletor de dias de trabalho;
+- atalho de planejamento.
 
-- `app.js` não foi alterado;
-- chave de armazenamento `vetta-driver-intelligence-v3` preservada;
-- cálculos, registros, custos, eventos e importação/exportação preservados;
-- manifesto, service worker, cache, instalação e barreira de acesso não alterados;
-- `netlify/teste-fechado`, Netlify, `main` e PR #1 não receberam o Bloco 1.
+A restauração foi feita devolvendo `styles.css` exatamente ao conteúdo anterior à mudança visual.
 
-## Arquivos do bloco
+O teste `tests/navigation-ux-contract.test.mjs`, que exigia a ocultação desses elementos, foi removido.
 
-- `styles.css`: reorganização visual e nomes das quatro áreas;
-- `tests/navigation-ux-contract.test.mjs`: contrato estático da navegação e preservação da chave de dados;
-- `SKILLS.md`: regra de continuidade sem autorização duplicada;
-- `docs/incidents/INC-0004-autorizacao-duplicada-em-deploy-previsivel.md`: aprendizado de processo;
-- `PROJECT_STATE.md`: estado e pendência de validação.
+## O que permaneceu
 
-## Evidência e limitações
+- a branch UX continua separada da versão dos testadores;
+- Netlify continua ligado à branch estável;
+- `main` continua fora deste trabalho;
+- cálculos, dados, `app.js`, PWA e acesso não foram alterados;
+- a regra de não pedir autorização duplicada para etapas operacionais previsíveis permanece válida;
+- a PR #1 permanece intocada.
 
-- a branch UX nasceu idêntica à fotografia estável e recebeu as mudanças somente nela;
-- a mudança funcional foi limitada à camada CSS existente;
-- o teste criado verifica o contrato por leitura dos arquivos, mas não foi executado nesta sessão porque o ambiente isolado não conseguiu resolver o domínio do GitHub para baixar a cópia;
-- não há CI automática confirmada para esta branch;
-- a interface ainda precisa ser aberta e validada fisicamente no celular.
+## Plano reescrito
 
-## Aprendizado do bloco
+O Plano 01 agora contém:
 
-**Aprendizado fechado:** não pedir autorização duplicada quando um bloco já autorizado depende apenas de apontar uma branch conhecida no GitHub Pages para validação.
+- inventário dos elementos atuais;
+- destino exato de cada elemento;
+- forma de acesso futura;
+- regra para itens visíveis, movidos, recolhidos, substituídos ou removidos;
+- proibição de ocultar por CSS sem destino visível;
+- mapa completo de Hoje, Registro, Histórico, Planejar, Mais e elementos globais;
+- ordem segura de execução em Blocos 1A, 1B, 1C e 1D;
+- tabela obrigatória para todo contrato futuro.
 
-- regra: `SKILLS.md`;
-- histórico: `docs/incidents/INC-0004-autorizacao-duplicada-em-deploy-previsivel.md`;
-- prova operacional: Bloco 1 executado somente na branch UX, mantendo o Netlify estável.
+## Nova ordem do trabalho
+
+1. **Bloco 1A — construir Planejar sem retirar nada de Hoje**;
+2. **Bloco 1B — construir Histórico com Dias e Análise**;
+3. **Bloco 1C — consolidar Hoje somente após os destinos estarem validados**;
+4. **Bloco 1D — ativar a navegação final de quatro áreas**.
+
+Nenhum elemento poderá desaparecer durante a transição.
+
+## Validação física
+
+A validação anterior confirmou que o fluxo simplificado parecia mais limpo, mas também revelou a regressão de acesso ao gráfico e a outros elementos.
+
+Após a reversão, a interface restaurada ainda precisa ser recarregada no GitHub Pages para confirmação visual. Como a alteração devolve exatamente o CSS anterior, não existe mudança nova de produto além da restauração.
+
+## Aprendizado fechado
+
+Mudança de interface não pode ser tratada apenas como redução visual. Todo elemento afetado precisa de destino, acesso e critério de aceite definidos antes da alteração.
+
+O Plano 01 passou a exigir esse mapa como parte do contrato.
 
 ## Próximo passo único
 
-O proprietário deve abrir o GitHub Pages no celular e validar:
+Apresentar o contrato executável do **Bloco 1A — Planejar**, citando cada elemento que será duplicado ou realocado, sem retirar nada de Hoje durante esse bloco.
 
-1. navegação `Hoje | Histórico | Planejar | Mais`;
-2. ausência da aba Dia;
-3. botão `Registrar meu dia` funcionando;
-4. troca entre as quatro áreas;
-5. conteúdo do formulário preservado ao navegar;
-6. Histórico, Planejar e Mais acessíveis;
-7. aparência geral sem cortes ou sobreposição.
-
-Até essa confirmação, o Bloco 1 permanece **aguardando validação física**.
+Esse próximo passo será apenas contrato e não autoriza implementação até aprovação explícita do proprietário.
