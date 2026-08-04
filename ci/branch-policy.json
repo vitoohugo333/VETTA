@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "app": true,
+  "branch": "netlify/teste-fechado-ux",
+  "role": "ux-development",
+  "published": {
+    "type": "github-pages",
+    "url": "https://vitoohugo333.github.io/VETTA/",
+    "authentication": "none",
+    "verifyFiles": [
+      "index.html",
+      "app-shell.html",
+      "app.js",
+      "styles.css",
+      "manifest.webmanifest",
+      "sw.js"
+    ]
+  }
+}
