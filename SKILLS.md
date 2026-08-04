@@ -1,82 +1,54 @@
-# VETTA — conhecimentos técnicos obrigatórios
+<!-- VETTA_GOVERNANCE_VERSION: 2026-08-03.2 -->
+# VETTA — índice técnico obrigatório
 
-Este arquivo é o índice permanente das verificações técnicas do projeto. Deve ser lido junto com `AGENTS.md` antes de `PROJECT_STATE.md`.
+Este arquivo é o mapa de leitura para qualquer agente. Ele deve ser lido depois de `AGENTS.md` e antes de `PROJECT_STATE.md`.
 
-- `AGENTS.md`: autoridade, escopo e forma de trabalhar.
-- `SKILLS.md`: conhecimentos transversais e indicação dos arquivos especializados.
-- `LEARNING_RULES.md`: ciclo obrigatório para preservar incidentes e aprendizados reutilizáveis.
-- arquivos especializados, como `PWA_RULES.md`: regras técnicas de uma área.
-- `tests/README.md`: estratégia de testes, custo-benefício e limites da automação de navegador.
-- `docs/incidents/`: história completa de falhas e descobertas relevantes já confirmadas.
-- `PROJECT_STATE.md`: estado atual, evidências e pendências da branch.
+## Sequência obrigatória
 
-Um aprendizado só entra aqui ou no arquivo especializado quando houver causa confirmada e regra reutilizável. Hipótese não vira regra.
+1. `AGENTS.md` — autoridade, escopo, fontes de verdade e forma de trabalhar;
+2. `SKILLS.md` — este índice;
+3. `TESTING_RULES.md` — responsabilidade autônoma por testes e CI Universal Adaptativa;
+4. arquivo especializado aplicável, especialmente `PWA_RULES.md`;
+5. `LEARNING_RULES.md` quando houver defeito, quase falha ou aprendizado;
+6. `PROJECT_STATE.md` — estado atual da branch;
+7. fontes vivas relevantes.
 
-## Leitura obrigatória por tipo de trabalho
+## Arquivos operacionais
 
-- Em todo trabalho técnico: ler `AGENTS.md`, este `SKILLS.md` e `PROJECT_STATE.md`.
-- Antes de encerrar um bloco que encontrou defeito, quase falha ou conhecimento reutilizável: ler e aplicar `LEARNING_RULES.md`.
-- Ao investigar sintoma semelhante a algo já ocorrido: consultar o índice `docs/incidents/README.md` antes de formular a correção.
-- Antes de criar, ampliar ou executar automação de navegador, CI ou teste de interação: ler `tests/README.md` e preservar sua política de custo-benefício.
-- Alteração em instalação, manifesto, service worker, cache, ícones, modo standalone, barreira de acesso ou publicação do PWA: ler `PWA_RULES.md`.
-- Quando surgir uma nova área com regras recorrentes, criar um arquivo operacional específico e registrá-lo aqui e no `AGENTS.md`.
-
-## Fechamento obrigatório de aprendizado
-
-Ao terminar um bloco técnico relevante, o agente deve registrar uma destas conclusões:
-
-- `Nenhum aprendizado permanente novo`, com justificativa breve;
-- `Aprendizado fechado`, citando incidente/aprendizado, regra e teste ou prova;
-- `Aprendizado pendente`, quando a causa ainda não estiver confirmada, mantendo a investigação no `PROJECT_STATE.md`.
-
-Esse fechamento faz parte do bloco já autorizado. Não exige nova autorização e não deve interromper mitigação urgente.
-
-## Quando preservar conhecimento
-
-Além de falhas graves, registrar descobertas que tenham valor claro para:
-
-- outras áreas do CalculaAê;
-- outros PWAs;
-- outras aplicações web;
-- projetos futuros;
-- práticas gerais de engenharia.
-
-A relevância futura do conhecimento importa tanto quanto o tamanho imediato do erro. Os critérios completos estão em `LEARNING_RULES.md`.
-
-## Onde cada aprendizado deve ser registrado
-
-- `AGENTS.md`: autorização, escopo, comunicação, checkpoints e forma de operar.
-- `SKILLS.md`: índice dos conhecimentos permanentes e regra para localizar o arquivo especializado correto.
-- `LEARNING_RULES.md`: critérios, ciclo de aprendizado e equilíbrio entre rigor e praticidade.
-- `docs/incidents/`: sintoma, causa imediata, causa estrutural, falha de detecção, tentativas materiais, prevenção, alcance e evidências.
-- arquivo especializado, como `PWA_RULES.md`: causa técnica confirmada, prevenção e teste obrigatório daquela área.
-- `tests/README.md`: estratégia prática de testes, consumo de recursos e diferença entre prova automatizada e validação física.
-- teste automatizado: prova executável que impede a regressão.
-- `PROJECT_STATE.md`: o que aconteceu nesta branch, qual fotografia foi publicada, validação manual e pendência atual.
-
-O mesmo problema pode gerar registros complementares, mas não cópias desorganizadas: a história fica em `docs/incidents/`; a regra operacional fica no arquivo da área; a evidência atual fica no `PROJECT_STATE.md`; a prevenção executável fica no teste.
-
-## Arquivos especializados atuais
-
-| Área | Arquivo obrigatório | Histórico e provas |
+| Área | Arquivo | Prova executável ou histórica |
 |---|---|---|
-| Aprendizado técnico | `LEARNING_RULES.md` | `docs/incidents/README.md` |
-| PWA, instalação e abertura standalone | `PWA_RULES.md` | incidentes `INC-0001` e `INC-0002`; testes de PWA |
-| Automação de navegador e CI | `tests/README.md` | `playwright.config.js`, `tests/e2e-remote/` e workflows aplicáveis |
+| Testes e CI | `TESTING_RULES.md` | `.github/workflows/ci-engine.yml`, `ci/branch-policy.json`, `scripts/ci/` |
+| PWA, instalação, cache e acesso | `PWA_RULES.md` | testes PWA, Playwright e ambiente publicado |
+| Aprendizado técnico | `LEARNING_RULES.md` | `docs/incidents/` |
+| Operação prática dos testes | `tests/README.md` | testes descobertos na própria branch |
+| Estado vivo | `PROJECT_STATE.md` | branch, commit, CI, deploy e validação física |
 
-Não criar arquivos especializados vazios. Uma nova área nasce quando existir ao menos uma regra confirmada e reutilizável que justifique sua manutenção.
+## Regra de consistência entre branches
 
-## Sincronização remota e deploy ligado à branch
+`AGENTS.md`, `SKILLS.md`, `TESTING_RULES.md`, `PWA_RULES.md` e `LEARNING_RULES.md` são canônicos na `main` e devem ser idênticos nas branches ativas.
 
-A branch remota confirmada é a fonte de trabalho em tempo real. Uma cópia local pode preparar e testar, mas o bloco só termina depois de sincronizar a alteração autorizada no GitHub e verificar o resultado remoto.
+A CI compara esses arquivos. Divergência não autorizada é falha de governança, porque um agente novo poderia receber instruções diferentes dependendo da branch.
 
-Quando uma branch alimenta automaticamente um site de validação:
+`PROJECT_STATE.md`, planos, incidentes e `ci/branch-policy.json` podem e devem refletir o estado específico de cada branch.
 
-1. confirmar a ponta da branch imediatamente antes de gravar;
-2. criar o commit somente sobre essa ponta, sem sobrescrever avanço concorrente;
-3. confirmar que o GitHub passou a apontar para o novo commit;
-4. identificar o deploy gerado por esse commit;
-5. verificar que o deploy ficou pronto e que o conteúdo técnico relevante corresponde ao commit;
-6. manter mudanças de interface ou PWA como **aguardando validação física** até o teste no celular.
+## Responsabilidade do agente
 
-Commit é uma fotografia salva do projeto. Deploy pronto comprova que essa fotografia foi servida, mas não substitui os testes funcionais nem a validação física exigida.
+Dentro de um bloco autorizado, o agente decide os testes necessários. Não transfira ao proprietário decisões como “rodar ou não rodar teste”, “qual navegador usar” ou “se deve verificar o ambiente publicado”.
+
+A escolha deve seguir risco e evidência, não conveniência operacional.
+
+## Criação de branch
+
+Antes da primeira alteração funcional numa branch nova, confirme:
+
+- arquivos canônicos presentes e iguais à `main`;
+- `PROJECT_STATE.md` específico criado;
+- `ci/branch-policy.json` correto;
+- `.github/workflows/ci-autonomous.yml` presente;
+- CI inicial verde na fotografia de origem.
+
+Sem isso, a branch não está pronta para desenvolvimento.
+
+## Fechamento
+
+Todo bloco técnico termina declarando uma das três situações de aprendizado previstas em `LEARNING_RULES.md` e apresentando evidência fresca dos testes escolhidos.
