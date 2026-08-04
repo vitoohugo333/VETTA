@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê (`netlify/teste-fechado`)
 
 **Atualizado em:** 2026-08-03  
-**Estado:** versão estável preservada; CI Universal Adaptativa e acesso OIDC do robô instalados.  
-**Alteração em curso:** primeira prova automática local e publicada.
+**Estado:** versão estável preservada; CI Universal Adaptativa instalada; testes locais completos aprovados.  
+**Alteração em curso:** Netlify ainda precisa servir a fotografia atual para concluir a prova OIDC publicada.
 
 ## Estado atual
 
@@ -40,7 +40,7 @@ Somente infraestrutura de engenharia:
 
 ## Acesso do robô
 
-O novo caminho `/__vetta-oidc-access` aceita somente identidade temporária assinada pelo GitHub e vinculada a:
+O caminho `/__vetta-oidc-access` aceita somente identidade temporária assinada pelo GitHub e vinculada a:
 
 - repositório imutável do VETTA;
 - proprietário autorizado;
@@ -51,24 +51,26 @@ O novo caminho `/__vetta-oidc-access` aceita somente identidade temporária assi
 
 A sessão dura 15 minutos. A rota antiga por senha permanece temporariamente apenas como retorno seguro até a primeira prova OIDC passar.
 
-## Validação
+## Evidência atual
 
-A CI deve executar:
+A execução `30866370117` comprovou na fotografia `eb48f2d8c0a89663efd073b89c6f49eeb0b51635`:
 
-- governança e sintaxe;
-- todos os testes `tests/**/*.test.mjs`;
-- navegador local conforme a classificação;
-- ambiente publicado com confirmação do commit servido;
-- artefatos somente em falha.
+- governança, sintaxe, JSON e todos os testes Node: aprovados;
+- Chromium móvel e desktop: aprovados;
+- Firefox: aprovado;
+- WebKit: aprovado;
+- artefato de falha: criado corretamente quando necessário.
+
+A prova publicada foi corretamente recusada porque, durante a execução, o Netlify ainda servia a fotografia intermediária `05de0909e007428527bd989a16d866e8697c03ce`, que não continha a rota OIDC final. Isso é divergência de publicação, não defeito confirmado do aplicativo nem do token.
 
 ## Validação física
 
-Nenhuma mudança visual ou de PWA foi feita neste bloco. Nova validação física não é necessária para a infraestrutura, salvo se a prova revelar comportamento diferente no aplicativo.
+Nenhuma mudança visual ou de PWA foi feita neste bloco. Nova validação física não é necessária para a infraestrutura, salvo se a prova publicada revelar comportamento diferente no aplicativo.
 
 ## Aprendizado
 
-**Aprendizado fechado:** a automação deve pertencer à branch e ao risco, não a um provedor de hospedagem específico. Netlify é apenas um adaptador de prova publicada.
+**Aprendizado fechado:** a automação deve pertencer à branch e ao risco, não a um provedor de hospedagem específico. A CI deve recusar um ambiente que serve fotografia diferente, mesmo quando ele responde normalmente.
 
 ## Próximo passo único
 
-Confirmar a primeira execução automática e publicada desta fotografia. Se a identidade OIDC passar, remover a rota e a variável antigas baseadas em senha.
+Aguardar o deploy automático desta fotografia e executar novamente a prova publicada. Somente depois de OIDC e commit servido passarem, remover a rota e a variável antigas baseadas em senha.
