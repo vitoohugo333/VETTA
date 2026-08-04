@@ -58,13 +58,20 @@ function record(date, gross, km) {
 async function openWithState(page, state) {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.waitForURL(/app-shell\.html(?:$|[?#])/);
+  await expect(page.locator('#view-dashboard')).toBeVisible();
+}
+
+async function openHistory(page) {
+  await page.locator('[data-view="history"]').first().click();
+  await expect(page.locator('#view-history')).toBeVisible();
 }
 
 test('Histórico abre em Dias e editar ou excluir não duplica registros', async ({ page }) => {
   const { monday, tuesday } = currentWeekDates();
   await openWithState(page, stateWithRecords([record(monday, 500, 100), record(tuesday, 420, 80)]));
 
-  await page.locator('[data-view="history"]').first().click();
+  await openHistory(page);
   await expect(page.locator('#historyDaysPanel')).toBeVisible();
   await expect(page.locator('#historyAnalysisPanel')).toBeHidden();
   await expect(page.locator('#historyCount')).toContainText('2 REGISTROS');
@@ -81,7 +88,7 @@ test('Histórico abre em Dias e editar ou excluir não duplica registros', async
   expect(saved.records).toHaveLength(2);
   expect(saved.records.find(item => item.date === monday)?.gross).toBe(650);
 
-  await page.locator('[data-view="history"]').first().click();
+  await openHistory(page);
   await expect(page.locator('#historyCount')).toContainText('2 REGISTROS');
   page.once('dialog', dialog => dialog.accept());
   await page.locator(`[data-action="delete"][data-date="${tuesday}"]`).click();
@@ -98,7 +105,7 @@ test('Análise reúne resumo, gráfico, comparação e a mesma semana de Início
   const { monday, tuesday } = currentWeekDates();
   await openWithState(page, stateWithRecords([record(monday, 500, 100), record(tuesday, 420, 80)]));
 
-  await page.locator('[data-view="history"]').first().click();
+  await openHistory(page);
   await page.locator('[data-history-tab="analysis"]').click();
 
   await expect(page.locator('#historyAnalysisPanel')).toBeVisible();
@@ -116,6 +123,7 @@ test('Análise reúne resumo, gráfico, comparação e a mesma semana de Início
   }));
 
   await page.locator('[data-view="dashboard"]').first().click();
+  await expect(page.locator('#view-dashboard')).toBeVisible();
   await expect(page.locator('#weekStatusTitle')).toBeVisible();
   const dashboardWeek = await page.evaluate(() => ({
     title: document.getElementById('weekStatusTitle').textContent,
@@ -132,7 +140,7 @@ test('Análise reúne resumo, gráfico, comparação e a mesma semana de Início
 
 test('Estados sem dados e com um único dia continuam claros', async ({ page }) => {
   await openWithState(page, stateWithRecords([]));
-  await page.locator('[data-view="history"]').first().click();
+  await openHistory(page);
   await expect(page.locator('#historyList')).toContainText('Nenhum dia registrado ainda');
 
   await page.locator('[data-history-tab="analysis"]').click();
