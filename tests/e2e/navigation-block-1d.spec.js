@@ -30,9 +30,9 @@ test('barra final mostra Hoje, Histórico, Planejar e Mais', async ({ page }) =>
   await openApp(page);
 
   const nav = page.locator('nav.fixed.bottom-0');
-  await expect(nav.locator('[data-view]:visible')).toHaveCount(4);
-  expect(await nav.locator('[data-view]:visible span').allTextContents()).toEqual(['Hoje', 'Histórico', 'Planejar', 'Mais']);
-  await expect(nav.locator('[data-view="day"]')).toBeHidden();
+  await expect(nav.locator('[data-view]')).toHaveCount(4);
+  expect(await nav.locator('[data-view] span').allTextContents()).toEqual(['Hoje', 'Histórico', 'Planejar', 'Mais']);
+  await expect(nav.locator('[data-view="day"]')).toHaveCount(0);
   await expect(nav.locator('[data-view="settings"]')).toHaveCount(0);
   await expect(nav.locator('[data-view="dashboard"]')).toHaveClass(/active/);
 
