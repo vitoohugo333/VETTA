@@ -23,6 +23,7 @@ async function openApp(page) {
   await page.waitForURL(/app-shell\.html(?:$|[?#])/);
   await expect(page.locator('#view-dashboard')).toBeVisible();
   await expect.poll(() => page.locator('#view-dashboard').getAttribute('data-block1c')).toBe('ready');
+  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
 }
 
 async function businessState(page) {
@@ -49,7 +50,7 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
   page.on('pageerror', error => errors.push(error.message));
   await openApp(page);
 
-  for (const selector of ['#kpiGrossDaily', '#kpiNetDaily', '#kpiKmDaily', '[data-view="day"]', '#monthStatusTitle', '#insightTitle', '[data-secondary-view="planning"]']) {
+  for (const selector of ['#kpiGrossDaily', '#kpiNetDaily', '#kpiKmDaily', '#view-dashboard button[data-view="day"]', '#monthStatusTitle', '#insightTitle', '[data-secondary-view="planning"]']) {
     await expect(page.locator(selector).first()).toBeVisible();
   }
   await expect(page.locator('#monthProgress')).toBeAttached();
@@ -76,8 +77,8 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
   await expect(page.locator('#planningRevenueChart')).toBeVisible();
   await expect(page.locator('#planningDreGross')).toBeVisible();
 
-  await page.locator('[data-back]').click();
-  await page.locator('[data-view="history"]').first().click();
+  await page.locator('#view-planning [data-back]').click();
+  await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
   await expect(page.locator('#historyDaysPanel')).toBeVisible();
   await page.locator('[data-history-tab="analysis"]').click();
   await expect(page.locator('#historyWeekStatusTitle')).toBeVisible();
@@ -86,14 +87,15 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
   expect(errors).toEqual([]);
 });
 
-test('consolidação visual não altera dados nem a navegação atual', async ({ page }) => {
+test('consolidação visual não altera dados e usa a navegação final', async ({ page }) => {
   await openApp(page);
   await expect.poll(() => businessState(page), { timeout: 10000 }).toBe(expectedBusinessState);
 
-  await expect(page.locator('nav.fixed.bottom-0 [data-view]')).toHaveCount(5);
-  await expect(page.locator('[data-view="dashboard"]').first()).toContainText('Início');
-  await expect(page.locator('[data-view="day"]').last()).toContainText('Dia');
-  await expect(page.locator('[data-view="settings"]').first()).toContainText('Ajustes');
+  const nav = page.locator('nav.fixed.bottom-0');
+  await expect(nav.locator('[data-view]:visible')).toHaveCount(4);
+  expect(await nav.locator('[data-view]:visible span').allTextContents()).toEqual(['Hoje', 'Histórico', 'Planejar', 'Mais']);
+  await expect(nav.locator('[data-view="day"]')).toBeHidden();
+  await expect(nav.locator('[data-view="settings"]')).toHaveCount(0);
 
   await expect.poll(() => businessState(page), { timeout: 10000 }).toBe(expectedBusinessState);
 });
