@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê (`netlify/teste-fechado-ux`)
 
-**Atualizado em:** 2026-08-03, horário de Brasília  
-**Estado:** Bloco 1A — Planejar implementado e aprovado pela CI; aguardando validação física no celular.  
-**Alteração em curso:** validação manual da nova área Planejar no GitHub Pages.
+**Atualizado em:** 2026-08-03 22:14, horário de Brasília  
+**Estado:** Bloco 1A — Planejar implementado, aprovado pela CI e validado fisicamente no celular.  
+**Alteração em curso:** nenhuma mudança funcional; bloco encerrado e preservado na branch UX.
 
 ## Estado atual
 
@@ -12,6 +12,7 @@
 | Branch | `netlify/teste-fechado-ux` |
 | Papel | desenvolvimento e validação de interface |
 | Fotografia funcional testada | `7710f7db7be4485aab31bcbf96d51443d9f932a4` |
+| Fotografia documental anterior | `e89edb67be6b0714f975300f8dc7e753ff7355fa` |
 | GitHub Pages | `https://vitoohugo333.github.io/VETTA/` |
 | Branch estável | `netlify/teste-fechado` |
 | Netlify estável | `https://calculaae.netlify.app/` |
@@ -19,7 +20,7 @@
 
 ## Bloco 1A — Planejar
 
-Foi construída uma área Planejar completa, acessada pelo botão `Ver planejamento do mês` existente em Início.
+Foi construída uma área Planejar completa, acessada a partir de Início.
 
 A área reúne:
 
@@ -45,6 +46,21 @@ Durante o Bloco 1A:
 - nenhum elemento foi ocultado, removido ou recolhido no local original;
 - a duplicação é temporária e só poderá ser retirada em bloco posterior após validação explícita do destino.
 
+## Validação física concluída
+
+Em 2026-08-03, o proprietário validou a interface no celular pelo GitHub Pages e informou que Planejar está no fim da página Início e que o resultado está bom.
+
+A captura fornecida confirma, no trecho visível:
+
+- carregamento do aplicativo em navegador móvel;
+- tela Ajustes preservada;
+- navegação inferior completa;
+- ausência de corte, sobreposição ou quebra visual evidente no trecho exibido.
+
+A posição atual de Planejar no fim de Início foi aceita para este bloco.
+
+A validação física registra aparência e organização aprovadas pelo proprietário. Os fluxos funcionais permanecem sustentados pela cobertura automática descrita abaixo.
+
 ## Arquivos funcionais
 
 - `planning-1a.js`: estrutura, renderização e interações da nova área Planejar;
@@ -68,14 +84,14 @@ Durante o Bloco 1A:
   - volta para Início e confirma que os elementos originais continuam visíveis.
 
 - `tests/e2e/cost-modal.spec.js`:
-  - passou a esperar Ajustes ficar visível antes de abrir o modal de custos;
+  - espera Ajustes ficar visível antes de abrir o modal de custos;
   - nenhuma lógica do aplicativo foi alterada por esse ajuste.
 
 ## Evidência automática
 
-Execução final: `30867200539`.
+Execução final do estado anterior: `30867449870`.
 
-A execução verificou exatamente a fotografia funcional `7710f7db7be4485aab31bcbf96d51443d9f932a4` e concluiu com sucesso:
+A execução verificou a fotografia documental `e89edb67be6b0714f975300f8dc7e753ff7355fa` e concluiu com sucesso:
 
 - governança, sintaxe, JSON e todos os testes Node;
 - Chromium;
@@ -84,14 +100,9 @@ A execução verificou exatamente a fotografia funcional `7710f7db7be4485aab31bc
 - comparação dos arquivos públicos com o GitHub Pages, incluindo `planning-1a.js`;
 - testes de interação no próprio site publicado.
 
-Duas falhas anteriores foram classificadas antes do fechamento:
-
-1. um teste estático confundia `data-cost-id` com `id` de elemento; o teste foi corrigido;
-2. uma execução concorrente foi cancelada enquanto instalava Firefox; a execução final sem concorrência passou integralmente.
-
 ## Proteções confirmadas
 
-Não foram alterados:
+Não foram alterados pelo Bloco 1A:
 
 - `app.js` e as fórmulas financeiras;
 - chave ou formato dos dados locais;
@@ -102,21 +113,6 @@ Não foram alterados:
 - `main` como aplicativo;
 - PR #1.
 
-## Validação física pendente
-
-O Bloco 1A permanece **aguardando validação física**.
-
-No celular, validar:
-
-1. abrir Início e tocar em `Ver planejamento do mês`;
-2. conferir o resumo, Metas, Agenda, Operação e combustível, Custos e reservas, Distribuição da meta, Aprendizado e Opções avançadas;
-3. conferir o gráfico de pizza visível;
-4. alterar um valor simples e verificar a atualização no restante do aplicativo;
-5. abrir e fechar as seções recolhíveis;
-6. usar Voltar e confirmar retorno para Início;
-7. confirmar ausência de cortes, sobreposições ou travamentos;
-8. confirmar que Início e Ajustes continuam completos.
-
 ## Aprendizado
 
 **Nenhum aprendizado permanente novo.**
@@ -125,4 +121,4 @@ O bloco aplicou regras já registradas: destino explícito antes de retirada, um
 
 ## Próximo passo único
 
-O proprietário deve validar o Bloco 1A no celular pelo GitHub Pages. Somente depois dessa confirmação o Bloco 1A pode ser encerrado e o contrato do Bloco 1B — Histórico com Dias e Análise — pode ser apresentado. Nenhuma retirada de conteúdo de Início ou Ajustes está autorizada por este estado.
+Preparar e apresentar o contrato do Bloco 1B — Histórico com Dias e Análise. Nenhuma retirada de conteúdo de Início ou Ajustes está autorizada por este estado.
