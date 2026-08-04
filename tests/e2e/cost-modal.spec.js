@@ -37,9 +37,12 @@ test('modal fecha e salva uma despesa sem carregar patches no navegador', async 
   await page.waitForURL(/app-shell\.html/);
   await expect(page.locator('#appVersionLabel')).toHaveText('Versão 3.5.1');
   await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
+  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
 
   await page.locator('nav.fixed.bottom-0 [data-view="planning"]').click();
-  await expect(page.locator('#view-planning')).toBeVisible();
+  await expect(page.locator('#planningHub')).toBeVisible();
+  await page.locator('[data-planning-section-open="costs"]').click();
+  await expect(page.locator('#planningPage-costs')).toBeVisible();
   await expect(page.locator('#planningAddCostButton')).toBeVisible();
   await page.locator('#planningAddCostButton').click();
 
