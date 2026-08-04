@@ -11,8 +11,10 @@
 | Repositório | `vitoohugo333/VETTA` |
 | Branch | `netlify/teste-fechado-ux` |
 | Papel | desenvolvimento e validação de interface |
-| Fotografia funcional testada | `25441d5c44bbf0673ba7f7082cfc29203b29b923` |
-| Execução automática funcional | `30918538960` |
+| Fotografia integral testada | `7d256d6a701ea7a0794610fc9abb7da8478e8e12` |
+| Execução automática integral | `30921060861` |
+| Fotografia funcional de referência | `25441d5c44bbf0673ba7f7082cfc29203b29b923` |
+| Execução funcional de referência | `30918538960` |
 | GitHub Pages | `https://vitoohugo333.github.io/VETTA/` |
 | Branch estável | `netlify/teste-fechado` |
 | Netlify estável | `https://calculaae.netlify.app/` |
@@ -71,13 +73,14 @@ O fluxo aberto por `Hoje → Registrar meu dia` foi reorganizado sem substituir 
 - `ci/branch-policy.json`: inclui `record-2.js` na prova do site publicado;
 - `tests/record-block-2-contract.test.mjs`: protege campos, armazenamento, uma data por registro, retorno seguro e seletores estáveis;
 - `tests/e2e/record-block-2.spec.js`: testa registro novo, opcionais, confirmação, atualização sem duplicação e edição pelo Histórico;
-- `tests/e2e-remote/record-block-2-published.spec.js`: prova o fluxo no GitHub Pages.
+- `tests/e2e-remote/record-block-2-published.spec.js`: prova o fluxo no GitHub Pages;
+- testes de navegação passaram a tolerar a recarga normal do PWA sem enfraquecer as verificações de tela, rascunho ou botão Voltar.
 
 ## Evidência automática
 
-Execução funcional final: `30918538960`.
+Execução integral final: `30921060861`.
 
-A execução verificou exatamente a fotografia funcional `25441d5c44bbf0673ba7f7082cfc29203b29b923` e concluiu com sucesso:
+A execução verificou exatamente a fotografia `7d256d6a701ea7a0794610fc9abb7da8478e8e12` e concluiu com sucesso:
 
 - governança, sintaxe, JSON e todos os testes Node;
 - Chromium;
@@ -89,6 +92,7 @@ A execução verificou exatamente a fotografia funcional `25441d5c44bbf0673ba7f7
 - confirmação depois de salvar;
 - criação e atualização da mesma data sem duplicação;
 - edição pelo Histórico;
+- preservação de rascunho e comportamento do botão Voltar;
 - paridade dos arquivos públicos com o GitHub Pages;
 - interação no próprio site publicado.
 
@@ -102,9 +106,15 @@ A primeira implementação usou uma classe Tailwind com colchetes diretamente em
 
 O teste de edição pelo Histórico preparava um registro e recarregava a página. O script inicial do teste restaurava o estado vazio. O cenário passou a iniciar diretamente com o registro esperado e a aguardar o botão de edição.
 
-Registro completo: `docs/incidents/INC-0007-classe-tailwind-usada-como-seletor-css.md`.
+### Espera instável durante a recarga normal do PWA
 
-Prevenção executável: `tests/record-block-2-contract.test.mjs` e `tests/e2e/record-block-2.spec.js`.
+Testes antigos de navegação presumiam que o documento permaneceria estável imediatamente após a abertura ou ao usar Voltar. Firefox e WebKit podem trocar o contexto durante a ativação do service worker. As verificações passaram a esperar um estado observável estável, mantendo as mesmas exigências funcionais.
+
+Registro principal: `docs/incidents/INC-0007-classe-tailwind-usada-como-seletor-css.md`.
+
+Aprendizado relacionado à abertura do PWA: `docs/incidents/INC-0005-comparacao-de-dados-durante-abertura-pwa.md`.
+
+Prevenção executável: contratos e testes de Registro, navegação final e navegação secundária.
 
 ## Proteções confirmadas
 
