@@ -22,8 +22,9 @@ async function waitForStableApp(page) {
       const before = page.url();
       const navigationReady = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
       const recordReady = await page.locator('#view-day').getAttribute('data-block2');
+      const historyReady = await page.locator('#view-history').getAttribute('data-block4');
       await page.waitForTimeout(150);
-      return navigationReady === 'ready' && recordReady === 'ready' && page.url() === before ? 'stable' : 'waiting';
+      return navigationReady === 'ready' && recordReady === 'ready' && historyReady === 'ready' && page.url() === before ? 'stable' : 'waiting';
     } catch {
       return 'waiting';
     }
@@ -46,8 +47,9 @@ async function openHistoryDays(page) {
         return 'waiting';
       }
 
-      const daysTab = page.locator('[data-history-tab="days"]');
-      if (await daysTab.isVisible()) await daysTab.click();
+      if (await page.locator('#historyDaysPanel').isVisible()) return 'ready';
+      const hub = page.locator('#historyHub');
+      if (await hub.isVisible()) await page.locator('[data-history-section-open="days"]').click();
       return await page.locator('#historyDaysPanel').isVisible() ? 'ready' : 'waiting';
     } catch {
       return 'waiting';
