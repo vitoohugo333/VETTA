@@ -1,0 +1,289 @@
+name: VETTA CI Engine
+
+on:
+  workflow_call:
+    inputs:
+      target_ref:
+        description: Fotografia ou branch a testar
+        required: true
+        type: string
+      target_branch:
+        description: Nome legível da branch
+        required: true
+        type: string
+      base_sha:
+        description: Fotografia anterior para classificação automática
+        required: false
+        default: ''
+        type: string
+      mode:
+        description: auto, full ou published
+        required: false
+        default: auto
+        type: string
+      allow_published:
+        description: Permite prova do ambiente publicado quando a política pedir
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: vetta-ci-${{ inputs.target_branch }}-${{ inputs.mode }}
+  cancel-in-progress: true
+
+jobs:
+  inspect:
+    name: Classificar risco e branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      profile: ${{ steps.classify.outputs.profile }}
+      browser_matrix: ${{ steps.classify.outputs.browser_matrix }}
+      published_required: ${{ steps.classify.outputs.published_required }}
+      app: ${{ steps.policy.outputs.app }}
+      published_url: ${{ steps.policy.outputs.published_url }}
+      published_type: ${{ steps.policy.outputs.published_type }}
+      published_auth: ${{ steps.policy.outputs.published_auth }}
+      verify_files: ${{ steps.policy.outputs.verify_files }}
+      target_sha: ${{ steps.identity.outputs.target_sha }}
+    steps:
+      - name: Baixar motor canônico
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: .vetta-ci
+          fetch-depth: 1
+
+      - name: Baixar fotografia escolhida
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref }}
+          path: target
+          fetch-depth: 0
+
+      - name: Identificar fotografia exata
+        id: identity
+        shell: bash
+        working-directory: target
+        run: echo "target_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Levantar arquivos alterados
+        shell: bash
+        working-directory: target
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+          MODE: ${{ inputs.mode }}
+        run: |
+          : > "$RUNNER_TEMP/vetta-changed-files.txt"
+          if [ "$MODE" = "auto" ] && [ -n "$BASE_SHA" ] && [ "$BASE_SHA" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+            git diff --name-only "$BASE_SHA" HEAD > "$RUNNER_TEMP/vetta-changed-files.txt"
+          else
+            git ls-files > "$RUNNER_TEMP/vetta-changed-files.txt"
+          fi
+          echo "Arquivos considerados:"
+          cat "$RUNNER_TEMP/vetta-changed-files.txt"
+
+      - name: Classificar cobertura
+        id: classify
+        shell: bash
+        run: node .vetta-ci/scripts/ci/classify-changes.mjs "$RUNNER_TEMP/vetta-changed-files.txt" "${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+
+      - name: Ler política da branch
+        id: policy
+        shell: bash
+        run: node .vetta-ci/scripts/ci/read-policy.mjs target >> "$GITHUB_OUTPUT"
+
+      - name: Resumo da decisão automática
+        shell: bash
+        run: |
+          {
+            echo "### Decisão da CI"
+            echo "- Branch: \`${{ inputs.target_branch }}\`"
+            echo "- Fotografia: \`${{ steps.identity.outputs.target_sha }}\`"
+            echo "- Perfil: \`${{ steps.classify.outputs.profile }}\`"
+            echo "- Navegadores: \`${{ steps.classify.outputs.browser_matrix }}\`"
+            echo "- Prova publicada requerida: \`${{ steps.classify.outputs.published_required }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  quality:
+    name: Integridade e testes determinísticos
+    needs: inspect
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Baixar motor canônico
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: .vetta-ci
+          fetch-depth: 1
+
+      - name: Baixar fotografia escolhida
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref }}
+          path: target
+          fetch-depth: 1
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependências declaradas
+        if: ${{ hashFiles('target/package.json') != '' }}
+        working-directory: target
+        run: npm install --no-audit --no-fund
+
+      - name: Verificar governança, sintaxe, JSON e todos os testes Node
+        run: node .vetta-ci/scripts/ci/verify-repository.mjs target .vetta-ci
+
+  browser:
+    name: Navegador — ${{ matrix.browser }}
+    needs: [inspect, quality]
+    if: ${{ needs.inspect.outputs.browser_matrix != '[]' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ${{ fromJson(needs.inspect.outputs.browser_matrix) }}
+    steps:
+      - name: Baixar motor canônico
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: .vetta-ci
+          fetch-depth: 1
+
+      - name: Baixar fotografia escolhida
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref }}
+          path: target
+          fetch-depth: 1
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependências
+        working-directory: target
+        run: npm install --no-audit --no-fund
+
+      - name: Preparar cópia temporária da branch
+        env:
+          VETTA_EXPECTED_COMMIT: ${{ needs.inspect.outputs.target_sha }}
+          VETTA_TARGET_BRANCH: ${{ inputs.target_branch }}
+        run: node .vetta-ci/scripts/ci/prepare-site.mjs target
+
+      - name: Instalar navegador e dependências do sistema
+        working-directory: target
+        run: npx playwright install --with-deps "${{ matrix.browser }}"
+
+      - name: Executar interação local
+        working-directory: target
+        env:
+          VETTA_BROWSER: ${{ matrix.browser }}
+          VETTA_TEST_PROFILE: ${{ needs.inspect.outputs.profile }}
+        run: npx playwright test --config=playwright.config.js
+
+      - name: Guardar evidência da falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: falha-${{ inputs.target_branch }}-${{ matrix.browser }}
+          path: |
+            target/playwright-report/
+            target/test-results/
+          if-no-files-found: ignore
+          retention-days: 2
+
+  published:
+    name: Prova do ambiente publicado
+    needs: [inspect, quality, browser]
+    if: >-
+      ${{
+        always()
+        && inputs.allow_published
+        && needs.inspect.outputs.published_required == 'true'
+        && needs.inspect.outputs.published_url != ''
+        && needs.quality.result == 'success'
+        && (needs.browser.result == 'success' || needs.browser.result == 'skipped')
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Baixar motor canônico
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: .vetta-ci
+          fetch-depth: 1
+
+      - name: Baixar fotografia escolhida
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref }}
+          path: target
+          fetch-depth: 1
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependências
+        working-directory: target
+        run: npm install --no-audit --no-fund
+
+      - name: Instalar Chromium
+        working-directory: target
+        run: npx playwright install --with-deps chromium
+
+      - name: Aguardar paridade de arquivos públicos
+        if: ${{ needs.inspect.outputs.published_auth == 'none' }}
+        env:
+          VETTA_TEST_BASE_URL: ${{ needs.inspect.outputs.published_url }}
+          VETTA_VERIFY_FILES: ${{ needs.inspect.outputs.verify_files }}
+        run: node .vetta-ci/scripts/ci/wait-for-published.mjs target
+
+      - name: Solicitar identidade temporária do GitHub
+        id: oidc
+        if: ${{ needs.inspect.outputs.published_auth == 'github-oidc' }}
+        shell: bash
+        run: |
+          response=$(curl --fail --silent --show-error \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=vetta-netlify-robot")
+          token=$(printf '%s' "$response" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>process.stdout.write(JSON.parse(d).value||''))")
+          test -n "$token"
+          echo "::add-mask::$token"
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Testar ambiente real
+        working-directory: target
+        env:
+          VETTA_BROWSER: chromium
+          VETTA_TEST_BASE_URL: ${{ needs.inspect.outputs.published_url }}
+          VETTA_PUBLISHED_AUTH: ${{ needs.inspect.outputs.published_auth }}
+          VETTA_TEST_OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+          VETTA_EXPECTED_COMMIT: ${{ needs.inspect.outputs.target_sha }}
+          VETTA_TARGET_BRANCH: ${{ inputs.target_branch }}
+        run: npx playwright test --config=playwright.config.js
+
+      - name: Guardar evidência da falha publicada
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: falha-publicada-${{ inputs.target_branch }}
+          path: |
+            target/playwright-report/
+            target/test-results/
+          if-no-files-found: ignore
+          retention-days: 2
