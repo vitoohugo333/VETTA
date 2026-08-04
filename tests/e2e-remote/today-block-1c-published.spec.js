@@ -31,6 +31,7 @@ test('GitHub Pages serve o Bloco 1C e mantêm os destinos acessíveis', async ({
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
   await page.goto(url('app-shell.html'), { waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.locator('#view-dashboard').getAttribute('data-block1c')).toBe('ready');
+  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
 
   await expect(page.locator('#kpiGrossDaily')).toBeVisible();
   await expect(page.locator('[data-view="day"]').first()).toBeVisible();
@@ -41,10 +42,19 @@ test('GitHub Pages serve o Bloco 1C e mantêm os destinos acessíveis', async ({
   await expect(page.locator('#revenueChart')).toBeHidden();
 
   await page.locator('[data-secondary-view="planning"]').click();
-  await expect(page.locator('#planningTargetInput')).toBeVisible();
-  await expect(page.locator('#planningRevenueChart')).toBeVisible();
+  await expect(page.locator('#planningHub')).toBeVisible();
 
-  await page.locator('[data-back]').click();
+  await page.locator('[data-planning-section-open="goals"]').click();
+  await expect(page.locator('#planningTargetInput')).toBeVisible();
+  await page.locator('#planningPage-goals [data-planning-section-back]').click();
+  await expect(page.locator('#planningHub')).toBeVisible();
+
+  await page.locator('[data-planning-section-open="distribution"]').click();
+  await expect(page.locator('#planningRevenueChart')).toBeVisible();
+  await page.locator('#planningPage-distribution [data-planning-section-back]').click();
+  await expect(page.locator('#planningHub')).toBeVisible();
+
+  await page.locator('#view-planning > div:first-child [data-back]').click();
   await page.locator('[data-view="history"]').first().click();
   await page.locator('[data-history-tab="analysis"]').click();
   await expect(page.locator('#historyWeekStatusTitle')).toBeVisible();
