@@ -1,69 +1,66 @@
 # Estado oficial — VETTA (`main`)
 
 **Atualizado em:** 2026-08-03  
-**Estado:** `main` organizada como painel de controle e acionamento manual; não contém o aplicativo atual.  
-**Alteração em curso:** cadastro do segredo do robô e primeira execução do teste remoto ainda pendentes.
+**Estado:** governança canônica e CI Universal Adaptativa instaladas.  
+**Alteração em curso:** validação das primeiras execuções autônomas nas branches ativas.
 
 ## Papel da `main`
 
-A `main` é a branch padrão do GitHub e serve para:
+A `main` é o centro de governança e orquestração. Ela não contém nem publica a versão atual do aplicativo.
 
-- apresentar as regras gerais do repositório;
-- orientar agentes a localizar e ler a branch realmente afetada;
-- disponibilizar workflows que o GitHub exige na branch padrão;
-- permanecer protegida contra cópia ou publicação acidental do aplicativo.
+Ela mantém:
 
-Ela não alimenta `calculaae.netlify.app` e não contém a versão atual do aplicativo.
+- regras canônicas de agentes e testes;
+- motor reutilizável `.github/workflows/ci-engine.yml`;
+- orquestrador pelo issue #2;
+- scripts de classificação, verificação e prova publicada;
+- workflow autônomo para validar a própria governança.
 
-## Branches e ambientes atuais
+## Branches operacionais
 
 | Branch | Papel | Ambiente |
 |---|---|---|
-| `main` | controle, governança e lançador manual | nenhum aplicativo servido |
-| `netlify/teste-fechado` | versão estável dos testadores | `https://calculaae.netlify.app` |
-| `netlify/teste-fechado-ux` | desenvolvimento da reorganização da interface | GitHub Pages pendente de confirmação |
-| `migration/vetta-clean-3-5-1` | referência histórica permanente e PR #1 | nenhum desenvolvimento novo |
+| `main` | governança e motor central | nenhum aplicativo servido |
+| `netlify/teste-fechado` | versão estável dos testadores | `https://calculaae.netlify.app/` |
+| `netlify/teste-fechado-ux` | desenvolvimento de interface | `https://vitoohugo333.github.io/VETTA/` |
+| `migration/vetta-clean-3-5-1` | referência histórica permanente e PR #1 | sem desenvolvimento novo |
 
-Branches antigas continuam presentes e devem ser ignoradas até limpeza autorizada e tecnicamente possível.
+Branches antigas e temporárias continuam pendentes de limpeza autorizada e não devem ser reutilizadas.
 
-## Alterações feitas na `main`
+## CI Universal Adaptativa
 
-- `AGENTS.md` agora explica que regras e estados pertencem à branch onde estão;
-- `SKILLS.md` funciona como índice de controle e obriga a leitura da branch-alvo;
-- `.github/workflows/test-usage-manual.yml` disponibiliza o teste remoto somente sob acionamento manual;
-- nenhum HTML, JavaScript do aplicativo, cálculo, dado, manifesto, service worker ou arquivo de interface foi copiado para a `main`.
+- push, pull request e execução manual chamam o motor da `main`;
+- o motor testa a fotografia exata da branch;
+- arquivos alterados determinam a profundidade;
+- todos os testes Node presentes são descobertos automaticamente;
+- mudanças funcionais recebem navegador;
+- interface, armazenamento, cálculos integrados e PWA recebem Chromium, Firefox e WebKit;
+- ambiente publicado é provado quando a política da branch exigir;
+- execuções ultrapassadas da mesma branch são canceladas;
+- artefatos de falha ficam por dois dias.
 
-## Credencial do robô
+## Console do agente
 
-- o Netlify possui a variável secreta `VETTA_ACCESS_ROBOT_HASH`;
-- a branch estável possui a rota isolada `/__vetta-robot-access`;
-- a senha em texto não está no GitHub nem no Netlify;
-- falta cadastrar `VETTA_TEST_PASSWORD` como segredo do GitHub;
-- o conector GitHub não oferece criação de segredo e o `gh` não está instalado neste ambiente.
+O issue #2, `VETTA — Console de Testes Autônomos`, permite ao agente solicitar cobertura adicional de qualquer branch sem pedir ao proprietário para apertar botões.
 
-## Custo e desativação
+Comandos aceitos:
 
-O workflow:
+- `/vetta test <branch> auto`;
+- `/vetta test <branch> full`;
+- `/vetta test <branch> published`.
 
-- roda apenas manualmente;
-- usa uma máquina Linux e um Chromium;
-- tem limite de oito minutos;
-- não grava vídeo;
-- guarda evidências somente em falha por um dia.
+Somente o proprietário e o formato fechado são aceitos.
 
-Pode ser desativado removendo o workflow, apagando o segredo do GitHub ou apagando a variável do Netlify. Nenhuma dessas ações altera o aplicativo.
+## Segurança
 
-## PR e publicação
+O motor apenas lê e testa. Não faz commit, merge, deploy manual, mudança de dados ou publicação.
 
-- a PR #1 continua aberta em rascunho e não foi alterada;
-- não houve merge;
-- a `main` não foi ligada ao Netlify;
-- o aplicativo dos testadores continua vindo de `netlify/teste-fechado`.
+A prova do Netlify protegido usa identidade OIDC temporária do GitHub, sem segredo persistente no GitHub.
 
-## Desvio registrado
+## PR #1
 
-A branch `tmp/robot-access-safe` foi criada por engano e não recebeu arquivos. O conector atual não oferece exclusão de branch; ela deve ser removida manualmente pela interface do GitHub e nunca usada para desenvolvimento.
+A PR #1 permanece aberta em rascunho, ligada a `migration/vetta-clean-3-5-1`, sem merge e sem alteração neste bloco.
 
 ## Próximo passo único
 
-Cadastrar o segredo `VETTA_TEST_PASSWORD` nas configurações do GitHub. Depois, executar `Testar uso remoto do CalculaAê`, selecionando `netlify/teste-fechado` e mantendo o endereço padrão `https://calculaae.netlify.app`.
+Confirmar as primeiras execuções automáticas da `main`, da branch estável e da branch UX; depois registrar os resultados e retirar o acesso antigo por senha do robô se a prova OIDC passar.
