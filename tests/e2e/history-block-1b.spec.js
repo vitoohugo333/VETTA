@@ -60,7 +60,7 @@ async function waitForStableApp(page) {
     try {
       const before = page.url();
       const navigationReady = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
-      const historyReady = await page.locator('#view-history').getAttribute('data-block1b');
+      const historyReady = await page.locator('#view-history').getAttribute('data-block4');
       await page.waitForTimeout(150);
       return navigationReady === 'ready' && historyReady === 'ready' && page.url() === before ? 'stable' : 'waiting';
     } catch {
@@ -77,26 +77,34 @@ async function openWithState(page, state) {
   await expect(page.locator('#view-dashboard')).toBeVisible();
 }
 
-async function openHistory(page) {
+async function openHistoryHub(page) {
   await expect.poll(async () => {
     try {
-      if (await page.locator('#view-history').isVisible()) return 'visible';
+      if (!await page.locator('#view-history').isVisible()) {
+        const historyNav = page.locator('nav.fixed.bottom-0 [data-view="history"]');
+        if (await historyNav.isVisible()) await historyNav.click();
+      }
+      if (await page.locator('#historyHub').isVisible()) return 'ready';
       const historyNav = page.locator('nav.fixed.bottom-0 [data-view="history"]');
       if (await historyNav.isVisible()) await historyNav.click();
-      return await page.locator('#view-history').isVisible() ? 'visible' : 'waiting';
+      return await page.locator('#historyHub').isVisible() ? 'ready' : 'waiting';
     } catch {
       return 'waiting';
     }
-  }, { timeout: 15000 }).toBe('visible');
+  }, { timeout: 15000 }).toBe('ready');
 }
 
-test('Histórico abre em Dias e editar ou excluir não duplica registros', async ({ page }) => {
+async function openHistorySection(page, section) {
+  await openHistoryHub(page);
+  await page.locator(`[data-history-section-open="${section}"]`).click();
+  await expect(page.locator(`#historyPage-${section}`)).toBeVisible();
+}
+
+test('Dias registrados mantém edição e exclusão sem duplicar registros', async ({ page }) => {
   const { monday, tuesday } = currentWeekDates();
   await openWithState(page, stateWithRecords([record(monday, 500, 100), record(tuesday, 420, 80)]));
 
-  await openHistory(page);
-  await expect(page.locator('#historyDaysPanel')).toBeVisible();
-  await expect(page.locator('#historyAnalysisPanel')).toBeHidden();
+  await openHistorySection(page, 'days');
   await expect(page.locator('#historyCount')).toContainText('2 REGISTROS');
   await expect(page.locator('#historyList [data-action="edit"]')).toHaveCount(2);
   await expect(page.locator('#historyList [data-action="delete"]')).toHaveCount(2);
@@ -111,7 +119,7 @@ test('Histórico abre em Dias e editar ou excluir não duplica registros', async
   expect(saved.records).toHaveLength(2);
   expect(saved.records.find(item => item.date === monday)?.gross).toBe(650);
 
-  await openHistory(page);
+  await openHistorySection(page, 'days');
   await expect(page.locator('#historyCount')).toContainText('2 REGISTROS');
   page.once('dialog', dialog => dialog.accept());
   await page.locator(`[data-action="delete"][data-date="${tuesday}"]`).click();
@@ -122,20 +130,18 @@ test('Histórico abre em Dias e editar ou excluir não duplica registros', async
   expect(saved.records[0].date).toBe(monday);
 });
 
-test('Análise reúne resumo, gráfico, comparação e assume a semana retirada de Início', async ({ page }) => {
+test('Resumo, Semana e Comparação preservam os mesmos cálculos do Histórico 1B', async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   const { monday, tuesday } = currentWeekDates();
   await openWithState(page, stateWithRecords([record(monday, 500, 100), record(tuesday, 420, 80)]));
 
-  await openHistory(page);
-  await page.locator('[data-history-tab="analysis"]').click();
-
-  await expect(page.locator('#historyAnalysisPanel')).toBeVisible();
+  await openHistorySection(page, 'summary');
   await expect(page.locator('#historyChart')).toBeVisible();
   await expect(page.locator('#historyDays')).toHaveText('2');
-  await expect(page.locator('#historyInsight')).toContainText('Comparação entre dias');
+  await page.locator('#historyPage-summary [data-history-section-back]').click();
 
+  await page.locator('[data-history-section-open="week"]').click();
   const historyWeek = await page.evaluate(() => ({
     title: document.getElementById('historyWeekStatusTitle').textContent,
     pill: document.getElementById('historyWeekStatusPill').textContent,
@@ -147,7 +153,6 @@ test('Análise reúne resumo, gráfico, comparação e assume a semana retirada 
 
   await page.locator('[data-view="dashboard"]').first().click();
   await expect(page.locator('#view-dashboard')).toBeVisible();
-  await expect(page.locator('#weekStatusTitle')).toBeHidden();
   const dashboardWeek = await page.evaluate(() => ({
     title: document.getElementById('weekStatusTitle').textContent,
     pill: document.getElementById('weekStatusPill').textContent,
@@ -156,17 +161,23 @@ test('Análise reúne resumo, gráfico, comparação e assume a semana retirada 
     actual: document.getElementById('weekActual').textContent,
     revenueKm: document.getElementById('weekRevenueKm').textContent,
   }));
-
   expect(historyWeek).toEqual(dashboardWeek);
+
+  await openHistorySection(page, 'comparison');
+  await expect(page.locator('#historyInsight')).toContainText('Comparação entre dias');
   expect(errors).toEqual([]);
 });
 
 test('Estados sem dados e com um único dia continuam claros', async ({ page }) => {
   await openWithState(page, stateWithRecords([]));
-  await openHistory(page);
+  await openHistorySection(page, 'days');
   await expect(page.locator('#historyList')).toContainText('Nenhum dia registrado ainda');
+  await page.locator('#historyPage-days [data-history-section-back]').click();
 
-  await page.locator('[data-history-tab="analysis"]').click();
+  await page.locator('[data-history-section-open="comparison"]').click();
   await expect(page.locator('#historyInsight')).toContainText('Ainda não há dias suficientes');
+  await page.locator('#historyPage-comparison [data-history-section-back]').click();
+
+  await page.locator('[data-history-section-open="week"]').click();
   await expect(page.locator('#historyWeekStatusPill')).toHaveText('SEMANA');
 });
