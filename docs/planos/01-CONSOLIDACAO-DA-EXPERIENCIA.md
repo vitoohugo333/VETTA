@@ -1,6 +1,6 @@
 # Plano 01 — Consolidação da experiência
 
-**Estado:** ATIVO — Blocos 1A e 1B concluídos; Bloco 1C aprovado tecnicamente e aguardando validação física  
+**Estado:** ATIVO — Blocos 1A, 1B e 1C concluídos; Bloco 1D aprovado tecnicamente e aguardando validação física  
 **Atualizado em:** 2026-08-04, horário de Brasília  
 **Branch de desenvolvimento:** `netlify/teste-fechado-ux`  
 **Ambiente de validação:** GitHub Pages  
@@ -10,13 +10,13 @@
 
 Reorganizar o CalculaAê para que o motorista encontre rapidamente o que precisa, sem perder recursos, cálculos, dados ou caminhos de acesso.
 
-Navegação-alvo:
+Navegação final implementada:
 
 ```text
 Hoje | Histórico | Planejar | Mais
 ```
 
-`Registrar meu dia` continuará como ação destacada em Hoje, sem ocupar uma quinta aba.
+`Registrar meu dia` continua como ação destacada em Hoje, sem ocupar uma quinta aba.
 
 ## 2. Regra obrigatória de escopo
 
@@ -59,14 +59,14 @@ O Plano 01 não altera:
 
 ### 4.1 Hoje
 
-| Elemento | Destino permanente | Estado atual após 1C |
+| Elemento | Destino permanente | Estado atual |
 |---|---|---|
 | Meta de faturamento por dia | Hoje | visível |
 | Líquido planejado | Hoje | visível |
 | Rodagem estimada | Hoje | visível |
 | Custo de combustível por km | Hoje; edição em Planejar | visível |
 | Texto de situação da meta | Hoje | visível |
-| Registrar meu dia | Hoje | visível |
+| Registrar meu dia | Hoje | visível e abre o registro como tela secundária |
 | Situação do mês | Hoje | visível |
 | Progresso do mês | Hoje | visível |
 | Líquido gerado | Hoje | visível |
@@ -74,7 +74,7 @@ O Plano 01 não altera:
 | Dias restantes | Hoje | visível |
 | Leitura do VETTA | Hoje | visível |
 | Razões da recomendação | Hoje | visíveis quando existentes |
-| Ver planejamento do mês | Hoje até a navegação final | visível |
+| Ver planejamento do mês | Hoje → Planejar | atalho visível com retorno para Hoje |
 | Objetivo mensal líquido | Planejar → Metas | retirado visualmente de Hoje |
 | Seletor 5, 6 ou 7 dias | Planejar → Agenda | retirado visualmente de Hoje |
 | Folgas extras | Planejar → Agenda | retirado visualmente de Hoje |
@@ -82,12 +82,15 @@ O Plano 01 não altera:
 | Gráfico Distribuição da meta | Planejar → Distribuição da meta | retirado visualmente de Hoje |
 | Faturamento bruto, rodagem, custos e objetivo do gráfico | Planejar → Distribuição da meta | retirados visualmente de Hoje |
 
-As duplicações retiradas continuam no HTML como retorno seguro para os consumidores atuais. O módulo só as oculta depois de confirmar todos os destinos. Se uma origem ou destino faltar, Hoje permanece completo.
+As duplicações retiradas de Hoje continuam no HTML como retorno seguro para os consumidores atuais. O módulo só as oculta depois de confirmar todos os destinos. Se uma origem ou destino faltar, Hoje permanece completo.
 
 ### 4.2 Registro do dia
 
 | Elemento | Destino | Regra |
 |---|---|---|
+| Acesso principal | Hoje → Registrar meu dia | permanece visível |
+| Botão `Dia` da barra antiga | Hoje → Registrar meu dia | retirado somente da barra final |
+| Tela e formulário do registro | Registrar meu dia | permanecem no HTML e funcionais |
 | Data | Registrar meu dia | permanece |
 | Faturamento | Registrar meu dia | permanece |
 | Quilômetros | Registrar meu dia | permanece |
@@ -109,12 +112,13 @@ As duplicações retiradas continuam no HTML como retorno seguro para os consumi
 | Líquido acumulado | Histórico → Análise → Resumo | disponível |
 | Gráfico de evolução | Histórico → Análise | disponível |
 | Comparação entre dias | Histórico → Análise | disponível |
-| Situação semanal | Histórico → Análise → Semana atual | destino permanente disponível |
+| Situação semanal | Histórico → Análise → Semana atual | disponível |
 
 ### 4.4 Planejar
 
 | Elemento | Destino | Estado |
 |---|---|---|
+| Acesso principal | barra inferior → Planejar | disponível |
 | Objetivo líquido | Planejar → Metas | disponível |
 | Dias da semana e atalhos 5/6/7 | Planejar → Agenda | disponíveis |
 | Folgas extras | Planejar → Agenda | disponível |
@@ -125,6 +129,9 @@ As duplicações retiradas continuam no HTML como retorno seguro para os consumi
 | Aprendizado local | Planejar → Aprendizado | disponível |
 | Restaurar padrões | Planejar → Opções avançadas | disponível e protegido |
 | Gráfico de pizza e detalhamento | Planejar → Distribuição da meta | disponíveis |
+| Tela antiga Ajustes | fallback interno | preservada, mas não ocupa a barra final |
+
+Ao abrir Planejar diretamente pela barra, não existe botão Voltar porque a área é principal. Ao abrir pelo atalho de Hoje, o botão Voltar aparece e retorna para Hoje.
 
 ### 4.5 Mais
 
@@ -144,8 +151,8 @@ As duplicações retiradas continuam no HTML como retorno seguro para os consumi
 |---|---|---|
 | Cabeçalho VETTA | áreas principais | permanece |
 | Botão Instalar | Mais → Aplicativo; pode existir alerta global | não retirar sem substituição |
-| Navegação inferior | Hoje, Histórico, Planejar, Mais | somente no Bloco 1D |
-| Botão voltar | telas secundárias | preservar origem e formulário |
+| Navegação inferior | Hoje, Histórico, Planejar, Mais | implementada no Bloco 1D |
+| Botão voltar | telas secundárias | preserva origem e formulário |
 | Modais de custo, evento e instalação | áreas correspondentes | permanecem |
 | Onboarding | fluxo inicial | Bloco 6 |
 
@@ -169,42 +176,48 @@ As duplicações retiradas continuam no HTML como retorno seguro para os consumi
 
 ### Bloco 1C — Consolidar Hoje
 
+**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente em 2026-08-04.
+
+- Hoje mantém resumo diário, Registro do dia, situação mensal e leitura do VETTA;
+- objetivo mensal e agenda aparecem em Planejar;
+- semana aparece em Histórico → Análise;
+- gráfico e detalhamento aparecem em Planejar;
+- retirada reversível e condicionada à existência dos destinos;
+- dados, cálculos e PWA preservados.
+
+### Bloco 1D — Ativar navegação final
+
 **Estado:** implementado, aprovado pela CI e pelo GitHub Pages; aguardando validação física.
 
 Entregas executadas:
 
-- Hoje mantém resumo diário, Registro do dia, situação mensal e leitura do VETTA;
-- objetivo mensal e agenda aparecem somente em Planejar;
-- semana aparece em Histórico → Análise;
-- gráfico e detalhamento aparecem em Planejar;
-- o atalho para Planejar continua em Hoje;
-- navegação inferior continua com cinco itens;
-- retirada reversível e condicionada à existência dos destinos;
-- nenhuma regra de CSS específica, remoção física ou alteração de dados.
+- a barra possui estruturalmente quatro áreas: `Hoje | Histórico | Planejar | Mais`;
+- o botão `Dia` saiu somente da barra;
+- `Registrar meu dia`, a tela e o formulário continuam acessíveis por Hoje;
+- Ajustes saiu da barra porque Planejar passou a ser a área principal;
+- rotas antigas de Ajustes convergem para Planejar;
+- o botão Voltar distingue Planejar aberto diretamente de Planejar aberto pelo atalho de Hoje;
+- o formulário não salvo permanece preenchido ao voltar;
+- a navegação antiga é preservada se algum destino validado não carregar;
+- nenhuma fórmula, dado, armazenamento ou arquivo do PWA foi alterado.
 
 Aceite técnico alcançado:
 
 - testes determinísticos aprovados;
 - Chromium, Firefox e WebKit aprovados;
-- dados financeiros e de uso preservados;
-- GitHub Pages com arquivos e interação aprovados.
+- interação, voltar e formulário não salvo aprovados;
+- GitHub Pages com arquivos e interação aprovados;
+- exatamente quatro itens reais comprovados na barra.
 
 Aceite pendente:
 
-- validação física da tela Hoje consolidada.
+- validação física da navegação no celular.
 
-### Bloco 1D — Ativar navegação final
+### Bloco 2 — Registro diário
 
 **Estado:** não autorizado.
 
-Somente depois da validação física do Bloco 1C:
-
-- trocar `Início | Dia | Histórico | Ajustes | Mais` por `Hoje | Histórico | Planejar | Mais`;
-- retirar Dia da barra apenas porque `Registrar meu dia` está acessível em Hoje;
-- retirar Ajustes da barra apenas porque Planejar está completo;
-- preservar botão voltar, estado ativo e formulário não salvo.
-
-### Bloco 2 — Registro diário
+Direção prevista:
 
 - priorizar faturamento e quilômetros;
 - recolher opcionais sem removê-los;
@@ -246,13 +259,12 @@ O contrato falha se algum elemento afetado não estiver na tabela.
 
 ## 8. Estado atual
 
-- Bloco 1A concluído e validado fisicamente;
-- Bloco 1B concluído e validado fisicamente;
-- Bloco 1C aprovado tecnicamente e publicado no GitHub Pages;
-- Hoje está consolidado sem retirar acesso aos recursos;
-- Planejar mantém meta, agenda e distribuição;
-- Histórico → Análise mantém a semana;
-- navegação ainda possui cinco itens;
-- `app.js`, `styles.css`, cálculos, dados e PWA permanecem intocados pelo Bloco 1C;
-- Bloco 1C permanece **aguardando validação física**;
-- Bloco 1D não está autorizado.
+- Blocos 1A, 1B e 1C concluídos e validados fisicamente;
+- Bloco 1D aprovado tecnicamente e publicado no GitHub Pages;
+- navegação final possui `Hoje | Histórico | Planejar | Mais`;
+- Registro do dia continua acessível em Hoje;
+- Planejar é uma área principal;
+- Hoje, Histórico, Planejar e Mais preservam seus conteúdos aprovados;
+- `app.js`, `styles.css`, cálculos, dados e PWA permanecem intocados pelo Bloco 1D;
+- Bloco 1D permanece **aguardando validação física**;
+- Bloco 2 não está autorizado.
