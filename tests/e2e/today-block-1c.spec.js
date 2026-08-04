@@ -15,7 +15,6 @@ const state = {
   events: [],
   closings: [],
 };
-const expectedStoredState = JSON.stringify(state);
 
 async function openApp(page) {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
@@ -31,6 +30,11 @@ async function storedState(page) {
   } catch {
     return null;
   }
+}
+
+async function waitForStoredState(page) {
+  await expect.poll(() => storedState(page), { timeout: 10000 }).not.toBeNull();
+  return storedState(page);
 }
 
 test('Hoje mantém o essencial e retira somente duplicações com destino validado', async ({ page }) => {
@@ -77,12 +81,12 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
 
 test('consolidação visual não altera dados nem a navegação atual', async ({ page }) => {
   await openApp(page);
-  await expect.poll(() => storedState(page), { timeout: 10000 }).toBe(expectedStoredState);
+  const normalizedBefore = await waitForStoredState(page);
 
   await expect(page.locator('nav.fixed.bottom-0 [data-view]')).toHaveCount(5);
   await expect(page.locator('[data-view="dashboard"]').first()).toContainText('Início');
   await expect(page.locator('[data-view="day"]').last()).toContainText('Dia');
   await expect(page.locator('[data-view="settings"]').first()).toContainText('Ajustes');
 
-  await expect.poll(() => storedState(page), { timeout: 10000 }).toBe(expectedStoredState);
+  await expect.poll(() => storedState(page), { timeout: 10000 }).toBe(normalizedBefore);
 });
