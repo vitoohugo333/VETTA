@@ -55,16 +55,39 @@ function record(date, gross, km) {
   };
 }
 
+async function waitForStableApp(page) {
+  await expect.poll(async () => {
+    try {
+      const before = page.url();
+      const navigationReady = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
+      const historyReady = await page.locator('#view-history').getAttribute('data-block1b');
+      await page.waitForTimeout(150);
+      return navigationReady === 'ready' && historyReady === 'ready' && page.url() === before ? 'stable' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('stable');
+}
+
 async function openWithState(page, state) {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.waitForURL(/app-shell\.html(?:$|[?#])/);
+  await waitForStableApp(page);
   await expect(page.locator('#view-dashboard')).toBeVisible();
 }
 
 async function openHistory(page) {
-  await page.locator('[data-view="history"]').first().click();
-  await expect(page.locator('#view-history')).toBeVisible();
+  await expect.poll(async () => {
+    try {
+      if (await page.locator('#view-history').isVisible()) return 'visible';
+      const historyNav = page.locator('nav.fixed.bottom-0 [data-view="history"]');
+      if (await historyNav.isVisible()) await historyNav.click();
+      return await page.locator('#view-history').isVisible() ? 'visible' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('visible');
 }
 
 test('Histórico abre em Dias e editar ou excluir não duplica registros', async ({ page }) => {
