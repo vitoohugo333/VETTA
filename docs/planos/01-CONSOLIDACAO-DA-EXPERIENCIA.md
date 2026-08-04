@@ -1,6 +1,6 @@
 # Plano 01 — Consolidação da experiência
 
-**Estado:** ATIVO — Blocos 1A a 3 validados fisicamente; Bloco 4 aprovado tecnicamente e aguardando validação física  
+**Estado:** ATIVO — Blocos 1A a 4 validados fisicamente; Bloco 5 aprovado tecnicamente e **aguardando validação física**  
 **Atualizado em:** 2026-08-04, horário de Brasília  
 **Branch de desenvolvimento:** `netlify/teste-fechado-ux`  
 **Ambiente de validação:** GitHub Pages  
@@ -35,7 +35,7 @@ As únicas situações permitidas são:
 
 - permanece visível;
 - muda de área com caminho visível;
-- fica recolhido, mas com botão ou resumo visível;
+- fica recolhido com botão ou resumo visível;
 - é substituído por solução equivalente ou melhor após autorização específica;
 - é removido permanentemente após autorização explícita citando o item.
 
@@ -43,11 +43,11 @@ Ocultar por CSS sem destino visível é proibido.
 
 ## 3. Proteções permanentes
 
-O Plano 01 não altera:
+Este plano não altera:
 
 - fórmulas financeiras;
 - significado ou formato dos dados;
-- registros, custos, eventos e configurações salvas;
+- registros, custos, eventos, fechamentos e configurações salvas;
 - chave `vetta-driver-intelligence-v3`;
 - funcionamento local-first;
 - PWA, manifesto, service worker, cache ou acesso;
@@ -59,121 +59,101 @@ O Plano 01 não altera:
 
 ### 4.1 Hoje
 
-| Elemento | Destino permanente | Estado atual |
+| Elemento | Destino permanente | Estado |
 |---|---|---|
 | Meta de faturamento por dia | Hoje | visível |
 | Líquido planejado | Hoje | visível |
 | Rodagem estimada | Hoje | visível |
 | Custo de combustível por km | Hoje; edição em Planejar | visível |
 | Texto de situação da meta | Hoje | visível |
-| Registrar meu dia | Hoje | visível e abre o registro como tela secundária |
-| Situação do mês | Hoje | visível |
-| Progresso do mês | Hoje | visível |
-| Líquido gerado | Hoje | visível |
-| Projeção | Hoje | visível |
-| Dias restantes | Hoje | visível |
-| Leitura do VETTA | Hoje | visível |
-| Razões da recomendação | Hoje | visíveis quando existentes |
-| Ver planejamento do mês | Hoje → Planejar | atalho visível com retorno para Hoje |
-| Objetivo mensal líquido | Planejar → Metas | retirado visualmente de Hoje |
-| Seletor 5, 6 ou 7 dias | Planejar → Agenda | retirado visualmente de Hoje |
-| Folgas extras | Planejar → Agenda | retirado visualmente de Hoje |
-| Situação e números da semana | Histórico → Semana atual | retirados visualmente de Hoje |
-| Gráfico Distribuição da meta | Planejar → Distribuição | retirado visualmente de Hoje |
-| Faturamento bruto, rodagem, custos e objetivo do gráfico | Planejar → Distribuição | retirados visualmente de Hoje |
+| Registrar meu dia | Hoje → Registro | ação destacada |
+| Situação, progresso e projeção do mês | Hoje | visíveis |
+| Líquido gerado e dias restantes | Hoje | visíveis |
+| Leitura e razões do VETTA | Hoje | visíveis quando aplicáveis |
+| Ver planejamento do mês | Hoje → Planejar | atalho visível com retorno |
+| Objetivo, dias e folgas | Planejar | retirados visualmente de Hoje após destino confirmado |
+| Situação semanal | Histórico → Semana atual | retirado visualmente de Hoje após destino confirmado |
+| Distribuição detalhada | Planejar → Distribuição | retirado visualmente de Hoje após destino confirmado |
 
-As duplicações retiradas de Hoje continuam no HTML como retorno seguro para os consumidores atuais. O módulo só as oculta depois de confirmar todos os destinos. Se uma origem ou destino faltar, Hoje permanece completo.
+As origens antigas permanecem no HTML como fallback para consumidores atuais. Só ficam ocultas depois que os destinos são confirmados.
 
 ### 4.2 Registro do dia
 
-| Elemento | Destino | Estado após Bloco 2 |
+| Elemento | Destino | Estado |
 |---|---|---|
-| Acesso principal | Hoje → Registrar meu dia | visível |
-| Tela e formulário do registro | Registrar meu dia | preservados |
-| Data | área essencial | visível |
-| Faturamento | área essencial | visível e prioritário |
-| Quilômetros | área essencial | visível e prioritário |
-| Horas online | Detalhes opcionais | recolhido, mas acessível |
-| Combustível gasto | Detalhes opcionais | recolhido, mas acessível |
-| Prévia de custos | Resultado antes de salvar | visível |
-| Líquido calculado | Resultado antes de salvar | destacado |
-| Receita por km e diferença da meta | Resultado antes de salvar | visíveis |
-| Salvar | Registro | permanece e usa a gravação original |
-| Limpar | Registro | permanece |
-| Confirmação após salvar | Registro concluído | mostra faturamento, quilômetros e líquido |
-| Editar depois de salvar | Registro concluído → Editar este dia | reabre a mesma data |
-| Concluir | Registro concluído → Hoje | retorna para Hoje |
-| Edição pelo Histórico | Histórico → Dias registrados → Editar | usa o mesmo formulário |
+| Data, faturamento e quilômetros | Registro | essenciais e visíveis |
+| Horas e combustível | Detalhes opcionais | acessíveis sob demanda |
+| Custos, líquido, receita/km e diferença da meta | Resultado antes de salvar | visíveis |
+| Salvar e limpar | Registro | preservados |
+| Confirmação após salvar | Registro concluído | preservada |
+| Editar a mesma data | Registro e Histórico | atualiza sem duplicar |
+| Concluir | Registro concluído → Hoje | retorno previsível |
 
-O Bloco 2 não criou outra persistência. A regra canônica continua sendo um registro por data: salvar novamente a mesma data atualiza o registro existente.
+A regra canônica continua sendo um registro por data e uma única fonte persistida.
 
 ### 4.3 Histórico
 
-Histórico abre como um resumo curto com quatro ilhas visíveis. Cada ilha abre uma tela própria usando os mesmos elementos, registros, cálculos e gráfico já existentes.
+Histórico abre como resumo curto com quatro ilhas.
 
 | Elemento | Destino | Estado após Bloco 4 |
 |---|---|---|
-| Resumo do Histórico | barra inferior → Histórico | visível e curto |
-| Lista de dias | Histórico → Dias registrados | tela própria |
-| Editar dia | Histórico → Dias registrados | disponível e integrado ao Bloco 2 |
-| Excluir dia | Histórico → Dias registrados | disponível com confirmação |
-| Quantidade de dias | Histórico → Resumo e evolução | tela própria |
-| Média de faturamento/km | Histórico → Resumo e evolução | tela própria |
-| Líquido acumulado | Histórico → Resumo e evolução | tela própria |
+| Lista, editar e excluir | Histórico → Dias registrados | tela própria |
+| Quantidade de dias, média/km e líquido | Histórico → Resumo e evolução | tela própria |
 | Gráfico de evolução | Histórico → Resumo e evolução | tela própria |
-| Situação semanal | Histórico → Semana atual | tela própria |
-| Meta, realizado e média/km semanais | Histórico → Semana atual | tela própria |
+| Situação, meta, realizado e média/km semanais | Histórico → Semana atual | tela própria |
 | Comparação entre dias | Histórico → Comparação | tela própria |
-| Abas antigas Dias e Análise | fallback interno | preservadas e não exibidas quando o Bloco 4 está ativo |
+| Abas antigas Dias e Análise | fallback interno | preservadas |
 
-Regras de retorno:
+Regras:
 
-- dentro de um assunto, `Voltar para Histórico` retorna ao resumo curto;
-- o botão Voltar do Android ou navegador faz o mesmo retorno;
-- tocar novamente em Histórico enquanto uma área está aberta retorna ao resumo;
-- o gráfico é criado quando Resumo e evolução fica visível;
-- editar e excluir continuam atuando sobre o mesmo registro original;
-- se qualquer elemento obrigatório não for encontrado, o Bloco 4 não ativa e `Dias | Análise` permanece disponível como fallback.
+- `Voltar para Histórico` e o botão Voltar do Android retornam ao resumo;
+- tocar novamente em Histórico também retorna ao resumo;
+- editar e excluir continuam atuando sobre o mesmo registro;
+- se faltar qualquer elemento obrigatório, o Bloco 4 não ativa.
 
 ### 4.4 Planejar
 
-Planejar abre como um resumo curto. Cada assunto possui uma ilha visível e abre uma tela própria, reutilizando os mesmos campos e eventos originais.
+Planejar abre como resumo curto com sete ilhas.
 
 | Elemento | Destino | Estado após Bloco 3 |
 |---|---|---|
-| Resumo do plano | barra inferior → Planejar | visível e curto |
 | Objetivo líquido | Planejar → Metas | tela própria |
-| Dias da semana e atalhos 5/6/7 | Planejar → Agenda | tela própria |
-| Folgas extras | Planejar → Agenda | tela própria |
-| Tipo, nome, preço e rendimento do combustível | Planejar → Operação | tela própria |
-| Receita média por km | Planejar → Operação | tela própria |
-| Custos mensais, semanais, únicos, por km e percentuais | Planejar → Custos e reservas | tela própria |
-| Reservas | Planejar → Custos e reservas | tela própria |
-| Gráfico de pizza e detalhamento | Planejar → Distribuição | tela própria |
+| Dias e folgas | Planejar → Agenda | tela própria |
+| Combustível e receita média/km | Planejar → Operação | tela própria |
+| Custos e reservas | Planejar → Custos e reservas | tela própria |
+| Gráfico e detalhamento | Planejar → Distribuição | tela própria |
 | Aprendizado local | Planejar → Aprendizado | tela própria |
 | Restaurar padrões | Planejar → Opções avançadas | tela própria e protegida |
-| Tela antiga Ajustes | fallback interno | preservada, mas não ocupa a barra final |
+| Ajustes antigo | fallback interno | preservado |
 
-Regras de retorno:
+Regras:
 
-- dentro de um assunto, `Voltar para Planejar` retorna ao resumo curto;
-- o botão Voltar do Android ou navegador faz o mesmo retorno;
-- Planejar aberto pela barra é área principal e não mostra retorno para Hoje;
-- Planejar aberto pelo atalho de Hoje mantém, no resumo, o botão que retorna para Hoje;
-- valores preenchidos permanecem ao alternar entre assuntos;
-- se qualquer seção original obrigatória não for encontrada, o Bloco 3 não ativa e a tela longa anterior é preservada.
+- `Voltar para Planejar` e o botão Voltar do Android retornam ao resumo;
+- Planejar aberto por Hoje mantém retorno para Hoje;
+- valores permanecem ao alternar entre assuntos;
+- se faltar qualquer seção obrigatória, a tela longa anterior permanece.
 
 ### 4.5 Mais
 
-| Elemento | Destino | Regra |
+Mais abre como resumo curto com cinco ilhas.
+
+| Elemento | Destino | Estado após Bloco 5 |
 |---|---|---|
-| Comparação Gasolina × GNV | Mais → Ferramentas | permanece |
-| Relatório mensal | Mais → Relatórios | permanece |
-| Exportar e importar | Mais → Dados | permanecem |
-| Radar de eventos | Mais → Radar | permanece |
-| Criar, editar e excluir evento | Mais → Radar | permanecem |
-| Instalação | Mais → Aplicativo | permanece |
-| Versão do app | Mais → Aplicativo | permanece |
+| Comparação Gasolina × GNV | Mais → Ferramentas | tela própria com campos, gráfico e ações originais |
+| Relatório mensal | Mais → Relatórios | tela própria com fluxo original |
+| Exportar e importar | Mais → Meus dados | tela própria e mesma fonte local |
+| Lista, criar, editar e excluir evento | Mais → Radar | tela própria |
+| Instalação e modal | Mais → Aplicativo | tela própria |
+| Versão do aplicativo | Mais → Aplicativo | etiqueta original única |
+| Rolagem antiga de Mais | fallback interno | preservada caso falte um destino |
+
+Regras:
+
+- `Voltar para Mais` e o botão Voltar do Android retornam ao resumo;
+- tocar novamente em Mais enquanto uma área está aberta retorna ao resumo;
+- os resumos acompanham o estado atual sem criar persistência nova;
+- nenhum recurso ativa parcialmente: importação, lista do Radar e versão são requisitos do fallback;
+- a etiqueta de versão original é reutilizada, sem cópia com o mesmo identificador.
 
 ### 4.6 Elementos globais
 
@@ -184,103 +164,73 @@ Regras de retorno:
 | Navegação inferior | Hoje, Histórico, Planejar, Mais | implementada e validada |
 | Botão voltar | telas secundárias | preserva origem e formulário |
 | Modais de custo, evento e instalação | áreas correspondentes | permanecem |
-| Onboarding | fluxo inicial | Bloco 6 |
+| Onboarding | fluxo inicial | reservado ao Bloco 6 |
 
 ## 5. Ordem de execução
 
-### Bloco 1A — Construir Planejar
+### Blocos 1A a 1D — Fundação da navegação
 
-**Estado:** concluído, aprovado pela CI e validado fisicamente.
+**Estado:** concluídos, aprovados pela CI e validados fisicamente em 2026-08-04.
 
-### Bloco 1B — Construir Histórico com Dias e Análise
-
-**Estado:** concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente em 2026-08-04.
-
-### Bloco 1C — Consolidar Hoje
-
-**Estado:** concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente em 2026-08-04.
-
-### Bloco 1D — Ativar navegação final
-
-**Estado:** concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
-
-A barra final permanece `Hoje | Histórico | Planejar | Mais`, o Registro continua acessível por Hoje e as rotas antigas de Ajustes convergem para Planejar.
+Entregaram Planejar, Histórico inicial, Hoje consolidado e a barra final `Hoje | Histórico | Planejar | Mais`.
 
 ### Bloco 2 — Registro diário
 
-**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
+**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente em 2026-08-04.
 
-Entregas:
-
-- faturamento e quilômetros priorizados;
-- horas e combustível preservados em `Detalhes opcionais`;
-- líquido destacado na prévia;
-- confirmação de dia registrado ou atualizado;
-- edição da mesma data sem duplicação;
-- retorno previsível para Hoje;
-- edição pelo Histórico preservada;
-- `app.js`, cálculos, dados e PWA intocados.
+Priorizou faturamento e quilômetros, preservou detalhes opcionais, confirmação, edição da mesma data e retorno para Hoje.
 
 ### Bloco 3 — Refinar Planejar
 
-**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
+**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente em 2026-08-04.
 
-Entregas:
-
-- Planejar abre como resumo curto;
-- sete ilhas visíveis: Metas, Agenda, Operação, Custos e reservas, Distribuição, Aprendizado e Opções avançadas;
-- cada ilha abre tela própria;
-- os campos, listas, gráfico e ações originais foram movidos como os mesmos elementos, sem segunda cópia;
-- resumos das ilhas refletem os valores atuais;
-- alterações de meta, agenda, combustível e custos permanecem entre telas;
-- gráfico é redesenhado ao abrir Distribuição;
-- retorno por botão e pelo Android/navegador preservado;
-- fallback mantém a tela longa anterior se um destino obrigatório faltar;
-- nenhum dado, fórmula, chave de armazenamento ou arquivo do PWA foi alterado.
-
-Aceite técnico alcançado na fotografia funcional `0c6f7b3d57ff94cbd4681f6d6323703861c6233b`, execução funcional `30927631513` e execução integral de fechamento `30929247436`.
-
-Aceite físico informado pelo proprietário no celular em 2026-08-04.
+Entregou sete ilhas, telas próprias, mesmos campos e ações, preservação de valores, gráfico redesenhado e fallback da tela longa.
 
 ### Bloco 4 — Refinar Histórico
+
+**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
+
+Entregou quatro ilhas, mesmos registros e cálculos, lista, edição, exclusão, gráfico, semana, comparação, retornos e fallback `Dias | Análise`.
+
+### Bloco 5 — Organizar Mais
 
 **Estado:** implementado, aprovado pela CI e pelo GitHub Pages; **aguardando validação física**.
 
 Entregas:
 
-- Histórico abre como resumo curto;
-- quatro ilhas visíveis: Dias registrados, Resumo e evolução, Semana atual e Comparação;
-- cada ilha abre tela própria;
-- lista, editar, excluir, números, gráfico, semana e comparação usam os mesmos elementos anteriores;
-- nenhum registro, cálculo ou gráfico foi duplicado;
-- botão de retorno e botão Voltar do Android/navegador preservados;
-- estados sem registros e com registros insuficientes permanecem claros;
-- fallback mantém `Dias | Análise` caso algum destino obrigatório falte;
-- nenhum dado, fórmula, chave de armazenamento ou arquivo do PWA foi alterado.
+- Mais abre como resumo curto;
+- cinco ilhas visíveis: Ferramentas, Relatórios, Meus dados, Radar e Aplicativo;
+- cada ilha abre uma tela própria;
+- comparação, relatório, exportação, importação, eventos, instalação e versão usam os recursos originais;
+- não existe segunda fonte de dados;
+- a versão original permanece única;
+- retorno por botão, Android e histórico do navegador;
+- fallback preserva a rolagem anterior caso qualquer recurso obrigatório falte;
+- nenhum cálculo, formato de dado, chave de armazenamento ou arquivo do PWA foi alterado.
 
-Aceite técnico alcançado na fotografia integral `3acafd3ebcf0fb51154d4dd8538c3ffa0f35de3f`, execução `30941963581`:
+Aceite técnico funcional alcançado na fotografia `848493889483720aa988f19b185eed02116feb3a`, execução `30947977950`:
 
-- governança e todos os testes determinísticos;
+- governança e testes determinísticos;
 - Chromium;
 - Firefox;
 - WebKit;
-- quatro ilhas e respectivas telas;
-- lista, edição e exclusão;
-- resumo, gráfico, semana e comparação;
-- estados sem dados;
-- preservação dos cálculos e do formulário de registro;
-- navegação por botão e histórico;
+- todos os cinco destinos e suas interações;
+- importação e exportação na mesma fonte local;
+- criação, edição e exclusão no Radar;
+- instalação e versão única;
+- preservação dos blocos anteriores;
 - paridade dos arquivos públicos;
 - interação no GitHub Pages.
 
-### Blocos 5 a 8
+Aceite físico ainda pendente no celular.
 
-- Bloco 5: organização de Mais;
+### Blocos 6 a 8
+
 - Bloco 6: onboarding e linguagem;
 - Bloco 7: acessibilidade e acabamento;
 - Bloco 8: regressão completa e versão candidata.
 
-Esses blocos não podem ser usados como promessa vaga para restaurar algo retirado antes.
+**Estado:** não autorizados.
 
 ## 6. Critério obrigatório para contratos futuros
 
@@ -289,27 +239,25 @@ Antes de qualquer alteração de interface, apresentar:
 | Elemento | Estado atual | Mudança | Destino | Como acessar | Pode ficar oculto? | Teste |
 |---|---|---|---|---|---|---|
 
-O contrato falha se algum elemento afetado não estiver na tabela.
+O contrato falha se algum elemento afetado não estiver inventariado.
 
 ## 7. Testes mínimos por bloco
 
-- inventário dos elementos antes e depois;
+- inventário antes e depois;
 - prova de que nenhum recurso desapareceu sem destino;
-- navegação e botão voltar;
-- preservação do formulário não salvo;
+- navegação e botão Voltar;
+- preservação de formulários e dados;
 - cálculos determinísticos;
 - dados antigos carregando;
 - criação, edição e exclusão aplicáveis;
 - Chromium, Firefox e WebKit para interface;
-- prova do ambiente publicado quando aplicável;
+- prova do ambiente publicado;
 - validação física no Android.
 
 ## 8. Estado atual
 
-- Blocos 1A a 3 concluídos e validados fisicamente;
-- Bloco 4 aprovado tecnicamente e servido pelo GitHub Pages;
-- Histórico agora abre curto e separa cada consulta em tela própria;
-- nenhum registro, ação, número, gráfico ou comparação foi removido;
-- `app.js`, `styles.css`, cálculos, formato dos dados e PWA permanecem intocados pelo Bloco 4;
-- Bloco 4 permanece **aguardando validação física**;
-- Bloco 5 não está autorizado.
+- Blocos 1A a 4 concluídos e validados fisicamente;
+- Bloco 5 aprovado tecnicamente e publicado automaticamente no ambiente de validação;
+- Bloco 5 permanece **aguardando validação física**;
+- `app.js`, fórmulas, formato dos dados, armazenamento local e PWA permanecem protegidos;
+- Bloco 6 não está autorizado.
