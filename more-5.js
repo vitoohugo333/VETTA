@@ -11,9 +11,10 @@
   const dataCard = $('exportButton')?.closest('.card-vetta');
   const importInput = $('importInput');
   const radarCard = $('addEventButton')?.closest('.card-vetta');
+  const eventList = $('eventList');
   const installCard = $('installCardButton');
 
-  const required = [hero, compareDetails, reportCard, dataCard, importInput, radarCard, installCard];
+  const required = [hero, compareDetails, reportCard, dataCard, importInput, radarCard, eventList, installCard];
   const originalHosts = [compareDetails, reportCard, dataCard, radarCard, installCard];
 
   if (
