@@ -16,10 +16,23 @@ const initialState = {
   events: []
 };
 
+async function waitForStableNavigation(page) {
+  await expect.poll(async () => {
+    try {
+      const before = page.url();
+      const ready = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
+      await page.waitForTimeout(150);
+      return ready === 'ready' && page.url() === before ? 'stable' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('stable');
+}
+
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: STORAGE_KEY, state: initialState });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
+  await waitForStableNavigation(page);
 });
 
 test('uma ilha abre tela própria e voltar preserva o formulário', async ({ page }) => {
@@ -47,7 +60,7 @@ test('o voltar do navegador ou Android retorna da tela secundária para sua áre
   await page.locator('[data-secondary-view="planning"]').click();
   await expect(page.locator('#view-planning')).toBeVisible();
 
-  await page.goBack();
+  await page.evaluate(() => window.history.back());
   await expect(page.locator('#view-dashboard')).toBeVisible();
   await expect(page.locator('nav.fixed.bottom-0 [data-view="dashboard"]')).toHaveClass(/active/);
 });
