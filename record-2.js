@@ -21,7 +21,7 @@
   const optionalGrid = hoursInput?.closest('.grid');
   const previewCard = previewCost?.closest('.card-vetta');
   const previewGrid = previewCost?.closest('.grid');
-  const hero = root.querySelector(':scope > .rounded-\[2rem\]');
+  const hero = Array.from(root.children).find(element => element.querySelector('h2')?.textContent.trim() === 'Registro do dia');
   const heroText = hero?.querySelector('p');
 
   const required = [
@@ -43,6 +43,7 @@
     previewCard,
     previewGrid,
     hero,
+    heroText,
   ];
 
   if (required.some(item => !item)) {
