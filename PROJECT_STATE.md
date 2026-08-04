@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê (`netlify/teste-fechado-ux`)
 
-**Atualizado em:** 2026-08-03, horário de Brasília  
-**Estado:** Bloco 1B — Histórico com `Dias | Análise` implementado, aprovado pela CI e pelo GitHub Pages; aguardando validação física no celular.  
-**Alteração em curso:** validação manual da nova organização do Histórico.
+**Atualizado em:** 2026-08-04, horário de Brasília  
+**Estado:** Bloco 1C — Hoje consolidado, aprovado pela CI e pelo GitHub Pages; aguardando validação física no celular.  
+**Alteração em curso:** validação manual da tela Hoje consolidada.
 
 ## Estado atual
 
@@ -11,133 +11,146 @@
 | Repositório | `vitoohugo333/VETTA` |
 | Branch | `netlify/teste-fechado-ux` |
 | Papel | desenvolvimento e validação de interface |
-| Fotografia funcional testada | `9d80641dad1427bea2131d6ae70838b5d50fd20f` |
-| Execução automática final | `30871942011` |
+| Fotografia funcional testada | `a73d8807849a903dc1faa442d9eb1afb1a778d99` |
+| Execução automática final | `30907975939` |
 | GitHub Pages | `https://vitoohugo333.github.io/VETTA/` |
 | Branch estável | `netlify/teste-fechado` |
 | Netlify estável | `https://calculaae.netlify.app/` |
 | Plano ativo | `docs/planos/01-CONSOLIDACAO-DA-EXPERIENCIA.md` |
 
-## Bloco 1A — Planejar
+## Blocos anteriores
 
-O Bloco 1A permanece concluído e validado fisicamente.
+### Bloco 1A — Planejar
 
-Planejar reúne meta, agenda, combustível, custos, reservas, gráfico de pizza, aprendizado e opções avançadas, sem criar uma segunda fonte de dados. Início e Ajustes continuam preservados durante a transição.
+Concluído, aprovado pela CI e validado fisicamente no celular.
 
-## Bloco 1B — Histórico com Dias e Análise
+Planejar reúne meta, agenda, combustível, custos, reservas, gráfico de pizza, aprendizado e opções avançadas usando a mesma fonte de dados do aplicativo.
 
-Histórico foi dividido em duas áreas internas com acesso visível:
+### Bloco 1B — Histórico com Dias e Análise
 
-### Dias
+Concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
 
-- abre por padrão;
-- mostra a quantidade de registros;
-- mantém a lista do mais recente para o mais antigo;
-- preserva data, faturamento, quilômetros, receita por quilômetro e líquido estimado;
-- mantém editar e excluir com confirmação;
-- mantém a mensagem quando não existem registros.
+Histórico abre em `Dias` e oferece `Análise` com resumo, gráfico, comparação e situação semanal.
 
-### Análise
+## Bloco 1C — Consolidar Hoje
 
-- mostra quantidade de dias, média por quilômetro e líquido acumulado;
-- preserva o gráfico `Evolução do líquido`;
-- preserva a comparação entre dias;
-- inclui a análise da semana atual;
-- mostra meta, realizado, média por quilômetro e situação semanal;
-- usa exatamente o mesmo cálculo semanal exibido em Início.
+A tela Início foi reduzida ao conteúdo de uso diário.
 
-## Transição sem retirada
+### Permanece visível em Hoje
 
-Durante o Bloco 1B:
+- meta de faturamento por dia;
+- líquido planejado;
+- rodagem estimada;
+- custo de combustível por quilômetro;
+- texto de situação da meta;
+- botão `Registrar meu dia`;
+- situação e progresso do mês;
+- líquido gerado;
+- projeção;
+- dias restantes;
+- leitura do VETTA e suas razões;
+- botão `Ver planejamento do mês`.
 
-- Início continua completo;
-- o cartão semanal original permanece em Início;
-- Ajustes continua completo;
-- Planejar continua completo;
-- a navegação permanece `Início | Dia | Histórico | Ajustes | Mais`;
-- nenhum elemento existente foi removido ou ocultado permanentemente;
-- nenhum novo campo foi gravado para guardar a aba selecionada;
-- a chave `vetta-driver-intelligence-v3` e o formato dos dados permanecem intactos.
+### Duplicações retiradas de Hoje
+
+| Elemento | Destino validado |
+|---|---|
+| objetivo mensal, seletor 5/6/7 dias e folgas | Planejar → Metas e Agenda |
+| situação, meta, realizado e média por km da semana | Histórico → Análise → Semana atual |
+| gráfico de pizza e detalhamento da distribuição | Planejar → Distribuição da meta |
+
+Os cartões antigos permanecem no HTML como retorno seguro porque `app.js` continua atualizando seus identificadores. Eles são ocultados por atributo nativo somente depois que todos os destinos são encontrados.
+
+Se Planejar, Histórico ou alguma origem necessária não carregar, o Bloco 1C não é aplicado e Início permanece completo. Nenhum recurso fica sem acesso.
+
+## Navegação durante a transição
+
+A navegação continua:
+
+```text
+Início | Dia | Histórico | Ajustes | Mais
+```
+
+O botão para Planejar permanece visível em Início. A navegação final de quatro áreas pertence exclusivamente ao Bloco 1D, que não está autorizado.
 
 ## Arquivos funcionais
 
-- `history-1b.js`: organiza Histórico em Dias e Análise, reutilizando a lista, o gráfico, a comparação e o cálculo semanal existentes;
-- `app-shell.html`: carrega `history-1b.js` depois de `app.js` e `planning-1a.js`;
-- `ci/branch-policy.json`: inclui o novo módulo na prova dos arquivos publicados.
+- `today-1c.js`: consolida Hoje somente depois de confirmar todos os destinos;
+- `history-1b.js`: carrega o módulo do Bloco 1C após Planejar e Histórico;
+- `ci/branch-policy.json`: inclui `today-1c.js` na prova de paridade publicada.
 
 ## Testes adicionados e ajustados
 
-- `tests/history-block-1b-contract.test.mjs`:
-  - exige os destinos Dias e Análise;
-  - preserva a chave de armazenamento;
-  - exige a permanência do cartão semanal original em Início;
-  - impede IDs duplicados e novo estado persistido;
-  - inclui `history-1b.js` na prova publicada.
+- `tests/today-block-1c-contract.test.mjs`:
+  - exige a permanência dos elementos essenciais de Hoje;
+  - exige destinos válidos antes de qualquer retirada;
+  - impede remoção física, CSS específico, alteração de dados e armazenamento;
+  - preserva a chave `vetta-driver-intelligence-v3`.
 
-- `tests/e2e/history-block-1b.spec.js`:
-  - confirma que Histórico abre em Dias;
-  - edita um registro sem duplicá-lo;
-  - exclui somente o registro escolhido;
-  - verifica o gráfico, os resumos e a comparação em Análise;
-  - compara os seis valores da semana em Histórico com os mesmos valores de Início;
-  - verifica os estados sem dados e com dados insuficientes.
+- `tests/e2e/today-block-1c.spec.js`:
+  - confirma Hoje mais curto e os elementos essenciais visíveis;
+  - confirma as três duplicações ocultas e seus destinos registrados;
+  - abre Planejar e Histórico para provar que os recursos continuam acessíveis;
+  - preserva a navegação de cinco itens;
+  - compara integralmente os dados financeiros e de uso antes e depois.
 
-- `tests/e2e-remote/history-block-1b-published.spec.js`:
-  - confirma que `history-1b.js` está servido pelo GitHub Pages;
-  - abre o aplicativo publicado;
-  - alterna de Dias para Análise;
-  - confirma o gráfico e a permanência do cartão semanal original.
+- `tests/e2e-remote/today-block-1c-published.spec.js`:
+  - confirma `today-1c.js` servido pelo GitHub Pages;
+  - valida Hoje, Planejar e Histórico no site publicado.
+
+- testes dos Blocos 1A e 1B foram atualizados para o novo estado consolidado sem reduzir suas proteções.
 
 ## Evidência automática
 
-Execução final: `30871942011`.
+Execução final: `30907975939`.
 
-A execução verificou exatamente a fotografia funcional `9d80641dad1427bea2131d6ae70838b5d50fd20f` e concluiu com sucesso:
+A execução verificou exatamente a fotografia funcional `a73d8807849a903dc1faa442d9eb1afb1a778d99` e concluiu com sucesso:
 
 - governança, sintaxe, JSON e todos os testes Node;
 - Chromium;
 - Firefox;
 - WebKit;
-- paridade dos arquivos públicos com o GitHub Pages, incluindo `history-1b.js`;
-- testes de interação no próprio site publicado.
+- paridade dos arquivos públicos com o GitHub Pages, incluindo `today-1c.js`;
+- interação no próprio site publicado.
 
-Uma execução anterior, `30871742095`, encontrou uma falha somente no teste do Firefox: o teste tocava em Histórico antes de o redirecionamento inicial terminar. A espera foi corrigida no teste, sem alteração no aplicativo, e a cobertura completa passou na execução final.
+As falhas intermediárias foram classificadas como defeitos dos testes, não do produto. Elas envolviam seleção incorreta da navegação, preenchimento de progresso em 0%, recarga normal do PWA e metadados internos de migração. Nenhuma correção funcional foi feita para mascarar esses resultados.
 
 ## Proteções confirmadas
 
-Não foram alterados pelo Bloco 1B:
+Não foram alterados pelo Bloco 1C:
 
 - `app.js` e as fórmulas financeiras;
 - `styles.css`;
-- `planning-1a.js`;
-- registros, custos, eventos, importação e exportação;
-- chave ou formato dos dados locais;
+- formato e chave dos dados locais;
+- registros, custos, eventos, fechamentos, importação e exportação;
 - manifesto, service worker, cache, instalação e acesso;
 - branch `netlify/teste-fechado` e Netlify dos testadores;
 - `main`;
 - PR #1.
 
+## Aprendizado
+
+**Aprendizado fechado:** testes de armazenamento durante a abertura de um PWA devem esperar a interface ficar pronta, tolerar a recarga normal do service worker e separar dados de negócio de metadados internos de migração.
+
+Registro completo: `docs/incidents/INC-0005-comparacao-de-dados-durante-abertura-pwa.md`.
+
+Prevenção executável: `tests/e2e/today-block-1c.spec.js`.
+
 ## Validação física pendente
 
-O Bloco 1B permanece **aguardando validação física**.
+O Bloco 1C permanece **aguardando validação física**.
 
 No celular, validar:
 
-1. abrir Histórico e confirmar que `Dias` aparece primeiro;
-2. conferir a lista e os botões Editar e Excluir;
-3. tocar em `Análise`;
-4. conferir resumo, semana atual, gráfico e comparação;
-5. alternar entre Dias e Análise algumas vezes;
-6. confirmar ausência de cortes, sobreposições ou travamentos;
-7. voltar para Início e confirmar que o cartão semanal continua presente;
-8. confirmar que Planejar e Ajustes continuam completos.
-
-## Aprendizado
-
-**Nenhum aprendizado permanente novo.**
-
-A falha intermediária aplicou uma regra já existente: testes de interface devem esperar um estado observável depois de navegação ou redirecionamento, especialmente no Firefox.
+1. Início ficou mais curto;
+2. meta diária, mês, Registrar meu dia e leitura do VETTA continuam visíveis;
+3. objetivo mensal, semana e gráfico de pizza não aparecem mais em Início;
+4. `Ver planejamento do mês` continua abrindo Planejar;
+5. Planejar mantém meta, agenda e gráfico de pizza;
+6. Histórico → Análise mantém a situação semanal;
+7. a navegação continua com cinco itens;
+8. não existem cortes, sobreposições, travamentos ou perda de dados.
 
 ## Próximo passo único
 
-O proprietário deve validar o Bloco 1B no celular pelo GitHub Pages. O Bloco 1C — Consolidar Hoje — não está autorizado e nenhuma duplicação poderá ser retirada antes dessa validação física e de um novo contrato explícito.
+O proprietário deve validar o Bloco 1C no celular pelo GitHub Pages. O Bloco 1D — navegação final — não está autorizado.
