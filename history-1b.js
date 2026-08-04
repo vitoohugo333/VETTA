@@ -142,3 +142,11 @@
   app.renderHistory(app.calculations());
   app.renderCharts(app.calculations());
 })();
+
+if (!document.querySelector('script[data-vetta-module="today-1c"]')) {
+  const todayScript = document.createElement('script');
+  todayScript.src = './today-1c.js?v=1';
+  todayScript.async = false;
+  todayScript.dataset.vettaModule = 'today-1c';
+  document.head.appendChild(todayScript);
+}
