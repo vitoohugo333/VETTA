@@ -28,8 +28,8 @@ for (const prerequisite of [
 
 assert.match(today, /bottomNav\.querySelector\('\.nav-item\[data-view="dashboard"\]'\)/, 'Hoje deve nascer do item Início existente.');
 assert.match(today, /todayLabel\.textContent = 'Hoje'/, 'A primeira área deve se chamar Hoje.');
-assert.match(today, /dayNav\.hidden = true/, 'Dia deve sair apenas da barra, de forma nativa e reversível.');
 assert.match(today, /dayNav\.dataset\.relocatedTo = 'Hoje → Registrar meu dia'/, 'A retirada de Dia deve registrar o destino aprovado.');
+assert.match(today, /dayNav\.remove\(\)/, 'Somente o botão Dia deve sair estruturalmente da barra final.');
 assert.match(today, /planningNav\.dataset\.view = 'planning'/, 'Ajustes deve se transformar no acesso principal a Planejar.');
 assert.match(today, /planningLabel\.textContent = 'Planejar'/, 'A terceira área deve se chamar Planejar.');
 assert.match(today, /new Set\(\['dashboard', 'history', 'planning', 'more'\]\)/, 'Somente as quatro áreas finais podem ser primárias.');
@@ -39,9 +39,10 @@ assert.match(today, /planningBack\.hidden = !isSecondaryPlanning/, 'Voltar em Pl
 assert.match(today, /bottomNav\.dataset\.block1d = 'ready'/, 'A interface deve expor um estado observável de conclusão do Bloco 1D.');
 assert.match(today, /Bloco 1D não aplicado:[^]*navegação anterior foi preservada/, 'A falha de pré-requisito deve preservar a navegação anterior.');
 
+assert.doesNotMatch(today, /document\.getElementById\('view-day'\)\.remove|registerButton\.remove/, 'A tela e o botão de registro não podem ser apagados.');
 assert.doesNotMatch(today, /localStorage|sessionStorage|app\.state\s*=|\.save\s*\(/, 'O Bloco 1D não pode alterar dados ou armazenamento.');
 assert.doesNotMatch(today, /serviceWorker|caches\.|manifest\.webmanifest/, 'O Bloco 1D não pode alterar o PWA.');
 assert.doesNotMatch(styles, /block1d|navigation-1d/, 'A navegação final não deve depender de remendo específico no CSS.');
 assert.doesNotMatch(serviceWorker, /block1d|navigation-1d/, 'O service worker deve permanecer independente do Bloco 1D.');
 
-console.log('Contrato do Bloco 1D validado: quatro áreas finais, registro preservado e retorno seguro.');
+console.log('Contrato do Bloco 1D validado: quatro áreas estruturais, registro preservado e retorno seguro.');
