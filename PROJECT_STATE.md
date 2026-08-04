@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê (`netlify/teste-fechado-ux`)
 
 **Atualizado em:** 2026-08-04, horário de Brasília  
-**Estado:** Bloco 2 validado fisicamente; Bloco 3 — refinamento de Planejar aprovado tecnicamente e aguardando validação física.  
-**Alteração em curso:** validação manual do Planejar organizado por assuntos.
+**Estado:** Blocos 1A a 3 validados fisicamente; Bloco 4 não autorizado.  
+**Alteração em curso:** nenhuma alteração funcional em curso.
 
 ## Estado atual
 
@@ -13,6 +13,7 @@
 | Papel | desenvolvimento e validação de interface |
 | Fotografia funcional do Bloco 3 | `0c6f7b3d57ff94cbd4681f6d6323703861c6233b` |
 | Execução automática funcional | `30927631513` |
+| Execução automática integral de fechamento | `30929247436` |
 | GitHub Pages | `https://vitoohugo333.github.io/VETTA/` |
 | Branch estável | `netlify/teste-fechado` |
 | Netlify estável | `https://calculaae.netlify.app/` |
@@ -42,17 +43,21 @@ Concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo pro
 
 O fluxo mantém faturamento e quilômetros como essenciais, preserva horas e combustível em detalhes opcionais, confirma o salvamento e atualiza a mesma data sem duplicação.
 
+### Bloco 3 — Refinamento de Planejar
+
+Concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
+
+O proprietário informou que o Planejar reorganizado foi validado no celular. A validação física encerra a pendência de interface do Bloco 3; ela não autoriza o Bloco 4 nem qualquer publicação em produção.
+
 A barra permanece:
 
 ```text
 Hoje | Histórico | Planejar | Mais
 ```
 
-## Bloco 3 — Refinamento de Planejar
+## Bloco 3 — comportamento entregue
 
 Planejar deixou de ser uma rolagem única comprida e passou a abrir como um resumo curto, sem criar outra fonte de dados.
-
-### Comportamento entregue
 
 - resumo principal mostra a pergunta `O que você quer planejar?`;
 - sete ilhas permanecem visíveis:
@@ -87,9 +92,9 @@ Planejar deixou de ser uma rolagem única comprida e passou a abrir como um resu
 
 ## Evidência automática
 
-Execução funcional final: `30927631513`.
+A execução funcional `30927631513` verificou exatamente a fotografia `0c6f7b3d57ff94cbd4681f6d6323703861c6233b`.
 
-A execução verificou exatamente a fotografia `0c6f7b3d57ff94cbd4681f6d6323703861c6233b` e concluiu com sucesso:
+A execução integral de fechamento `30929247436` verificou a fotografia documental `b9e9a29cbd8da55ed0f259b435bbb42a34ccfa24` e concluiu com sucesso:
 
 - governança, sintaxe, JSON e todos os testes Node;
 - Chromium;
@@ -106,7 +111,7 @@ A execução verificou exatamente a fotografia `0c6f7b3d57ff94cbd4681f6d63237038
 
 ## Aprendizado do bloco
 
-Não houve novo defeito permanente do produto que exigisse incidente próprio.
+**Nenhum aprendizado permanente novo.**
 
 As primeiras falhas vieram de testes antigos que ainda esperavam a rolagem única. A correção foi atualizar os caminhos dos testes para reproduzir a nova navegação: abrir a ilha e então usar o mesmo elemento original. Nenhuma fórmula, dado ou comportamento financeiro foi alterado para fazer os testes passarem.
 
@@ -124,25 +129,12 @@ Não foram alterados pelo Bloco 3:
 - `main`;
 - PR #1.
 
-## Validação física pendente
+## Validação física concluída
 
-O Bloco 3 permanece **aguardando validação física**.
+O Bloco 3 foi validado fisicamente pelo proprietário no celular em 2026-08-04.
 
-No celular, validar:
-
-1. abrir Planejar pela barra inferior;
-2. confirmar que a primeira tela é curta e mostra sete ilhas;
-3. abrir Metas, editar o objetivo e voltar para Planejar;
-4. confirmar que o resumo da ilha reflete a nova meta;
-5. abrir Agenda e conferir dias da semana e folgas;
-6. abrir Operação e conferir combustível e receita por km;
-7. abrir Custos e reservas e conferir a lista e o botão de adicionar custo;
-8. abrir Distribuição e confirmar gráfico e detalhamento;
-9. abrir Aprendizado e Opções avançadas, sem executar restauração durante o teste;
-10. dentro de uma ilha, usar o botão Voltar do Android e confirmar retorno ao resumo;
-11. abrir Planejar pelo atalho de Hoje, entrar em uma ilha, voltar ao resumo e depois voltar para Hoje;
-12. verificar cortes, sobreposições, travamentos e preservação dos valores.
+Essa confirmação encerra a etapa de validação do Planejar reorganizado. Nenhuma nova alteração funcional foi incluída neste registro.
 
 ## Próximo passo único
 
-O proprietário deve validar o Bloco 3 no celular pelo GitHub Pages. O Bloco 4 — refinamento de Histórico — não está autorizado.
+Apurar e apresentar o contrato executável do Bloco 4 — refinamento de Histórico. A implementação do Bloco 4 ainda não está autorizada.
