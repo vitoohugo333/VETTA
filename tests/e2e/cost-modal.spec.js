@@ -36,11 +36,12 @@ test('modal fecha e salva uma despesa sem carregar patches no navegador', async 
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.waitForURL(/app-shell\.html/);
   await expect(page.locator('#appVersionLabel')).toHaveText('Versão 3.5.1');
+  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
 
-  await page.locator('[data-view="settings"]').first().click();
-  await expect(page.locator('#view-settings')).toBeVisible();
-  await expect(page.locator('#addCostButton')).toBeVisible();
-  await page.locator('#addCostButton').click();
+  await page.locator('nav.fixed.bottom-0 [data-view="planning"]').click();
+  await expect(page.locator('#view-planning')).toBeVisible();
+  await expect(page.locator('#planningAddCostButton')).toBeVisible();
+  await page.locator('#planningAddCostButton').click();
 
   const modal = page.locator('#costModal');
   await expect(modal).toBeVisible();
@@ -48,7 +49,7 @@ test('modal fecha e salva uma despesa sem carregar patches no navegador', async 
   await page.locator('#closeCostModal i').click();
   await expect(modal).toBeHidden();
 
-  await page.locator('#addCostButton').click();
+  await page.locator('#planningAddCostButton').click();
   await expect(modal).toBeVisible();
 
   await page.locator('#costName').fill('Seguro de teste E2E');
