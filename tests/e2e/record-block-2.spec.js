@@ -16,8 +16,8 @@ const state = {
   closings: [],
 };
 
-async function openApp(page) {
-  await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
+async function openApp(page, initialState = state) {
+  await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: initialState });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
   await expect.poll(() => page.locator('#view-day').getAttribute('data-block2')).toBe('ready');
@@ -83,10 +83,9 @@ test('registro prioriza essenciais, recolhe opcionais e confirma o dia salvo', a
 });
 
 test('edição pelo Histórico continua usando o mesmo formulário e a mesma data', async ({ page }) => {
-  await openApp(page);
-  await page.evaluate(key => {
-    const value = JSON.parse(localStorage.getItem(key));
-    value.records = [{
+  const stateWithRecord = {
+    ...state,
+    records: [{
       id: 'day-2026-08-03',
       date: '2026-08-03',
       gross: 280,
@@ -100,14 +99,14 @@ test('edição pelo Histórico continua usando o mesmo formulário e a mesma dat
       perKmCostSnapshot: 0,
       percentCostSnapshot: 0,
       fixedShareSnapshot: 0,
-    }];
-    localStorage.setItem(key, JSON.stringify(value));
-    location.reload();
-  }, STORAGE_KEY);
+    }],
+  };
 
-  await expect.poll(() => page.locator('#view-day').getAttribute('data-block2')).toBe('ready');
+  await openApp(page, stateWithRecord);
   await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
-  await page.locator('[data-action="edit"][data-date="2026-08-03"]').click();
+  const editButton = page.locator('[data-action="edit"][data-date="2026-08-03"]');
+  await expect(editButton).toBeVisible();
+  await editButton.click();
 
   await expect(page.locator('#view-day')).toBeVisible();
   await expect(page.locator('#recordDate')).toHaveValue('2026-08-03');
