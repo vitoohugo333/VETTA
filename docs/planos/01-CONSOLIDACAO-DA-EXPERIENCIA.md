@@ -1,6 +1,6 @@
 # Plano 01 — Consolidação da experiência
 
-**Estado:** ATIVO — Blocos 1A a 2 validados fisicamente; Bloco 3 aprovado tecnicamente e aguardando validação física  
+**Estado:** ATIVO — Blocos 1A a 3 validados fisicamente; Bloco 4 não autorizado  
 **Atualizado em:** 2026-08-04, horário de Brasília  
 **Branch de desenvolvimento:** `netlify/teste-fechado-ux`  
 **Ambiente de validação:** GitHub Pages  
@@ -209,7 +209,7 @@ Entregas:
 
 ### Bloco 3 — Refinar Planejar
 
-**Estado:** implementado, aprovado pela CI e pelo GitHub Pages; **aguardando validação física**.
+**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
 
 Entregas:
 
@@ -224,7 +224,7 @@ Entregas:
 - fallback mantém a tela longa anterior se um destino obrigatório faltar;
 - nenhum dado, fórmula, chave de armazenamento ou arquivo do PWA foi alterado.
 
-Aceite técnico alcançado na fotografia funcional `0c6f7b3d57ff94cbd4681f6d6323703861c6233b`, execução `30927631513`:
+Aceite técnico alcançado na fotografia funcional `0c6f7b3d57ff94cbd4681f6d6323703861c6233b`, execução funcional `30927631513` e execução integral de fechamento `30929247436`:
 
 - governança e todos os testes determinísticos;
 - Chromium;
@@ -235,6 +235,11 @@ Aceite técnico alcançado na fotografia funcional `0c6f7b3d57ff94cbd4681f6d6323
 - navegação por botão e histórico;
 - paridade dos arquivos públicos;
 - interação no GitHub Pages.
+
+Aceite físico:
+
+- validação informada pelo proprietário no celular em 2026-08-04;
+- nenhuma nova autorização funcional foi concedida junto com essa confirmação.
 
 ### Blocos 4 a 8
 
@@ -270,10 +275,9 @@ O contrato falha se algum elemento afetado não estiver na tabela.
 
 ## 8. Estado atual
 
-- Blocos 1A a 2 concluídos e validados fisicamente;
-- Bloco 3 aprovado tecnicamente e servido pelo GitHub Pages;
-- Planejar agora abre curto e separa cada assunto em tela própria;
+- Blocos 1A a 3 concluídos e validados fisicamente;
+- Planejar abre curto e separa cada assunto em tela própria;
 - nenhum campo, custo, gráfico, aprendizado ou opção avançada foi removido;
 - `app.js`, `styles.css`, cálculos, formato dos dados e PWA permanecem intocados pelo Bloco 3;
-- Bloco 3 permanece **aguardando validação física**;
+- não existe alteração funcional em curso;
 - Bloco 4 não está autorizado.
