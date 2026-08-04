@@ -24,17 +24,21 @@ const state = {
   closings: [],
 };
 
-test('GitHub Pages serve o Histórico 1B e permite alternar Dias e Análise', async ({ page, request }) => {
+test('GitHub Pages preserva o Histórico 1B dentro do resumo do Bloco 4', async ({ page, request }) => {
   const moduleResponse = await request.get(url('history-1b.js'));
   expect(moduleResponse.ok(), 'history-1b.js deve estar publicado.').toBeTruthy();
 
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
   await page.goto(url('app-shell.html'), { waitUntil: 'domcontentloaded' });
-  await page.locator('[data-view="history"]').first().click();
+  await expect.poll(() => page.locator('#view-history').getAttribute('data-block4')).toBe('ready');
+  await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
 
+  await expect(page.locator('#historyHub')).toBeVisible();
+  await page.locator('[data-history-section-open="days"]').click();
   await expect(page.locator('#historyDaysPanel')).toBeVisible();
-  await page.locator('[data-history-tab="analysis"]').click();
-  await expect(page.locator('#historyAnalysisPanel')).toBeVisible();
+  await page.locator('#historyPage-days [data-history-section-back]').click();
+
+  await page.locator('[data-history-section-open="summary"]').click();
   await expect(page.locator('#historyChart')).toBeVisible();
   await expect(page.locator('#weekStatusTitle')).toHaveCount(1);
 });
