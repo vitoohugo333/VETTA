@@ -1,0 +1,1 @@
+Antes de qualquer trabalho no VETTA, identifique a branch-alvo e leia `START_HERE.md`, `AGENTS.md`, `SKILLS.md`, `TESTING_RULES.md`, regras especializadas e `PROJECT_STATE.md` daquela branch. Testes são responsabilidade autônoma do agente e fazem parte do bloco autorizado.
