@@ -1,43 +1,54 @@
-# VETTA — índice técnico da branch `main`
+<!-- VETTA_GOVERNANCE_VERSION: 2026-08-03.2 -->
+# VETTA — índice técnico obrigatório
 
-A `main` é o ponto de entrada e controle do repositório. Ela não substitui os conhecimentos técnicos da branch onde o aplicativo será realmente alterado.
+Este arquivo é o mapa de leitura para qualquer agente. Ele deve ser lido depois de `AGENTS.md` e antes de `PROJECT_STATE.md`.
 
-## Regra obrigatória
+## Sequência obrigatória
 
-Antes de qualquer diagnóstico ou mudança:
+1. `AGENTS.md` — autoridade, escopo, fontes de verdade e forma de trabalhar;
+2. `SKILLS.md` — este índice;
+3. `TESTING_RULES.md` — responsabilidade autônoma por testes e CI Universal Adaptativa;
+4. arquivo especializado aplicável, especialmente `PWA_RULES.md`;
+5. `LEARNING_RULES.md` quando houver defeito, quase falha ou aprendizado;
+6. `PROJECT_STATE.md` — estado atual da branch;
+7. fontes vivas relevantes.
 
-1. identificar a branch-alvo;
-2. ler `AGENTS.md`, `SKILLS.md`, arquivos especializados e `PROJECT_STATE.md` da branch-alvo;
-3. confirmar GitHub, PR, CI e ambiente servido proporcionais ao risco;
-4. usar a `main` apenas para regras gerais e acionamento dos workflows que precisam existir na branch padrão.
+## Arquivos operacionais
 
-## Branches atuais
+| Área | Arquivo | Prova executável ou histórica |
+|---|---|---|
+| Testes e CI | `TESTING_RULES.md` | `.github/workflows/ci-engine.yml`, `ci/branch-policy.json`, `scripts/ci/` |
+| PWA, instalação, cache e acesso | `PWA_RULES.md` | testes PWA, Playwright e ambiente publicado |
+| Aprendizado técnico | `LEARNING_RULES.md` | `docs/incidents/` |
+| Operação prática dos testes | `tests/README.md` | testes descobertos na própria branch |
+| Estado vivo | `PROJECT_STATE.md` | branch, commit, CI, deploy e validação física |
 
-| Branch | Papel |
-|---|---|
-| `main` | controle, governança e lançador manual de testes |
-| `netlify/teste-fechado` | aplicativo estável dos testadores e Netlify |
-| `netlify/teste-fechado-ux` | desenvolvimento da reorganização da interface |
-| `migration/vetta-clean-3-5-1` | referência histórica permanente |
+## Regra de consistência entre branches
 
-## Automação de navegador
+`AGENTS.md`, `SKILLS.md`, `TESTING_RULES.md`, `PWA_RULES.md` e `LEARNING_RULES.md` são canônicos na `main` e devem ser idênticos nas branches ativas.
 
-O workflow `.github/workflows/test-usage-manual.yml` existe na `main` apenas para disponibilizar o botão manual do GitHub Actions.
+A CI compara esses arquivos. Divergência não autorizada é falha de governança, porque um agente novo poderia receber instruções diferentes dependendo da branch.
 
-Ao executar, selecionar a branch que contém o aplicativo e os testes, normalmente `netlify/teste-fechado`. O checkout e a execução devem usar essa branch escolhida.
+`PROJECT_STATE.md`, planos, incidentes e `ci/branch-policy.json` podem e devem refletir o estado específico de cada branch.
 
-Regras permanentes:
+## Responsabilidade do agente
 
-- execução manual;
-- somente Chromium e Linux por padrão;
-- limite curto;
-- sem vídeo permanente;
-- evidência somente em falha;
-- senha apenas em segredo do GitHub;
-- nenhuma execução automática sem necessidade comprovada e nova autorização.
+Dentro de um bloco autorizado, o agente decide os testes necessários. Não transfira ao proprietário decisões como “rodar ou não rodar teste”, “qual navegador usar” ou “se deve verificar o ambiente publicado”.
 
-## Segurança
+A escolha deve seguir risco e evidência, não conveniência operacional.
 
-A credencial exclusiva do robô é independente das senhas dos testadores. O GitHub guarda a senha em `VETTA_TEST_PASSWORD`; o Netlify guarda apenas o hash em `VETTA_ACCESS_ROBOT_HASH`.
+## Criação de branch
 
-A remoção de qualquer um desses dois valores desativa o acesso automatizado sem alterar interface, cálculos ou dados.
+Antes da primeira alteração funcional numa branch nova, confirme:
+
+- arquivos canônicos presentes e iguais à `main`;
+- `PROJECT_STATE.md` específico criado;
+- `ci/branch-policy.json` correto;
+- `.github/workflows/ci-autonomous.yml` presente;
+- CI inicial verde na fotografia de origem.
+
+Sem isso, a branch não está pronta para desenvolvimento.
+
+## Fechamento
+
+Todo bloco técnico termina declarando uma das três situações de aprendizado previstas em `LEARNING_RULES.md` e apresentando evidência fresca dos testes escolhidos.
