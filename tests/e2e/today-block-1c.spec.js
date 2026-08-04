@@ -25,6 +25,7 @@ async function openApp(page) {
   await expect.poll(() => page.locator('#view-dashboard').getAttribute('data-block1c')).toBe('ready');
   await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
   await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
+  await expect.poll(() => page.locator('#view-history').getAttribute('data-block4')).toBe('ready');
 }
 
 async function businessState(page) {
@@ -89,8 +90,8 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
 
   await page.locator('#view-planning > div:first-child [data-back]').click();
   await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
-  await expect(page.locator('#historyDaysPanel')).toBeVisible();
-  await page.locator('[data-history-tab="analysis"]').click();
+  await expect(page.locator('#historyHub')).toBeVisible();
+  await page.locator('[data-history-section-open="week"]').click();
   await expect(page.locator('#historyWeekStatusTitle')).toBeVisible();
   await expect(page.locator('#historyWeekTarget')).toBeVisible();
 
