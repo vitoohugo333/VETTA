@@ -20,6 +20,10 @@ Registrar somente conhecimento com causa confirmada e valor futuro. Hipóteses, 
 | [INC-0001](./INC-0001-barreira-de-acesso-bloqueou-arquivos-do-pwa.md) | Incidente | Barreira de acesso bloqueou arquivos técnicos do PWA | PWA reutilizável; aplicação web reutilizável | Confirmado |
 | [INC-0002](./INC-0002-piscada-na-abertura-standalone.md) | Incidente | Tela de instalação apareceu antes do app instalado | PWA reutilizável | Confirmado |
 | [INC-0003](./INC-0003-automacao-remota-sem-burlar-instalacao.md) | Aprendizado preventivo | Navegador automatizado testa o app sem liberar acesso comum | PWA reutilizável; aplicação web reutilizável | Confirmado |
+| [INC-0004](./INC-0004-autorizacao-duplicada-em-deploy-previsivel.md) | Aprendizado preventivo | Etapa operacional previsível não exige autorização duplicada | Governança e publicação de validação | Confirmado |
+| [INC-0005](./INC-0005-comparacao-de-dados-durante-abertura-pwa.md) | Aprendizado preventivo | Comparar dados somente após a abertura estabilizar | PWA, armazenamento e testes | Confirmado |
+| [INC-0006](./INC-0006-hidden-sobrescrito-na-navegacao-final.md) | Incidente | `hidden` foi vencido pelo estilo da navegação | Interface, CSS e testes de PWA | Confirmado |
+| [INC-0007](./INC-0007-classe-tailwind-usada-como-seletor-css.md) | Incidente | Classe Tailwind com colchetes usada como seletor CSS | Interface e testes de navegador | Confirmado |
 
 ## Numeração
 
