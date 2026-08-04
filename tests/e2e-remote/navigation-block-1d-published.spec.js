@@ -33,8 +33,8 @@ test('GitHub Pages servem a navegação final e preservam as rotas secundárias'
   await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
 
   const nav = page.locator('nav.fixed.bottom-0');
-  await expect(nav.locator('[data-view]:visible')).toHaveCount(4);
-  expect(await nav.locator('[data-view]:visible span').allTextContents()).toEqual(['Hoje', 'Histórico', 'Planejar', 'Mais']);
+  await expect(nav.locator('[data-view]')).toHaveCount(4);
+  await expect(nav.locator('[data-view] span')).toHaveText(['Hoje', 'Histórico', 'Planejar', 'Mais']);
 
   await nav.locator('[data-view="planning"]').click();
   await expect(page.locator('#view-planning')).toBeVisible();
