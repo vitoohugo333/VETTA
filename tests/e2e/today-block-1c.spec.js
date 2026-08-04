@@ -33,8 +33,12 @@ async function storedState(page) {
 }
 
 async function waitForStoredState(page) {
-  await expect.poll(() => storedState(page), { timeout: 10000 }).not.toBeNull();
-  return storedState(page);
+  let confirmed = null;
+  await expect.poll(async () => {
+    confirmed = await storedState(page);
+    return confirmed;
+  }, { timeout: 10000 }).not.toBeNull();
+  return confirmed;
 }
 
 test('Hoje mantém o essencial e retira somente duplicações com destino validado', async ({ page }) => {
