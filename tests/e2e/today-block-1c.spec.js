@@ -68,7 +68,7 @@ test('consolidação visual não altera dados nem a navegação atual', async ({
   await openApp(page);
   const before = await page.evaluate(key => localStorage.getItem(key), STORAGE_KEY);
 
-  await expect(page.locator('nav.bottom-nav [data-view]')).toHaveCount(5);
+  await expect(page.locator('nav.fixed.bottom-0 [data-view]')).toHaveCount(5);
   await expect(page.locator('[data-view="dashboard"]').first()).toContainText('Início');
   await expect(page.locator('[data-view="day"]').last()).toContainText('Dia');
   await expect(page.locator('[data-view="settings"]').first()).toContainText('Ajustes');
