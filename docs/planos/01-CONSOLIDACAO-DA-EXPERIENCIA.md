@@ -1,6 +1,6 @@
 # Plano 01 — Consolidação da experiência
 
-**Estado:** ATIVO — Blocos 1A a 1D concluídos e validados fisicamente; Bloco 2 aprovado tecnicamente e aguardando validação física  
+**Estado:** ATIVO — Blocos 1A a 2 validados fisicamente; Bloco 3 aprovado tecnicamente e aguardando validação física  
 **Atualizado em:** 2026-08-04, horário de Brasília  
 **Branch de desenvolvimento:** `netlify/teste-fechado-ux`  
 **Ambiente de validação:** GitHub Pages  
@@ -79,8 +79,8 @@ O Plano 01 não altera:
 | Seletor 5, 6 ou 7 dias | Planejar → Agenda | retirado visualmente de Hoje |
 | Folgas extras | Planejar → Agenda | retirado visualmente de Hoje |
 | Situação e números da semana | Histórico → Análise → Semana atual | retirados visualmente de Hoje |
-| Gráfico Distribuição da meta | Planejar → Distribuição da meta | retirado visualmente de Hoje |
-| Faturamento bruto, rodagem, custos e objetivo do gráfico | Planejar → Distribuição da meta | retirados visualmente de Hoje |
+| Gráfico Distribuição da meta | Planejar → Distribuição | retirado visualmente de Hoje |
+| Faturamento bruto, rodagem, custos e objetivo do gráfico | Planejar → Distribuição | retirados visualmente de Hoje |
 
 As duplicações retiradas de Hoje continuam no HTML como retorno seguro para os consumidores atuais. O módulo só as oculta depois de confirmar todos os destinos. Se uma origem ou destino faltar, Hoje permanece completo.
 
@@ -123,22 +123,31 @@ O Bloco 2 não criou outra persistência. A regra canônica continua sendo um re
 
 ### 4.4 Planejar
 
-| Elemento | Destino | Estado |
+Planejar abre como um resumo curto. Cada assunto possui uma ilha visível e abre uma tela própria, reutilizando os mesmos campos e eventos originais.
+
+| Elemento | Destino | Estado após Bloco 3 |
 |---|---|---|
-| Acesso principal | barra inferior → Planejar | disponível |
-| Objetivo líquido | Planejar → Metas | disponível |
-| Dias da semana e atalhos 5/6/7 | Planejar → Agenda | disponíveis |
-| Folgas extras | Planejar → Agenda | disponível |
-| Tipo, nome, preço e rendimento do combustível | Planejar → Operação e combustível | disponíveis |
-| Receita média por km | Planejar → Operação | disponível |
-| Custos mensais, semanais, únicos, por km e percentuais | Planejar → Custos e reservas | disponíveis |
-| Reservas | Planejar → Custos e reservas | disponíveis |
-| Aprendizado local | Planejar → Aprendizado | disponível |
-| Restaurar padrões | Planejar → Opções avançadas | disponível e protegido |
-| Gráfico de pizza e detalhamento | Planejar → Distribuição da meta | disponíveis |
+| Resumo do plano | barra inferior → Planejar | visível e curto |
+| Objetivo líquido | Planejar → Metas | tela própria |
+| Dias da semana e atalhos 5/6/7 | Planejar → Agenda | tela própria |
+| Folgas extras | Planejar → Agenda | tela própria |
+| Tipo, nome, preço e rendimento do combustível | Planejar → Operação | tela própria |
+| Receita média por km | Planejar → Operação | tela própria |
+| Custos mensais, semanais, únicos, por km e percentuais | Planejar → Custos e reservas | tela própria |
+| Reservas | Planejar → Custos e reservas | tela própria |
+| Gráfico de pizza e detalhamento | Planejar → Distribuição | tela própria |
+| Aprendizado local | Planejar → Aprendizado | tela própria |
+| Restaurar padrões | Planejar → Opções avançadas | tela própria e protegida |
 | Tela antiga Ajustes | fallback interno | preservada, mas não ocupa a barra final |
 
-Ao abrir Planejar diretamente pela barra, não existe botão Voltar porque a área é principal. Ao abrir pelo atalho de Hoje, o botão Voltar aparece e retorna para Hoje.
+Regras de retorno:
+
+- dentro de um assunto, `Voltar para Planejar` retorna ao resumo curto;
+- o botão Voltar do Android ou navegador faz o mesmo retorno;
+- Planejar aberto pela barra é área principal e não mostra retorno para Hoje;
+- Planejar aberto pelo atalho de Hoje mantém, no resumo, o botão que retorna para Hoje;
+- valores preenchidos permanecem ao alternar entre assuntos;
+- se qualquer seção original obrigatória não for encontrada, o Bloco 3 não ativa e a tela longa anterior é preservada.
 
 ### 4.5 Mais
 
@@ -169,77 +178,66 @@ Ao abrir Planejar diretamente pela barra, não existe botão Voltar porque a ár
 
 **Estado:** concluído, aprovado pela CI e validado fisicamente.
 
-- Planejar completo foi construído;
-- gráfico de pizza e números associados estão acessíveis;
-- usa a mesma fonte de dados do aplicativo.
-
 ### Bloco 1B — Construir Histórico com Dias e Análise
 
 **Estado:** concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente em 2026-08-04.
 
-- Dias preserva lista, edição e exclusão;
-- Análise reúne resumo, gráfico, comparação e semana atual;
-- não criou novo estado persistido.
-
 ### Bloco 1C — Consolidar Hoje
 
-**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente em 2026-08-04.
-
-- Hoje mantém resumo diário, Registro do dia, situação mensal e leitura do VETTA;
-- objetivo mensal e agenda aparecem em Planejar;
-- semana aparece em Histórico → Análise;
-- gráfico e detalhamento aparecem em Planejar;
-- retirada reversível e condicionada à existência dos destinos;
-- dados, cálculos e PWA preservados.
+**Estado:** concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente em 2026-08-04.
 
 ### Bloco 1D — Ativar navegação final
 
-**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
+**Estado:** concluído, aprovado pela CI, pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
 
-- a barra possui estruturalmente quatro áreas: `Hoje | Histórico | Planejar | Mais`;
-- o botão `Dia` saiu somente da barra;
-- `Registrar meu dia`, a tela e o formulário continuam acessíveis por Hoje;
-- Ajustes saiu da barra porque Planejar passou a ser a área principal;
-- rotas antigas de Ajustes convergem para Planejar;
-- o botão Voltar distingue Planejar aberto diretamente de Planejar aberto pelo atalho de Hoje;
-- o formulário não salvo permanece preenchido ao voltar;
-- a navegação antiga é preservada se algum destino validado não carregar;
-- nenhuma fórmula, dado, armazenamento ou arquivo do PWA foi alterado.
+A barra final permanece `Hoje | Histórico | Planejar | Mais`, o Registro continua acessível por Hoje e as rotas antigas de Ajustes convergem para Planejar.
 
 ### Bloco 2 — Registro diário
 
-**Estado:** implementado, aprovado pela CI e pelo GitHub Pages; aguardando validação física.
+**Estado:** concluído, aprovado pela CI e pelo GitHub Pages e validado fisicamente pelo proprietário em 2026-08-04.
 
-Entregas executadas:
+Entregas:
 
-- data, faturamento e quilômetros permanecem visíveis;
-- faturamento e quilômetros receberam prioridade visual;
-- horas online e combustível gasto foram movidos para `Detalhes opcionais` sem serem removidos;
-- a prévia passou a destacar o líquido calculado, preservando custos, receita por km e diferença da meta;
-- salvar continua delegando à gravação canônica do aplicativo;
-- a mesma data continua sendo atualizada, sem duplicação;
-- a confirmação mostra se o dia foi registrado ou atualizado;
-- `Editar este dia` reabre o registro salvo;
-- `Concluir` retorna para Hoje;
-- edição pelo Histórico continua usando o mesmo formulário;
-- se a estrutura esperada da tela não existir, o formulário original permanece intacto.
+- faturamento e quilômetros priorizados;
+- horas e combustível preservados em `Detalhes opcionais`;
+- líquido destacado na prévia;
+- confirmação de dia registrado ou atualizado;
+- edição da mesma data sem duplicação;
+- retorno previsível para Hoje;
+- edição pelo Histórico preservada;
+- `app.js`, cálculos, dados e PWA intocados.
 
-Aceite técnico alcançado:
+### Bloco 3 — Refinar Planejar
 
-- contratos de armazenamento e interface aprovados;
-- criação e atualização da mesma data aprovadas;
-- opcionais recolhidos e recuperados na edição aprovados;
-- Chromium, Firefox e WebKit aprovados;
-- paridade e interação no GitHub Pages aprovadas;
-- `app.js`, cálculos, formato dos dados e PWA preservados.
+**Estado:** implementado, aprovado pela CI e pelo GitHub Pages; **aguardando validação física**.
 
-Aceite pendente:
+Entregas:
 
-- validação física do novo fluxo de registro no Android.
+- Planejar abre como resumo curto;
+- sete ilhas visíveis: Metas, Agenda, Operação, Custos e reservas, Distribuição, Aprendizado e Opções avançadas;
+- cada ilha abre tela própria;
+- os campos, listas, gráfico e ações originais foram movidos como os mesmos elementos, sem segunda cópia;
+- resumos das ilhas refletem os valores atuais;
+- alterações de meta, agenda, combustível e custos permanecem entre telas;
+- gráfico é redesenhado ao abrir Distribuição;
+- retorno por botão e pelo Android/navegador preservado;
+- fallback mantém a tela longa anterior se um destino obrigatório faltar;
+- nenhum dado, fórmula, chave de armazenamento ou arquivo do PWA foi alterado.
 
-### Blocos 3 a 8
+Aceite técnico alcançado na fotografia funcional `0c6f7b3d57ff94cbd4681f6d6323703861c6233b`, execução `30927631513`:
 
-- Bloco 3: refinamento de Planejar;
+- governança e todos os testes determinísticos;
+- Chromium;
+- Firefox;
+- WebKit;
+- edição e preservação de valores entre assuntos;
+- custos e gráfico acessíveis;
+- navegação por botão e histórico;
+- paridade dos arquivos públicos;
+- interação no GitHub Pages.
+
+### Blocos 4 a 8
+
 - Bloco 4: refinamento de Histórico;
 - Bloco 5: organização de Mais;
 - Bloco 6: onboarding e linguagem;
@@ -272,12 +270,10 @@ O contrato falha se algum elemento afetado não estiver na tabela.
 
 ## 8. Estado atual
 
-- Blocos 1A a 1D concluídos e validados fisicamente;
-- Bloco 2 aprovado tecnicamente e publicado no GitHub Pages;
-- Registro do dia prioriza faturamento e quilômetros;
-- horas e combustível continuam acessíveis em detalhes opcionais;
-- salvar mostra confirmação e editar preserva uma única data;
-- navegação final continua `Hoje | Histórico | Planejar | Mais`;
-- `app.js`, `styles.css`, cálculos, formato dos dados e PWA permanecem intocados pelo Bloco 2;
-- Bloco 2 permanece **aguardando validação física**;
-- Bloco 3 não está autorizado.
+- Blocos 1A a 2 concluídos e validados fisicamente;
+- Bloco 3 aprovado tecnicamente e servido pelo GitHub Pages;
+- Planejar agora abre curto e separa cada assunto em tela própria;
+- nenhum campo, custo, gráfico, aprendizado ou opção avançada foi removido;
+- `app.js`, `styles.css`, cálculos, formato dos dados e PWA permanecem intocados pelo Bloco 3;
+- Bloco 3 permanece **aguardando validação física**;
+- Bloco 4 não está autorizado.
