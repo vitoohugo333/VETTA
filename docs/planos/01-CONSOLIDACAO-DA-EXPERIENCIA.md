@@ -1,7 +1,7 @@
 # Plano 01 — Consolidação da experiência
 
-**Estado:** ATIVO — replanejado após regressão de acesso  
-**Atualizado em:** 2026-08-03  
+**Estado:** ATIVO — Blocos 1A concluído e 1B implementado  
+**Atualizado em:** 2026-08-03, horário de Brasília  
 **Branch de desenvolvimento:** `netlify/teste-fechado-ux`  
 **Ambiente de validação:** GitHub Pages  
 **Princípio:** simplificar sem apagar, esconder ou perder recursos
@@ -75,8 +75,8 @@ O Plano 01 não altera:
 | Líquido gerado | Hoje | visível | permanece |
 | Projeção | Hoje | visível | permanece |
 | Dias restantes | Hoje | visível | permanece |
-| Situação da semana | Histórico → Análise semanal | atalho visível em Hoje ou aba Análise | só sai de Hoje quando o destino existir |
-| Meta, realizado e média/km da semana | Histórico → Análise semanal | tela ou seção visível | não fica inacessível |
+| Situação da semana | Histórico → Análise semanal | visível em Início e na aba Análise durante a transição | só sai de Hoje em contrato posterior, após validação física do destino |
+| Meta, realizado e média/km da semana | Histórico → Análise semanal | visíveis em Início e em Análise | não ficam inacessíveis |
 | Gráfico de pizza Distribuição da meta | Planejar → Distribuição da meta | cartão visível em Planejar | obrigatório; não pode ser ocultado |
 | Faturamento bruto necessário | Planejar → Distribuição da meta | junto ao gráfico | permanece |
 | Rodagem mensal estimada | Planejar → Distribuição da meta | junto ao gráfico | permanece |
@@ -109,12 +109,12 @@ O Plano 01 não altera:
 | Lista de dias | Histórico → Dias | primeira área | permanece |
 | Editar dia | Histórico → Dias | ação no registro | permanece |
 | Excluir dia | Histórico → Dias | ação com confirmação | permanece |
-| Quantidade de dias | Histórico → Resumo | visível | permanece |
-| Média de faturamento/km | Histórico → Resumo | visível | permanece |
-| Líquido acumulado | Histórico → Resumo | visível | permanece |
-| Gráfico de evolução | Histórico → Análise | aba ou seção visível | permanece |
-| Comparação entre dias | Histórico → Análise | aba ou seção visível | permanece |
-| Situação semanal | Histórico → Análise semanal | aba ou seção visível | recebe o conteúdo semanal de Hoje |
+| Quantidade de dias | Histórico → Análise → Resumo | botão Análise | permanece |
+| Média de faturamento/km | Histórico → Análise → Resumo | botão Análise | permanece |
+| Líquido acumulado | Histórico → Análise → Resumo | botão Análise | permanece |
+| Gráfico de evolução | Histórico → Análise | botão Análise | permanece |
+| Comparação entre dias | Histórico → Análise | botão Análise | permanece |
+| Situação semanal | Histórico → Análise → Semana atual | botão Análise | duplicada sem retirar o cartão de Início |
 
 ### 4.4 Ajustes atuais → Planejar
 
@@ -134,7 +134,7 @@ O Plano 01 não altera:
 | Reservas | Planejar → Custos e reservas | lista | permanece |
 | Aprendizado local | Planejar → Aprendizado | resumo e confirmação | permanece |
 | Restaurar padrões | Planejar → Opções avançadas | ação protegida | permanece |
-| Gráfico de pizza | Planejar → Distribuição da meta | cartão visível | entra obrigatoriamente neste bloco |
+| Gráfico de pizza | Planejar → Distribuição da meta | cartão visível | incluído e preservado |
 
 ### 4.5 Mais
 
@@ -166,6 +166,8 @@ A navegação de quatro áreas só pode ser ativada depois que todos os destinos
 
 ### Bloco 1A — Construir Planejar sem retirar nada de Hoje
 
+**Estado:** concluído, aprovado pela CI e validado fisicamente no celular.
+
 Entregas:
 
 - criar a área Planejar completa;
@@ -173,31 +175,41 @@ Entregas:
 - incluir o gráfico de pizza e todos os números da distribuição da meta;
 - manter temporariamente os elementos originais em Hoje enquanto o novo destino é validado.
 
-Aceite:
+Aceite alcançado:
 
 - todo conteúdo de Planejar funciona;
 - gráfico de pizza visível;
 - nenhum conteúdo anterior desapareceu;
 - cálculos idênticos;
-- validação no celular.
+- validação no celular concluída.
 
 ### Bloco 1B — Construir Histórico com Dias e Análise
+
+**Estado:** implementado e aprovado pela CI; aguardando validação física no celular.
 
 Entregas:
 
 - separar Dias e Análise;
-- mover situação semanal, gráfico de evolução, médias e comparações para Análise;
-- manter lista e correção de registros em Dias.
+- manter lista, edição e exclusão de registros em Dias;
+- reunir resumo, gráfico de evolução, comparação entre dias e situação semanal em Análise;
+- duplicar a situação semanal em Análise sem retirar o cartão original de Início;
+- não criar novo estado persistido nem novo formato de dados.
 
-Aceite:
+Aceite técnico alcançado:
 
 - todos os gráficos e análises possuem acesso visível;
-- editar e excluir continuam funcionando;
-- validação no celular.
+- editar e excluir continuam funcionando sem duplicar registros;
+- a semana exibida em Histórico coincide com a semana de Início;
+- Chromium, Firefox e WebKit passaram;
+- arquivos e interações do GitHub Pages passaram na prova publicada.
+
+Aceite ainda pendente:
+
+- validação física no celular.
 
 ### Bloco 1C — Consolidar Hoje
 
-Somente após 1A e 1B aprovados:
+Somente após 1A e 1B aprovados fisicamente:
 
 - manter em Hoje o resumo diário;
 - manter Registrar meu dia;
@@ -205,7 +217,7 @@ Somente após 1A e 1B aprovados:
 - manter leitura do VETTA;
 - retirar duplicações que já existam e estejam comprovadamente acessíveis em Planejar ou Histórico.
 
-Para cada retirada, o relatório deve citar o destino já validado.
+Para cada retirada, o relatório deve citar o destino já validado. Nenhuma retirada está autorizada pelo Bloco 1B.
 
 ### Bloco 1D — Ativar navegação final
 
@@ -255,9 +267,12 @@ O contrato falha e não pode ser executado se algum elemento afetado não estive
 
 ## 8. Estado atual
 
-- a tentativa anterior do Bloco 1 foi revertida;
-- a interface da branch UX voltou ao estado anterior;
-- o gráfico de pizza e os demais cartões voltaram a ser visíveis;
-- a branch UX continua separada para desenvolvimento;
-- o próximo trabalho de interface deve começar pelo **Bloco 1A — construir Planejar sem retirar nada de Hoje**;
-- este plano não autoriza executar o Bloco 1A automaticamente.
+- o Bloco 1A está concluído e validado fisicamente;
+- o Bloco 1B está implementado na branch UX e aprovado pela CI e pela prova do GitHub Pages;
+- Histórico abre em `Dias` e oferece a área `Análise` por botão visível;
+- a situação semanal permanece em Início e também aparece em Análise;
+- nenhum conteúdo de Início, Ajustes ou Planejar foi retirado;
+- `app.js`, `styles.css`, dados, cálculos e PWA permanecem intocados pelo Bloco 1B;
+- o Bloco 1B permanece **aguardando validação física**;
+- o próximo passo é validar `Dias | Análise` no celular;
+- este plano não autoriza o Bloco 1C nem qualquer retirada automática.
