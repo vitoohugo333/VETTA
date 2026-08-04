@@ -1,83 +1,74 @@
-# Estado oficial — CalculaAê
+# Estado oficial — CalculaAê (`netlify/teste-fechado`)
 
 **Atualizado em:** 2026-08-03  
-**Estado:** versão estável preservada; acesso exclusivo do robô implantado; workflow manual ativado na `main`.  
-**Alteração em curso:** cadastro do segredo `VETTA_TEST_PASSWORD` no GitHub e primeira execução remota ainda pendentes.
+**Estado:** versão estável preservada; CI Universal Adaptativa e acesso OIDC do robô instalados.  
+**Alteração em curso:** primeira prova automática local e publicada.
 
 ## Estado atual
 
 | Item | Estado |
 |---|---|
 | Repositório | `vitoohugo333/VETTA` |
-| Branch estável dos testadores | `netlify/teste-fechado` |
-| Site estável | `https://calculaae.netlify.app` |
-| Branch UX | `netlify/teste-fechado-ux` |
-| `main` | painel de controle, regras gerais e workflow manual |
+| Branch | `netlify/teste-fechado` |
+| Papel | versão estável dos testadores |
+| Site | `https://calculaae.netlify.app/` |
+| Branch UX separada | `netlify/teste-fechado-ux` |
 | Referência histórica | `migration/vetta-clean-3-5-1` |
-| Alteração técnica do robô | concluída até `dc8f560bb5c8530016c84d2d82d5f674660c6384` |
-| Deploy confirmado | `6a71241038bc2f000863ea59`, pronto e ligado a `dc8f560bb5c8530016c84d2d82d5f674660c6384` |
 
-## Resultado deste bloco
+## O que mudou neste bloco
 
-Foi criado um acesso separado para o navegador automatizado sem alterar as três credenciais dos testadores.
+Somente infraestrutura de engenharia:
 
-- o Netlify guarda somente o hash em `VETTA_ACCESS_ROBOT_HASH`;
-- a rota `/__vetta-robot-access` aceita apenas `POST`;
-- senha errada retorna acesso negado;
-- senha correta cria uma sessão normal do site;
-- a rota usa uma credencial ativa existente apenas como identidade da sessão;
-- nenhuma senha em texto foi escrita no repositório;
-- a barreira principal `calculaae-access-gate` permaneceu intacta.
+- regras canônicas sincronizadas com a `main`;
+- workflow autônomo da branch;
+- política de ambiente em `ci/branch-policy.json`;
+- Playwright adaptado a Chromium, Firefox e WebKit;
+- teste publicado genérico;
+- autenticação temporária OIDC do GitHub Actions;
+- metadado de deploy com commit e branch;
+- testes determinísticos do contrato OIDC.
 
-## Teste remoto econômico
+## O que permaneceu intocado
 
-O workflow manual está em `.github/workflows/test-usage-manual.yml` na `main` e também existe na branch estável.
+- interface;
+- cálculos;
+- registros e armazenamento local;
+- manifesto, service worker, cache e ícones;
+- senhas dos testadores;
+- fluxo normal de instalação e abertura;
+- branch UX, `main` como aplicativo e PR #1.
 
-Ao executar escolhendo `netlify/teste-fechado`, o GitHub usa o aplicativo e os testes dessa branch. A `main` não precisa conter o aplicativo.
+## Acesso do robô
 
-Proteções mantidas:
+O novo caminho `/__vetta-oidc-access` aceita somente identidade temporária assinada pelo GitHub e vinculada a:
 
-- execução somente manual;
-- Linux e Chromium únicos;
-- limite de oito minutos;
-- sem repetição automática;
-- vídeo desligado;
-- captura e trace somente em falha;
-- evidência mantida por um dia.
+- repositório imutável do VETTA;
+- proprietário autorizado;
+- motor canônico da `main`;
+- executor hospedado pelo GitHub;
+- evento permitido;
+- audiência exclusiva.
 
-## Evidências
+A sessão dura 15 minutos. A rota antiga por senha permanece temporariamente apenas como retorno seguro até a primeira prova OIDC passar.
 
-- teste local da nova rota passou com senha correta, senha errada e método não permitido;
-- `node --check` passou para a nova Edge Function e seu teste;
-- Netlify publicou duas Edge Functions sem erro;
-- deploy `6a71241038bc2f000863ea59` ficou pronto;
-- nenhum arquivo de interface, cálculo, dados, manifesto, service worker ou cache foi alterado.
+## Validação
 
-## Ainda pendente
+A CI deve executar:
 
-- o conector GitHub não oferece criação de segredo;
-- o `gh` oficial não está instalado no ambiente;
-- o proprietário precisa cadastrar uma única vez o segredo `VETTA_TEST_PASSWORD` usando a senha exclusiva gerada neste bloco;
-- depois disso, executar o workflow selecionando `netlify/teste-fechado`;
-- o navegador remoto ainda não foi executado contra o site real.
+- governança e sintaxe;
+- todos os testes `tests/**/*.test.mjs`;
+- navegador local conforme a classificação;
+- ambiente publicado com confirmação do commit servido;
+- artefatos somente em falha.
 
-## Branch temporária criada por engano
+## Validação física
 
-Foi criada `tmp/robot-access-safe` antes da preparação local. Nenhum arquivo foi gravado nela e ela aponta para a fotografia estável anterior ao bloco.
+Nenhuma mudança visual ou de PWA foi feita neste bloco. Nova validação física não é necessária para a infraestrutura, salvo se a prova revelar comportamento diferente no aplicativo.
 
-O conector atual não oferece exclusão de branch. Ela deve ser removida pela interface do GitHub quando conveniente e não deve ser usada para desenvolvimento.
+## Aprendizado
 
-## Aplicativo e validação física
-
-- a versão dos testadores continua no mesmo endereço;
-- nenhuma tela, cálculo, dado ou comportamento de instalação foi alterado;
-- não é necessária nova validação física no celular para esta infraestrutura;
-- o fluxo completo no iPhone/Safari continua não confirmado.
-
-## Aprendizado do bloco
-
-**Nenhum aprendizado permanente novo.** Este bloco aplicou o aprendizado já registrado em `INC-0003`: automação e instalação física são provas separadas, e o acesso do robô deve permanecer isolado, revogável e fora do código público.
+**Aprendizado fechado:** a automação deve pertencer à branch e ao risco, não a um provedor de hospedagem específico. Netlify é apenas um adaptador de prova publicada.
 
 ## Próximo passo único
 
-Cadastrar o segredo `VETTA_TEST_PASSWORD` no GitHub e executar a primeira prova manual contra `https://calculaae.netlify.app`, selecionando a branch `netlify/teste-fechado`.
+Confirmar a primeira execução automática e publicada desta fotografia. Se a identidade OIDC passar, remover a rota e a variável antigas baseadas em senha.
