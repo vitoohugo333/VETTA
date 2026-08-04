@@ -15,6 +15,7 @@ const state = {
   events: [],
   closings: [],
 };
+const expectedStoredState = JSON.stringify(state);
 
 async function openApp(page) {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
@@ -22,6 +23,14 @@ async function openApp(page) {
   await page.waitForURL(/app-shell\.html(?:$|[?#])/);
   await expect(page.locator('#view-dashboard')).toBeVisible();
   await expect.poll(() => page.locator('#view-dashboard').getAttribute('data-block1c')).toBe('ready');
+}
+
+async function storedState(page) {
+  try {
+    return await page.evaluate(key => localStorage.getItem(key), STORAGE_KEY);
+  } catch {
+    return null;
+  }
 }
 
 test('Hoje mantém o essencial e retira somente duplicações com destino validado', async ({ page }) => {
@@ -68,13 +77,12 @@ test('Hoje mantém o essencial e retira somente duplicações com destino valida
 
 test('consolidação visual não altera dados nem a navegação atual', async ({ page }) => {
   await openApp(page);
-  const before = await page.evaluate(key => localStorage.getItem(key), STORAGE_KEY);
+  await expect.poll(() => storedState(page), { timeout: 10000 }).toBe(expectedStoredState);
 
   await expect(page.locator('nav.fixed.bottom-0 [data-view]')).toHaveCount(5);
   await expect(page.locator('[data-view="dashboard"]').first()).toContainText('Início');
   await expect(page.locator('[data-view="day"]').last()).toContainText('Dia');
   await expect(page.locator('[data-view="settings"]').first()).toContainText('Ajustes');
 
-  const after = await page.evaluate(key => localStorage.getItem(key), STORAGE_KEY);
-  expect(after).toBe(before);
+  await expect.poll(() => storedState(page), { timeout: 10000 }).toBe(expectedStoredState);
 });
