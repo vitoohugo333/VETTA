@@ -1,6 +1,6 @@
 # Plano 01 — Consolidação da experiência
 
-**Estado:** ATIVO — Blocos 1A a 3 validados fisicamente; Bloco 4 não autorizado  
+**Estado:** ATIVO — Blocos 1A a 3 validados fisicamente; Bloco 4 aprovado tecnicamente e aguardando validação física  
 **Atualizado em:** 2026-08-04, horário de Brasília  
 **Branch de desenvolvimento:** `netlify/teste-fechado-ux`  
 **Ambiente de validação:** GitHub Pages  
@@ -78,7 +78,7 @@ O Plano 01 não altera:
 | Objetivo mensal líquido | Planejar → Metas | retirado visualmente de Hoje |
 | Seletor 5, 6 ou 7 dias | Planejar → Agenda | retirado visualmente de Hoje |
 | Folgas extras | Planejar → Agenda | retirado visualmente de Hoje |
-| Situação e números da semana | Histórico → Análise → Semana atual | retirados visualmente de Hoje |
+| Situação e números da semana | Histórico → Semana atual | retirados visualmente de Hoje |
 | Gráfico Distribuição da meta | Planejar → Distribuição | retirado visualmente de Hoje |
 | Faturamento bruto, rodagem, custos e objetivo do gráfico | Planejar → Distribuição | retirados visualmente de Hoje |
 
@@ -103,23 +103,37 @@ As duplicações retiradas de Hoje continuam no HTML como retorno seguro para os
 | Confirmação após salvar | Registro concluído | mostra faturamento, quilômetros e líquido |
 | Editar depois de salvar | Registro concluído → Editar este dia | reabre a mesma data |
 | Concluir | Registro concluído → Hoje | retorna para Hoje |
-| Edição pelo Histórico | Histórico → Dias → Editar | usa o mesmo formulário |
+| Edição pelo Histórico | Histórico → Dias registrados → Editar | usa o mesmo formulário |
 
 O Bloco 2 não criou outra persistência. A regra canônica continua sendo um registro por data: salvar novamente a mesma data atualiza o registro existente.
 
 ### 4.3 Histórico
 
-| Elemento | Destino | Estado |
+Histórico abre como um resumo curto com quatro ilhas visíveis. Cada ilha abre uma tela própria usando os mesmos elementos, registros, cálculos e gráfico já existentes.
+
+| Elemento | Destino | Estado após Bloco 4 |
 |---|---|---|
-| Lista de dias | Histórico → Dias | disponível |
-| Editar dia | Histórico → Dias | disponível e integrado ao Bloco 2 |
-| Excluir dia | Histórico → Dias | disponível |
-| Quantidade de dias | Histórico → Análise → Resumo | disponível |
-| Média de faturamento/km | Histórico → Análise → Resumo | disponível |
-| Líquido acumulado | Histórico → Análise → Resumo | disponível |
-| Gráfico de evolução | Histórico → Análise | disponível |
-| Comparação entre dias | Histórico → Análise | disponível |
-| Situação semanal | Histórico → Análise → Semana atual | disponível |
+| Resumo do Histórico | barra inferior → Histórico | visível e curto |
+| Lista de dias | Histórico → Dias registrados | tela própria |
+| Editar dia | Histórico → Dias registrados | disponível e integrado ao Bloco 2 |
+| Excluir dia | Histórico → Dias registrados | disponível com confirmação |
+| Quantidade de dias | Histórico → Resumo e evolução | tela própria |
+| Média de faturamento/km | Histórico → Resumo e evolução | tela própria |
+| Líquido acumulado | Histórico → Resumo e evolução | tela própria |
+| Gráfico de evolução | Histórico → Resumo e evolução | tela própria |
+| Situação semanal | Histórico → Semana atual | tela própria |
+| Meta, realizado e média/km semanais | Histórico → Semana atual | tela própria |
+| Comparação entre dias | Histórico → Comparação | tela própria |
+| Abas antigas Dias e Análise | fallback interno | preservadas e não exibidas quando o Bloco 4 está ativo |
+
+Regras de retorno:
+
+- dentro de um assunto, `Voltar para Histórico` retorna ao resumo curto;
+- o botão Voltar do Android ou navegador faz o mesmo retorno;
+- tocar novamente em Histórico enquanto uma área está aberta retorna ao resumo;
+- o gráfico é criado quando Resumo e evolução fica visível;
+- editar e excluir continuam atuando sobre o mesmo registro original;
+- se qualquer elemento obrigatório não for encontrado, o Bloco 4 não ativa e `Dias | Análise` permanece disponível como fallback.
 
 ### 4.4 Planejar
 
@@ -224,26 +238,43 @@ Entregas:
 - fallback mantém a tela longa anterior se um destino obrigatório faltar;
 - nenhum dado, fórmula, chave de armazenamento ou arquivo do PWA foi alterado.
 
-Aceite técnico alcançado na fotografia funcional `0c6f7b3d57ff94cbd4681f6d6323703861c6233b`, execução funcional `30927631513` e execução integral de fechamento `30929247436`:
+Aceite técnico alcançado na fotografia funcional `0c6f7b3d57ff94cbd4681f6d6323703861c6233b`, execução funcional `30927631513` e execução integral de fechamento `30929247436`.
+
+Aceite físico informado pelo proprietário no celular em 2026-08-04.
+
+### Bloco 4 — Refinar Histórico
+
+**Estado:** implementado, aprovado pela CI e pelo GitHub Pages; **aguardando validação física**.
+
+Entregas:
+
+- Histórico abre como resumo curto;
+- quatro ilhas visíveis: Dias registrados, Resumo e evolução, Semana atual e Comparação;
+- cada ilha abre tela própria;
+- lista, editar, excluir, números, gráfico, semana e comparação usam os mesmos elementos anteriores;
+- nenhum registro, cálculo ou gráfico foi duplicado;
+- botão de retorno e botão Voltar do Android/navegador preservados;
+- estados sem registros e com registros insuficientes permanecem claros;
+- fallback mantém `Dias | Análise` caso algum destino obrigatório falte;
+- nenhum dado, fórmula, chave de armazenamento ou arquivo do PWA foi alterado.
+
+Aceite técnico alcançado na fotografia integral `3acafd3ebcf0fb51154d4dd8538c3ffa0f35de3f`, execução `30941963581`:
 
 - governança e todos os testes determinísticos;
 - Chromium;
 - Firefox;
 - WebKit;
-- edição e preservação de valores entre assuntos;
-- custos e gráfico acessíveis;
+- quatro ilhas e respectivas telas;
+- lista, edição e exclusão;
+- resumo, gráfico, semana e comparação;
+- estados sem dados;
+- preservação dos cálculos e do formulário de registro;
 - navegação por botão e histórico;
 - paridade dos arquivos públicos;
 - interação no GitHub Pages.
 
-Aceite físico:
+### Blocos 5 a 8
 
-- validação informada pelo proprietário no celular em 2026-08-04;
-- nenhuma nova autorização funcional foi concedida junto com essa confirmação.
-
-### Blocos 4 a 8
-
-- Bloco 4: refinamento de Histórico;
 - Bloco 5: organização de Mais;
 - Bloco 6: onboarding e linguagem;
 - Bloco 7: acessibilidade e acabamento;
@@ -276,8 +307,9 @@ O contrato falha se algum elemento afetado não estiver na tabela.
 ## 8. Estado atual
 
 - Blocos 1A a 3 concluídos e validados fisicamente;
-- Planejar abre curto e separa cada assunto em tela própria;
-- nenhum campo, custo, gráfico, aprendizado ou opção avançada foi removido;
-- `app.js`, `styles.css`, cálculos, formato dos dados e PWA permanecem intocados pelo Bloco 3;
-- não existe alteração funcional em curso;
-- Bloco 4 não está autorizado.
+- Bloco 4 aprovado tecnicamente e servido pelo GitHub Pages;
+- Histórico agora abre curto e separa cada consulta em tela própria;
+- nenhum registro, ação, número, gráfico ou comparação foi removido;
+- `app.js`, `styles.css`, cálculos, formato dos dados e PWA permanecem intocados pelo Bloco 4;
+- Bloco 4 permanece **aguardando validação física**;
+- Bloco 5 não está autorizado.
