@@ -16,12 +16,29 @@ const initialState = {
   closings: [],
 };
 
+async function waitForStableNavigation(page) {
+  await expect.poll(async () => {
+    try {
+      const before = page.url();
+      const ready = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
+      await page.waitForTimeout(150);
+      return ready === 'ready' && page.url() === before ? 'stable' : 'waiting';
+    } catch {
+      return 'waiting';
+    }
+  }, { timeout: 15000 }).toBe('stable');
+}
+
 async function openApp(page) {
   await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: STORAGE_KEY, state: initialState });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.waitForURL(/app-shell\.html(?:$|[?#])/);
   await expect(page.locator('#view-dashboard')).toBeVisible();
-  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
+  await waitForStableNavigation(page);
+}
+
+async function goBackInsideApp(page) {
+  await page.evaluate(() => window.history.back());
 }
 
 test('barra final mostra Hoje, Histórico, Planejar e Mais', async ({ page }) => {
@@ -69,7 +86,7 @@ test('registro e atalho de Planejar continuam secundários de Hoje', async ({ pa
 
   await page.locator('#recordGross').fill('321.50');
   await page.locator('#recordKm').fill('120');
-  await page.goBack();
+  await goBackInsideApp(page);
   await expect(page.locator('#view-dashboard')).toBeVisible();
 
   await page.locator('#view-dashboard button[data-view="day"]').click();
@@ -95,7 +112,7 @@ test('voltar do navegador retorna de Planejar principal para Hoje', async ({ pag
   await expect(page.locator('#view-planning')).toBeVisible();
   await expect(page.locator('#view-planning [data-back]')).toBeHidden();
 
-  await page.goBack();
+  await goBackInsideApp(page);
   await expect(page.locator('#view-dashboard')).toBeVisible();
   await expect(nav.locator('[data-view="dashboard"]')).toHaveClass(/active/);
 });
