@@ -1,109 +1,175 @@
+<!-- VETTA_GOVERNANCE_VERSION: 2026-08-03.2 -->
 # VETTA — regras obrigatórias do projeto
 
-O VETTA ajuda motoristas de aplicativo a planejar, registrar e entender o próprio resultado financeiro. Deve ser simples no celular, confiável nos números e local-first.
+O VETTA é um PWA financeiro para motoristas de aplicativo. Deve permanecer simples no celular, confiável nos números, local-first e seguro para os dados existentes.
 
-## Regra central sobre branches
+## Comece sempre por esta sequência
 
-Os arquivos do repositório pertencem à branch onde estão. `AGENTS.md`, `SKILLS.md` e `PROJECT_STATE.md` não são automaticamente globais.
+Antes de qualquer diagnóstico, contrato, alteração ou conclusão técnica, leia nesta ordem **na branch que será realmente afetada**:
 
-A `main` funciona como branch protegida de controle, governança e acionamento manual de workflows. Ela não é a fonte atual do aplicativo.
+1. `AGENTS.md`;
+2. `SKILLS.md`;
+3. `TESTING_RULES.md`;
+4. arquivos especializados aplicáveis, como `PWA_RULES.md`;
+5. `LEARNING_RULES.md` quando houver defeito, quase falha ou aprendizado reutilizável;
+6. `PROJECT_STATE.md`;
+7. fontes vivas atuais: GitHub, PR, CI, Netlify, GitHub Pages e conteúdo servido.
 
-Antes de qualquer trabalho técnico:
+Os arquivos pertencem à branch onde estão. A cópia da `main` é o padrão canônico, mas nunca substitui a leitura da branch-alvo. A CI compara os arquivos canônicos e falha se uma branch ativa ficar sem as regras obrigatórias ou divergir sem decisão explícita.
 
-1. identificar a branch realmente afetada;
-2. ler `AGENTS.md`, `SKILLS.md`, arquivos operacionais aplicáveis e `PROJECT_STATE.md` daquela branch;
-3. confirmar a ponta atual da branch, PR, CI e ambiente servido quando forem relevantes;
-4. nunca usar os arquivos da `main` como substitutos dos arquivos da branch-alvo.
-
-O workflow manual existente na `main` pode executar outra branch escolhida. Nesse caso, o código e os testes usados são os da branch selecionada, não os da `main`.
-
-## Hierarquia de verdade
+## Fontes de verdade
 
 1. ordem explícita mais recente do proprietário;
-2. `AGENTS.md` da branch-alvo;
-3. `SKILLS.md` e arquivos operacionais da branch-alvo;
-4. fontes vivas atuais: GitHub, PR, CI, Netlify, GitHub Pages e site servido;
-5. `PROJECT_STATE.md` da branch-alvo;
-6. memória do chat, resumos e capturas, apenas como contexto auxiliar.
+2. `AGENTS.md`, `SKILLS.md`, `TESTING_RULES.md` e regras especializadas da branch-alvo;
+3. fontes vivas atuais;
+4. `PROJECT_STATE.md` da branch-alvo;
+5. memória, resumos e capturas apenas como contexto auxiliar.
 
-Todo fato variável deve ser confirmado na fonte atual. Se não puder ser confirmado, declarar **não confirmado** e explicar o impacto.
+Todo fato que pode mudar exige fonte atual, momento da checagem e validade. Se não puder ser confirmado, declare **não confirmado**, explique o impacto e não complete a lacuna com suposição.
 
-## Uso obrigatório do Codex Engineering Guardrails
+## Ferramentas obrigatórias
 
-- diagnóstico, auditoria ou revisão sem alteração: usar `code-verification`;
-- mudança autorizada: usar `code-work`, do recorte à verificação final;
-- nunca substituir evidência por suposição.
+- Use o conector GitHub como fonte remota primária para repositório, branches, commits, PRs, CI e publicação.
+- Use `code-verification` do Codex Engineering Guardrails em diagnóstico, auditoria e revisão sem alteração.
+- Use `code-work` do contrato até a verificação final em qualquer mudança autorizada.
+- Ferramentas locais só podem preencher lacunas reais do conector e devem permanecer alinhadas ao remoto.
 
-## Uso obrigatório do GitHub
+## Apuração antes de decidir
 
-Para repositório, branches, commits, PRs, CI e publicação, usar o conector GitHub como fonte remota primária. Ferramentas locais só podem preencher lacunas reais do conector e devem permanecer alinhadas ao remoto.
+Antes de alterar:
 
-## Trabalho por blocos
+1. confirme repositório, branch, fotografia atual e relação com o ambiente servido;
+2. leia o PR relacionado, base, cabeça, estado, diff e CI, quando existir;
+3. leia o `PROJECT_STATE.md` atual e separe registro histórico de confirmação fresca;
+4. verifique arquivos consumidores, configurações, testes e workflows afetados;
+5. identifique riscos para dados, cálculos, interface, navegação, PWA, build, CI e publicação;
+6. confirme alterações locais preexistentes quando houver cópia Git local;
+7. apresente o caminho completo até a prova final e aguarde autorização quando ela ainda for necessária.
 
-Uma autorização cobre o bloco técnico diretamente necessário para entregar o resultado aprovado, incluindo testes e ajustes pequenos indispensáveis.
+Arquivos soltos nunca provam o estado do GitHub. Divergência que impeça identificar o conteúdo correto bloqueia commit, push, PR, merge e publicação até decisão do proprietário.
 
-Parar e pedir nova decisão apenas se surgir:
+## Autoridade e blocos de ação
 
-- mudança de objetivo;
-- área fora do contrato;
-- risco novo para dados, cálculos, interface, PWA, acesso ou publicação;
-- alteração não autorizada em `main`, merge, tag, release, credenciais ou ação destrutiva.
+Uma autorização para um bloco cobre as etapas previsíveis e diretamente necessárias para entregar o resultado aprovado, incluindo:
 
-## Política atual de branches e ambientes
+- investigação proporcional;
+- edição dos arquivos previstos;
+- testes e ampliação de testes necessários;
+- pequenas correções indispensáveis ao mesmo objetivo;
+- fotografia salva e sincronização na branch remota autorizada;
+- deploy automático já conhecido da branch de validação;
+- atualização documental e checkpoint do próprio bloco.
 
-- `main`: controle e governança; protegida; não contém a versão atual do aplicativo.
+Não peça autorização separada para executar testes. O agente é responsável por escolher, executar, interpretar e ampliar a verificação necessária.
+
+Continuam exigindo autorização explícita separada: mudança de objetivo, área fora do contrato, alteração em `main` não citada, merge, tag, release, mudança do alvo de produção, deploy manual fora do fluxo conhecido, alteração destrutiva, exclusão de dados ou credenciais não previstas.
+
+## Responsabilidade autônoma pelos testes
+
+Teste não é uma opção oferecida ao proprietário. É parte da engenharia.
+
+O agente deve:
+
+1. classificar o risco real da mudança;
+2. executar a cobertura mais forte que produza evidência útil;
+3. usar executores padrão gratuitos do repositório público quando disponíveis;
+4. escalar de testes determinísticos para navegador, múltiplos navegadores, ambiente publicado e validação física conforme o risco;
+5. investigar falhas até classificá-las corretamente;
+6. não declarar sucesso com testes ausentes, antigos ou que não exercitam o comportamento alterado.
+
+Não executar testes irrelevantes não é economia: é evitar ruído. Porém, quando um teste acrescenta prova material e usa infraestrutura padrão gratuita, a preferência é executá-lo.
+
+A política completa está em `TESTING_RULES.md`.
+
+## CI Universal Adaptativa
+
+A `main` mantém o motor canônico em `.github/workflows/ci-engine.yml`. Branches ativas carregam apenas o chamador `.github/workflows/ci-autonomous.yml`.
+
+O motor:
+
+- testa a fotografia exata da branch escolhida;
+- descobre os testes presentes naquela branch;
+- verifica sintaxe, JSON, contratos e testes determinísticos;
+- executa navegador local;
+- amplia para Chromium, Firefox e WebKit quando interface, navegação, armazenamento, cálculos ou PWA forem afetados;
+- prova o ambiente publicado quando a branch declarar um alvo e isso acrescentar evidência;
+- cancela execução ultrapassada da mesma branch;
+- guarda artefatos somente quando úteis, principalmente em falha;
+- nunca faz commit, merge, alteração de dados ou publicação manual.
+
+O issue #2 é a console do agente para testes adicionais de qualquer branch. Somente comandos fechados do proprietário são aceitos.
+
+## Branches e ambientes
+
+- `main`: governança, regras canônicas e orquestração; não é a fonte atual do aplicativo.
 - `netlify/teste-fechado`: versão estável dos testadores e fonte de `calculaae.netlify.app`.
-- `netlify/teste-fechado-ux`: desenvolvimento e validação manual da reorganização de interface.
-- `migration/vetta-clean-3-5-1`: referência histórica permanente e cabeça da PR #1.
-- branches antigas ou temporárias não devem ser reutilizadas sem apuração e ordem explícita.
+- `netlify/teste-fechado-ux`: desenvolvimento e validação manual da reorganização de interface; GitHub Pages é o ambiente publicado aplicável.
+- `migration/vetta-clean-3-5-1`: referência histórica permanente e cabeça da PR #1; não reutilizar para desenvolvimento.
+- branches antigas e temporárias não devem ser reutilizadas sem apuração e ordem explícita.
 
-Nenhuma mudança da branch UX pode ser copiada, mesclada ou publicada na branch estável, na `main` ou no Netlify sem autorização específica posterior.
+Uma branch nova deve nascer de uma branch ativa apropriada e herdar, antes da primeira mudança funcional, os arquivos canônicos, `ci/branch-policy.json` e o workflow autônomo. A CI deve falhar se essa preparação estiver ausente.
 
-## Custo-benefício obrigatório
+Nenhuma mudança da branch UX pode ser levada à branch estável, à `main` ou ao Netlify sem autorização específica posterior.
 
-Preferir a solução mais simples e gratuita que entregue evidência suficiente.
+## Regras de escopo e segurança
 
-Automação de navegador deve:
+- Uma mudança observável por vez.
+- Sem refatoração, limpeza ou modernização paralela.
+- Nunca sobrescreva, descarte ou incorpore trabalho preexistente sem ordem explícita.
+- Nunca exponha senha, token ou segredo em código, comentário, artefato ou log.
+- Valores financeiros exigem testes determinísticos independentes da interface.
+- Atualizações não podem apagar registros existentes.
+- Mudanças de interface ou PWA exigem validação física no celular depois da prova automatizada.
+- No máximo quatro branches remotas devem permanecer como estrutura planejada; branches excedentes existentes precisam de limpeza autorizada, não de reutilização.
 
-- rodar somente quando necessária;
-- usar, por padrão, uma máquina Linux e um Chromium;
-- evitar execução em todo commit, matrizes, vídeos permanentes e emuladores sem necessidade comprovada;
-- guardar evidências somente em falha e pelo menor tempo útil.
+## Evidência
 
-## Segurança e escopo
+Nunca diga “corrigido”, “funcionando”, “CI passou”, “publicado” ou “site igual à branch” sem evidência fresca e identificável.
 
-- uma mudança observável por vez;
-- sem refatoração ou limpeza paralela;
-- nunca expor senha, token ou segredo em arquivo, log ou comentário;
-- não sobrescrever trabalho remoto ou local preexistente;
-- mudanças de interface ou PWA exigem validação física no celular;
-- valores financeiros exigem testes determinísticos independentes da interface;
-- não declarar “funcionando”, “CI passou” ou “publicado” sem evidência fresca.
+Conforme o caso, cite:
+
+- branch e fotografia salva;
+- comandos e resultados dos testes;
+- execução da CI;
+- URL e conteúdo servido;
+- commit efetivamente publicado;
+- validação física do proprietário.
+
+Deploy pronto prova que uma fotografia foi servida; não substitui teste funcional. CI verde prova somente o que foi exercitado.
+
+## Aprendizado fechado
+
+Defeito, quase falha ou descoberta reutilizável deve seguir `LEARNING_RULES.md` e terminar como:
+
+- `Nenhum aprendizado permanente novo`;
+- `Aprendizado fechado`;
+- `Aprendizado pendente`.
 
 ## Comunicação
 
-Falar com o proprietário como leigo em programação: didático, direto e curto.
+Fale com o proprietário como leigo em programação: didático, direto e curto.
 
-Sempre explicar:
+Explique sempre:
 
 - onde está cada estado;
 - qual é o mais novo;
 - o que mudou;
 - o efeito prático;
 - o que permaneceu intocado;
+- a evidência real;
 - o próximo passo único.
 
-Commit é uma fotografia salva do projeto, não um número de versão crescente.
+Commit é uma **fotografia salva do projeto**, não um número de versão crescente.
 
-## Formato de entrega para trabalho técnico
+## Formato final obrigatório para trabalho técnico
 
 - Modo executado:
 - Objetivo aprovado:
-- Repositório, branch e atualização:
+- Repositório, branch e commit:
 - Estado explicado:
 - Arquivos alterados:
 - Evidência e testes:
-- Site de validação:
+- SHA do site de validação:
 - Ainda não validado no celular:
 - `main` e publicação foram alterados?:
 - Próximo passo único:
