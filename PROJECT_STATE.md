@@ -1,8 +1,8 @@
 # Estado oficial — CalculaAê (`netlify/teste-fechado-ux`)
 
-**Atualizado em:** 2026-08-04, horário de Brasília  
-**Estado:** Blocos 1A a 4 validados fisicamente; Bloco 5 aprovado tecnicamente e **aguardando validação física**.  
-**Alteração em curso:** validação manual da área Mais organizada por assuntos.
+**Atualizado em:** 2026-08-04, 21:28, horário de Brasília  
+**Estado:** Blocos 1A a 5 validados fisicamente.  
+**Alteração em curso:** nenhuma; aguardando autorização explícita para o próximo bloco.
 
 ## Estado atual
 
@@ -28,9 +28,10 @@ Uma fotografia salva do projeto é identificada por um commit. O código acima i
 - Bloco 1D — Navegação final;
 - Bloco 2 — Registro diário;
 - Bloco 3 — Refinamento de Planejar;
-- Bloco 4 — Refinamento de Histórico.
+- Bloco 4 — Refinamento de Histórico;
+- Bloco 5 — Organização de Mais.
 
-O proprietário informou em 2026-08-04 que o Bloco 4 foi validado no celular. Essa confirmação encerra a pendência física do Histórico e autorizou o início do Bloco 5; não autoriza o Bloco 6, `main`, merge ou produção.
+O proprietário informou em 2026-08-04, às 21:28 no horário de Brasília, que o Bloco 5 foi validado no celular. Essa confirmação encerra a pendência física da área Mais. Não autoriza o Bloco 6, `main`, merge ou produção.
 
 A barra permanece:
 
@@ -126,21 +127,10 @@ Não foram alterados pelo Bloco 5:
 
 `app.js` não recebeu alteração funcional do Bloco 5. Ele foi apenas confirmado como origem da etiqueta existente de versão e dos comportamentos reutilizados.
 
-## Validação física pendente
+## Validação física concluída
 
-O Bloco 5 permanece **aguardando validação física**.
-
-No celular, validar:
-
-1. abrir Mais pela barra inferior e confirmar uma tela curta com cinco ilhas;
-2. abrir Ferramentas e conferir campos, gráfico e comparação Gasolina × GNV;
-3. abrir Relatórios e conferir o fluxo de imprimir ou salvar;
-4. abrir Meus dados e conferir Exportar e Importar sem perder dados;
-5. abrir Radar, criar, editar e excluir um evento descartável;
-6. abrir Aplicativo e conferir instalação e uma única versão visível;
-7. dentro de cada área, usar `Voltar para Mais` e o botão Voltar do Android;
-8. verificar cortes, sobreposições, travamentos e preservação dos registros.
+O Bloco 5 foi validado fisicamente pelo proprietário em 2026-08-04. A área Mais, seus cinco destinos, retornos e preservação dos dados foram aceitos no celular.
 
 ## Próximo passo único
 
-O proprietário deve validar o Bloco 5 no celular pelo GitHub Pages. O Bloco 6 — onboarding e linguagem — não está autorizado.
+Aguardar autorização explícita para o Bloco 6 — onboarding e linguagem. Nenhuma mudança funcional adicional está autorizada.
