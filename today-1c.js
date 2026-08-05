@@ -202,3 +202,11 @@ if (!document.querySelector('script[data-vetta-module="more-5"]')) {
   moreScript.dataset.vettaModule = 'more-5';
   document.head.appendChild(moreScript);
 }
+
+if (!document.querySelector('script[data-vetta-module="onboarding-6"]')) {
+  const onboardingScript = document.createElement('script');
+  onboardingScript.src = './onboarding-6.js?v=1';
+  onboardingScript.async = false;
+  onboardingScript.dataset.vettaModule = 'onboarding-6';
+  document.head.appendChild(onboardingScript);
+}
