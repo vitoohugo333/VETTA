@@ -98,9 +98,9 @@
 
   const fuelUnits = {
     gnv: 'm³',
-    gasoline: 'litro',
-    ethanol: 'litro',
-    diesel: 'litro',
+    gasoline: 'L',
+    ethanol: 'L',
+    diesel: 'L',
   };
 
   const fuelLabels = {
@@ -114,7 +114,7 @@
 
   const syncExplanations = () => {
     const type = fuelType.value;
-    const unit = fuelUnits[type] || 'unidade';
+    const unit = fuelUnits[type] || 'un.';
     const fuelName = fuelLabels[type] || 'Combustível';
     const days = app.onboardingDays || 6;
     const target = app.number(targetInput.value);
@@ -168,6 +168,43 @@
       fixedInput.value = '0';
       this.renderOnboardingStep();
     }
+  };
+
+  const baseNextOnboarding = app.nextOnboarding.bind(app);
+  app.nextOnboarding = function() {
+    if (this.onboardingStep < 3) return baseNextOnboarding();
+
+    const target = this.number(targetInput.value);
+    const price = this.number(fuelPrice.value);
+    const efficiency = this.number(fuelEfficiency.value);
+    const revenue = this.number(revenueInput.value) || INITIAL_REVENUE_PER_KM;
+
+    if (target <= 0) return this.toast('Informe uma meta mensal.');
+    if (price <= 0 || efficiency <= 0) return this.toast('Informe preço e rendimento do combustível.');
+
+    const type = fuelType.value;
+    const unit = fuelUnits[type] || 'un.';
+    const label = fuelLabels[type] || 'Combustível';
+
+    this.state.targetProfit = target;
+    this.state.workWeekdays = this.weekdaysForCount(this.onboardingDays || 6);
+    this.state.fuel = { type, label, unit, price, efficiency };
+    this.state.revenueKm = revenue;
+    this.state.costs = [{
+      id: 'maintenance-onboarding',
+      name: 'Reserva de manutenção',
+      kind: 'per_km',
+      category: 'reserve',
+      value: 0.18,
+      active: true,
+    }];
+    this.state.onboardingComplete = true;
+    this.save();
+    this.closeModal('onboardingModal');
+    this.syncInputs();
+    this.render();
+    this.navigateToPrimary('dashboard');
+    this.toast('Meta montada. Agora registre seus dias e ajuste contas em Planejar.');
   };
 
   modal.dataset.block6 = 'ready';
