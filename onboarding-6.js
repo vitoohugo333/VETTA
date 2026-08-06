@@ -4,6 +4,7 @@
 
   if (!app || !modal || modal.dataset.block6 === 'ready') return;
 
+  const INITIAL_REVENUE_PER_KM = 1.75;
   const $ = id => document.getElementById(id);
   const required = [
     $('onboardingTitle'),
@@ -44,6 +45,7 @@
   const thirdParagraph = step3.querySelector('p');
   const step2Labels = step2.querySelectorAll('label');
   const step3Labels = step3.querySelectorAll('label');
+  const fixedWrap = fixedInput.closest('div');
 
   if (
     !firstParagraph
@@ -52,6 +54,7 @@
     || !thirdParagraph
     || step2Labels.length < 2
     || step3Labels.length < 2
+    || !fixedWrap
   ) {
     console.warn('Bloco 6 não aplicado: textos anteriores preservados porque o formulário não corresponde ao contrato.');
     return;
@@ -62,14 +65,19 @@
   secondParagraph.textContent = 'O preço e o rendimento definem quanto o combustível pesa em cada quilômetro.';
   step2Labels[0].textContent = 'Preço por unidade';
   step2Labels[1].textContent = 'Quantos km faz por unidade';
-  thirdParagraph.textContent = 'Use uma estimativa agora. Depois, o VETTA poderá comparar com seus dias reais.';
+  thirdParagraph.textContent = 'Use uma estimativa agora. Depois, o VETTA compara com seus dias reais e você adiciona suas contas em Planejar.';
   step3Labels[0].textContent = 'Quanto costuma faturar por km';
-  step3Labels[1].textContent = 'Contas mensais pagas com o trabalho';
+
+  fixedInput.value = '0';
+  fixedWrap.hidden = true;
+  fixedWrap.classList.add('hidden');
+  fixedWrap.setAttribute('aria-hidden', 'true');
+  fixedWrap.dataset.relocatedTo = 'Planejar → Custos e reservas';
 
   const consequence = document.createElement('p');
   consequence.id = 'onboarding6Consequence';
   consequence.className = 'text-xs text-blue-700 bg-blue-50 rounded-2xl p-4 leading-relaxed';
-  consequence.textContent = 'O VETTA divide sua meta pelos dias planejados e inclui combustível, manutenção e contas antes de mostrar a meta diária.';
+  consequence.textContent = 'O VETTA divide sua meta pelos dias planejados e considera combustível e manutenção antes de mostrar a meta diária.';
   step1.appendChild(consequence);
 
   const fuelHelp = document.createElement('p');
@@ -85,7 +93,7 @@
   const maintenanceNotice = document.createElement('p');
   maintenanceNotice.id = 'onboarding6Maintenance';
   maintenanceNotice.className = 'text-xs text-emerald-700 bg-emerald-50 rounded-2xl p-4 leading-relaxed';
-  maintenanceNotice.textContent = 'Também será criada uma reserva inicial de manutenção de R$ 0,18 por km. Você poderá editar ou remover depois em Planejar.';
+  maintenanceNotice.textContent = 'Ao montar a meta, será criada apenas uma reserva inicial de manutenção de R$ 0,18 por km. Contas mensais serão adicionadas depois em Planejar.';
   step3.appendChild(maintenanceNotice);
 
   const fuelUnits = {
@@ -110,17 +118,17 @@
     const fuelName = fuelLabels[type] || 'Combustível';
     const days = app.onboardingDays || 6;
     const target = app.number(targetInput.value);
-    const revenue = app.number(revenueInput.value) || 2.25;
-    const fixed = app.number(fixedInput.value);
+    const revenue = app.number(revenueInput.value) || INITIAL_REVENUE_PER_KM;
 
+    fixedInput.value = '0';
     fuelHelp.textContent = `${fuelName}: informe o preço por ${unit} e quantos quilômetros o veículo costuma fazer com essa unidade.`;
     summary.innerHTML = `
-      <strong class="block text-slate-800 mb-2">Antes de começar, confira:</strong>
+      <strong class="block text-slate-800 mb-2">Antes de montar sua meta, confira:</strong>
       <span class="block">Meta líquida: <strong>${money(target)}</strong> por mês.</span>
       <span class="block">Rotina: <strong>${days} dias por semana</strong>.</span>
       <span class="block">Combustível: <strong>${fuelName}</strong>, ${money(fuelPrice.value)} por ${unit}, rendendo ${app.number(fuelEfficiency.value).toFixed(1)} km/${unit}.</span>
       <span class="block">Faturamento estimado: <strong>${money(revenue)}/km</strong>.</span>
-      <span class="block">Contas mensais iniciais: <strong>${money(fixed)}</strong>.</span>`;
+      <span class="block mt-2 text-blue-700">Depois, adicione contas e outras reservas em Planejar.</span>`;
   };
 
   const baseRenderOnboardingStep = app.renderOnboardingStep.bind(app);
@@ -144,7 +152,7 @@
     syncExplanations();
   };
 
-  [targetInput, fuelPrice, fuelEfficiency, revenueInput, fixedInput].forEach(input => {
+  [targetInput, fuelPrice, fuelEfficiency, revenueInput].forEach(input => {
     input.addEventListener('input', syncExplanations);
   });
   fuelType.addEventListener('change', () => requestAnimationFrame(syncExplanations));
@@ -155,13 +163,19 @@
   const basePrepareOnboarding = app.prepareOnboarding.bind(app);
   app.prepareOnboarding = function() {
     basePrepareOnboarding();
-    if (!this.state.onboardingComplete) this.renderOnboardingStep();
+    if (!this.state.onboardingComplete) {
+      revenueInput.value = String(INITIAL_REVENUE_PER_KM);
+      fixedInput.value = '0';
+      this.renderOnboardingStep();
+    }
   };
 
   modal.dataset.block6 = 'ready';
   syncExplanations();
 
   if (!app.state.onboardingComplete && !modal.classList.contains('hidden')) {
+    revenueInput.value = String(INITIAL_REVENUE_PER_KM);
+    fixedInput.value = '0';
     app.renderOnboardingStep();
   }
 })();
