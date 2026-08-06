@@ -1,26 +1,29 @@
-# Estado oficial — CalculaAê (`netlify/teste-fechado-ux`)
+# Estado oficial — VETTA (`netlify/teste-fechado-ux`)
 
-**Atualizado em:** 2026-08-04, 21:28, horário de Brasília  
-**Estado:** Blocos 1A a 5 validados fisicamente.  
-**Alteração em curso:** nenhuma; aguardando autorização explícita para o próximo bloco.
+**Atualizado em:** 2026-08-06, horário de Brasília  
+**Estado funcional:** Blocos 1A a 5 validados fisicamente no celular.  
+**Estado de governança:** skill `vetta-product-ux` instalada e registrada.  
+**Alteração funcional em curso:** nenhuma.
 
-## Estado atual
+## Identificação da branch
 
-| Item | Estado |
+| Item | Estado atual |
 |---|---|
 | Repositório | `vitoohugo333/VETTA` |
-| Branch | `netlify/teste-fechado-ux` |
-| Papel | desenvolvimento e validação de interface |
-| Fotografia funcional do Bloco 5 | `848493889483720aa988f19b185eed02116feb3a` |
-| Execução automática funcional | `30947977950` |
-| GitHub Pages | `https://vitoohugo333.github.io/VETTA/` |
+| Branch em uso pelo GitHub Pages | `netlify/teste-fechado-ux` |
+| Papel | desenvolvimento e validação de UX |
+| Site de validação | `https://vitoohugo333.github.io/VETTA/` |
+| Fotografia funcional validada do Bloco 5 | `848493889483720aa988f19b185eed02116feb3a` |
+| Última fotografia documental antes deste checkpoint | `73b979a7e6779503a7a1e86171efc88aefe3b759` |
+| Execução funcional aprovada | `30947977950` |
 | Branch estável | `netlify/teste-fechado` |
-| Netlify estável | `https://calculaae.netlify.app/` |
-| Plano ativo | `docs/planos/01-CONSOLIDACAO-DA-EXPERIENCIA.md` |
+| Produção estável | `https://calculaae.netlify.app/` |
 
-Uma fotografia salva do projeto é identificada por um commit. O código acima identifica exatamente o conteúdo funcional que foi testado; não representa número de versão crescente.
+Uma fotografia salva é identificada por um commit. A fotografia documental mais nova não substitui nem invalida a fotografia funcional já testada; ela apenas adiciona regras para os próximos trabalhos de UX.
 
-## Blocos validados fisicamente
+## Estado funcional preservado
+
+Continuam validados fisicamente:
 
 - Bloco 1A — Planejar;
 - Bloco 1B — Histórico com Dias e Análise;
@@ -31,106 +34,72 @@ Uma fotografia salva do projeto é identificada por um commit. O código acima i
 - Bloco 4 — Refinamento de Histórico;
 - Bloco 5 — Organização de Mais.
 
-O proprietário informou em 2026-08-04, às 21:28 no horário de Brasília, que o Bloco 5 foi validado no celular. Essa confirmação encerra a pendência física da área Mais. Não autoriza o Bloco 6, `main`, merge ou produção.
-
-A barra permanece:
+A navegação funcional validada permanece:
 
 ```text
 Hoje | Histórico | Planejar | Mais
 ```
 
-## Bloco 5 — Organização de Mais
+A inclusão da skill não altera automaticamente essa navegação. A navegação de produto desejada registrada na skill funciona como direção para propostas futuras e exige contrato próprio antes de qualquer mudança funcional.
 
-Mais deixou de abrir como uma rolagem única com recursos diferentes misturados. Agora abre como um resumo curto com cinco ilhas visíveis:
+## Skill de UX instalada
 
-- Ferramentas;
-- Relatórios;
-- Meus dados;
-- Radar;
-- Aplicativo.
+Arquivos incorporados nesta branch:
 
-### Comportamento entregue
+- `.skills/vetta-product-ux/SKILL.md`;
+- `SKILLS.md` atualizado para tornar a skill obrigatória em diagnóstico, proposta, revisão e mudança de experiência.
 
-- cada ilha abre uma tela própria;
-- Ferramentas mantém a comparação Gasolina × GNV, os mesmos campos, gráfico, economia projetada e botões de aplicação;
-- Relatórios mantém o relatório mensal e o mesmo fluxo de impressão ou salvamento;
-- Meus dados mantém exportação e importação do mesmo armazenamento local;
-- Radar mantém lista, criação, edição e exclusão de eventos;
-- Aplicativo mantém o cartão de instalação, o modal e a etiqueta original da versão;
-- os elementos anteriores foram movidos como os mesmos elementos, sem segunda fonte de dados ou segunda versão do recurso;
-- `Voltar para Mais` retorna ao resumo curto;
-- o botão Voltar do Android ou navegador também retorna ao resumo;
-- tocar novamente em Mais enquanto uma área está aberta retorna ao resumo;
-- os resumos das ilhas acompanham combustível mais barato, quantidade de registros, custos, eventos e versão;
-- se qualquer recurso obrigatório faltar, o Bloco 5 não ativa e a rolagem anterior de Mais permanece disponível como fallback.
+A skill exige que próximos trabalhos de UX considerem:
 
-## Arquivos funcionais e de proteção
+- tarefa real do motorista;
+- fluxo principal, retorno, edição e cancelamento;
+- estados vazio, carregando, sucesso e erro;
+- preservação de dados e cálculos;
+- botão voltar e interrupção no celular;
+- clareza de valores reais, médios e projetados;
+- testes automatizados proporcionais;
+- validação física quando houver mudança visual ou de PWA.
 
-- `more-5.js`: cria o resumo e as cinco telas usando os recursos existentes;
-- `today-1c.js`: carrega `more-5.js` pela cadeia de módulos já validada;
-- `ci/branch-policy.json`: inclui `more-5.js` na prova do GitHub Pages;
-- `tests/more-block-5-contract.test.mjs`: protege inventário, origem única, fallback, armazenamento e navegação;
-- `tests/e2e/more-block-5.spec.js`: testa comparação, relatório, exportação, importação, Radar, instalação, versão e retornos;
-- `tests/e2e-remote/more-block-5-published.spec.js`: prova os cinco destinos no GitHub Pages;
-- `tests/e2e/planning-block-1a.spec.js`: passou a aguardar a estabilização final da abertura PWA antes de tocar em Planejar no Firefox.
+## Arquivos funcionais preservados neste bloco
 
-## Evidência automática
+Não foram alterados pela instalação da skill:
 
-A execução `30947977950` verificou exatamente a fotografia funcional `848493889483720aa988f19b185eed02116feb3a` e concluiu com sucesso:
-
-- governança, sintaxe, JSON e todos os testes determinísticos;
-- Chromium;
-- Firefox;
-- WebKit;
-- cinco ilhas e respectivas telas;
-- comparação Gasolina × GNV e gráfico;
-- relatório mensal;
-- exportação e importação usando o mesmo estado;
-- criação, edição e exclusão no Radar;
-- instalação e versão única do aplicativo;
-- retorno por botão, Android e histórico do navegador;
-- preservação dos blocos anteriores;
-- paridade dos arquivos públicos com a branch;
-- interação no próprio GitHub Pages.
-
-## Falhas intermediárias classificadas
-
-As execuções intermediárias encontraram proteções incompletas nos testes e uma duplicação visual real:
-
-1. o fallback não exigia separadamente o campo de importação;
-2. o fallback não exigia separadamente a lista do Radar;
-3. o Bloco 5 criou uma segunda etiqueta de versão, embora o aplicativo já criasse a original em execução;
-4. o contrato estático procurou incorretamente a etiqueta no HTML, mas sua origem real é `app.js`;
-5. dois testes antigos de Planejar tocaram durante a última recarga normal do PWA no Firefox.
-
-As correções tornaram importação, lista do Radar e versão original requisitos obrigatórios, removeram a cópia da versão e estabilizaram somente o teste antigo. Fórmulas, dados e comportamento financeiro não foram alterados.
-
-## Aprendizado do bloco
-
-**Nenhum aprendizado permanente novo.**
-
-A exigência de origem única, identificadores únicos, fallback completo e espera pela estabilização do PWA já está coberta pelas regras e incidentes existentes. O Bloco 5 adicionou testes específicos que impedem a repetição dentro desta área.
-
-## Proteções confirmadas
-
-Não foram alterados pelo Bloco 5:
-
-- fórmulas financeiras e significado dos cálculos;
+- `index.html`;
+- `app.js`;
 - `styles.css`;
-- chave `vetta-driver-intelligence-v3`;
-- formato de registros, custos, eventos e fechamentos;
-- funcionamento local-first;
-- manifesto, service worker, cache, instalação e barreira de acesso;
-- branch `netlify/teste-fechado` e Netlify dos testadores;
-- `main`;
-- PR #1.
+- módulos funcionais dos Blocos 1A a 5;
+- fórmulas financeiras;
+- armazenamento local e chave `vetta-driver-intelligence-v3`;
+- manifesto, service worker, cache e instalação;
+- dados, registros, custos, eventos e fechamentos.
 
-`app.js` não recebeu alteração funcional do Bloco 5. Ele foi apenas confirmado como origem da etiqueta existente de versão e dos comportamentos reutilizados.
+## Evidência desta atualização
 
-## Validação física concluída
+- commit `142a5d048fce90e942f63e4949744ea4a7c3881d`: adicionou somente `.skills/vetta-product-ux/SKILL.md`;
+- commit `73b979a7e6779503a7a1e86171efc88aefe3b759`: atualizou somente `SKILLS.md` para registrar a skill;
+- a inspeção dos dois commits confirmou ausência de arquivos funcionais;
+- nenhum status de CI e nenhuma execução de workflow foram retornados para essas fotografias documentais.
 
-O Bloco 5 foi validado fisicamente pelo proprietário em 2026-08-04. A área Mais, seus cinco destinos, retornos e preservação dos dados foram aceitos no celular.
+Portanto:
+
+- conteúdo documental: confirmado;
+- ausência de mudança funcional nos commits: confirmada;
+- CI posterior aos commits: **não confirmada**;
+- conteúdo efetivamente servido pelo GitHub Pages após os commits: **não confirmado nesta rodada**.
+
+## Branches criadas por engano
+
+Durante a operação foram criadas indevidamente:
+
+- `governance/vetta-product-ux`;
+- `noop`.
+
+Elas não alimentam GitHub Pages nem Netlify e não devem ser usadas para desenvolvimento. A exclusão permanece pendente porque o conector disponível não expõe uma ação de exclusão de branch.
+
+## Aprendizado
+
+**Aprendizado fechado:** não criar nova branch quando a branch atual comporta o trabalho. Antes de criar qualquer branch, confirmar explicitamente a branch em uso, seu papel e se existe impedimento real para continuar nela.
 
 ## Próximo passo único
 
-Aguardar autorização explícita para o Bloco 6 — onboarding e linguagem. Nenhuma mudança funcional adicional está autorizada.
+Continuar qualquer próximo trabalho de UX diretamente em `netlify/teste-fechado-ux`, usando a skill `vetta-product-ux`, sem criar nova branch e sem alterar o aplicativo sem contrato funcional específico.
