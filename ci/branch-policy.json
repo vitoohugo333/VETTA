@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "app": false,
-  "branch": "main",
-  "role": "governance-and-orchestration",
+  "branch": "governance/vetta-product-ux",
+  "role": "product-ux-governance",
   "published": null
 }
