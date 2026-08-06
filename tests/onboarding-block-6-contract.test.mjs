@@ -35,12 +35,19 @@ for (const text of [
   'Qual combustível entra nas metas?',
   'Vamos conferir seu planejamento',
   'Quanto costuma faturar por km',
-  'Contas mensais pagas com o trabalho',
-  'Também será criada uma reserva inicial de manutenção',
-  'Você poderá editar ou remover depois em Planejar',
+  'Montar minha meta',
+  'Contas mensais serão adicionadas depois em Planejar',
+  'Depois, adicione contas e outras reservas em Planejar',
 ]) {
   assert.ok(onboarding6.includes(text), `O Bloco 6 deve conter a orientação: ${text}`);
 }
+
+assert.match(onboarding6, /const INITIAL_REVENUE_PER_KM = 1\.75/, 'A estimativa inicial deve ser R$ 1,75 por km.');
+assert.match(onboarding6, /fixedInput\.value = '0'/, 'O onboarding deve zerar o custo mensal antigo.');
+assert.match(onboarding6, /fixedWrap\.hidden = true/, 'O campo de contas mensais não deve aparecer no onboarding.');
+assert.match(onboarding6, /Planejar → Custos e reservas/, 'O destino das contas deve ficar documentado no próprio módulo.');
+assert.doesNotMatch(onboarding6, /Contas mensais iniciais:/, 'O resumo não pode apresentar contas mensais iniciais.');
+assert.doesNotMatch(onboarding6, /Contas mensais pagas com o trabalho/, 'O onboarding não deve pedir contas mensais.');
 
 assert.match(onboarding6, /onboarding anterior preservado/, 'A ausência de elementos obrigatórios deve preservar o fluxo anterior.');
 assert.match(onboarding6, /baseRenderOnboardingStep/, 'O Bloco 6 deve estender a renderização existente, não criar uma segunda lógica de etapas.');
@@ -52,4 +59,4 @@ assert.doesNotMatch(onboarding6, /onboardingComplete\s*=/, 'O módulo de linguag
 const staticIds = [...onboarding6.matchAll(/\.id = '([^']+)'/g)].map(match => match[1]);
 assert.equal(new Set(staticIds).size, staticIds.length, 'O Bloco 6 não pode declarar IDs estáticos duplicados.');
 
-console.log('Contrato do Bloco 6 validado: linguagem simples, resumo final, origem única e fallback preservado.');
+console.log('Contrato do Bloco 6 validado: meta inicial simples, R$ 1,75/km, contas em Planejar e origem única preservada.');
