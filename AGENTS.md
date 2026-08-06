@@ -1,4 +1,4 @@
-<!-- VETTA_GOVERNANCE_VERSION: 2026-08-03.2 -->
+<!-- VETTA_GOVERNANCE_VERSION: 2026-08-06.1 -->
 # VETTA — regras obrigatórias do projeto
 
 O VETTA é um PWA financeiro para motoristas de aplicativo. Deve permanecer simples no celular, confiável nos números, local-first e seguro para os dados existentes.
@@ -25,6 +25,8 @@ Os arquivos pertencem à branch onde estão. A cópia da `main` é o padrão can
 4. `PROJECT_STATE.md` da branch-alvo;
 5. memória, resumos e capturas apenas como contexto auxiliar.
 
+O `PROJECT_STATE.md` é o registro oficial vivo da branch e deve ser atualizado no mesmo bloco sempre que estado, papel, ambiente, fotografia, CI, validação ou próximo passo mudarem. Fontes vivas confirmam e corrigem o registro; não autorizam encerrar o bloco deixando o documento desatualizado.
+
 Todo fato que pode mudar exige fonte atual, momento da checagem e validade. Se não puder ser confirmado, declare **não confirmado**, explique o impacto e não complete a lacuna com suposição.
 
 ## Ferramentas obrigatórias
@@ -45,6 +47,33 @@ Antes de alterar:
 5. identifique riscos para dados, cálculos, interface, navegação, PWA, build, CI e publicação;
 6. confirme alterações locais preexistentes quando houver cópia Git local;
 7. apresente o caminho completo até a prova final e aguarde autorização quando ela ainda for necessária.
+
+### Classificação obrigatória das branches
+
+Nunca use “branch mais atual”, “mais recente” ou “em uso” sem explicar o sentido. Antes de concluir, classifique separadamente:
+
+1. **branch em uso por ambiente:** a branch configurada para alimentar GitHub Pages, Netlify ou outro ambiente;
+2. **branch modificada mais recentemente:** a branch cuja fotografia salva tem a data de commit mais nova;
+3. **branch mais atual por finalidade:** a branch que contém o estado funcional correto e mais avançado para UX, produção estável, governança, migração ou outro papel declarado;
+4. **branch efetivamente publicada:** a fotografia cujo conteúdo foi confirmado no ambiente servido.
+
+A branch modificada por último não é automaticamente a correta para continuar o trabalho. Branch temporária, histórica ou experimental pode ser mais nova e ainda assim não estar em uso.
+
+Para responder qual branch está em uso ou publicada:
+
+- leia o `PROJECT_STATE.md` atualizado das branches operacionais;
+- confira papel, fotografia e data dos commits atuais;
+- confira PR e CI relacionados quando existirem;
+- confirme a configuração viva do ambiente quando a ferramenta permitir;
+- confira o conteúdo servido quando a publicação mudar a decisão;
+- diante de divergência, não escolha por memória, nome da branch ou documento isolado: declare a divergência, determine qual fonte está velha e atualize o `PROJECT_STATE.md` no mesmo bloco.
+
+Para o VETTA, enquanto não houver mudança confirmada e registrada:
+
+- `netlify/teste-fechado-ux` alimenta o GitHub Pages e é a branch de desenvolvimento de UX;
+- `netlify/teste-fechado` alimenta o Netlify estável;
+- `main` mantém a governança canônica;
+- `migration/vetta-clean-3-5-1` é referência histórica e cabeça da PR #1.
 
 Arquivos soltos nunca provam o estado do GitHub. Divergência que impeça identificar o conteúdo correto bloqueia commit, push, PR, merge e publicação até decisão do proprietário.
 
