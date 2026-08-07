@@ -1,4 +1,4 @@
-<!-- VETTA_GOVERNANCE_VERSION: 2026-08-07.3 -->
+<!-- VETTA_GOVERNANCE_VERSION: 2026-08-07.4 -->
 # VETTA — índice técnico obrigatório
 
 Este arquivo é o mapa de leitura para qualquer agente. Ele deve ser lido depois de `AGENTS.md` e antes de `PROJECT_STATE.md`.
@@ -43,22 +43,53 @@ O bloco não substitui a verdade técnica viva. Depois de resolver o contexto do
 
 `PROJECT_STATE.md`, planos, incidentes e `ci/branch-policy.json` refletem o estado específico de cada branch.
 
-## Codex Engineering Guardrails — plugin primeiro, skill como fallback
+## Codex Engineering Guardrails — gate operacional contínuo
+
+O **Codex Engineering Guardrails é obrigatório durante todo trabalho técnico do VETTA**, não apenas no preflight ou na primeira mensagem.
+
+### Resolução obrigatória
 
 O agente deve tentar primeiro usar o plugin **Codex Engineering Guardrails** como pacote normal de trabalho.
 
-Falha de descoberta, catálogo, status de instalação ou carregamento automático do plugin **não prova indisponibilidade**.
-
-Se o plugin não puder ser carregado, o agente deve usar diretamente a skill adequada:
+Falha de descoberta, catálogo, status de instalação ou carregamento automático do plugin **não prova indisponibilidade**. Se o plugin não puder ser carregado, o agente deve usar imediatamente a skill adequada:
 
 - `code-verification` para diagnóstico, auditoria, revisão, testes e validação sem alteração de produção;
 - `code-work` para qualquer mudança autorizada de código, configuração ou documentação técnica.
 
 O agente decide qual skill é aplicável a partir da tarefa. O proprietário não precisa mencionar o nome da skill.
 
-Somente declarar **Codex Engineering Guardrails indisponível** se o plugin e a skill diretamente aplicável não puderem ser carregados.
+Somente declarar **Codex Engineering Guardrails indisponível** se o plugin e a skill diretamente aplicável não puderem ser carregados. O repositório público `Comdir2/Codex-engineering-guardrails` pode ser usado para referência e versionamento, mas não substitui a execução da skill quando ela está disponível.
 
-O repositório público `Comdir2/Codex-engineering-guardrails` pode ser usado para referência e versionamento do projeto, mas não é requisito para a execução normal quando o plugin ou a skill interna estiver disponível.
+### Gate por fase da operação
+
+Antes de cada fronteira material do trabalho, o agente deve confirmar internamente que está operando sob o modo correto:
+
+1. antes da primeira conclusão técnica de diagnóstico, auditoria ou revisão: `code-verification`;
+2. antes da primeira alteração autorizada: `code-work`;
+3. se uma tarefa mudar de somente leitura para mudança, carregar `code-work` **antes da primeira escrita**;
+4. antes de declarar um checkpoint técnico encerrado, confirmar que o Guardrails aplicável cobriu a verificação final.
+
+Não é necessário recarregar a mesma skill a cada comando ou commit se o modo de trabalho não mudou e a skill continua ativa no contexto. O objetivo é manter a disciplina, não criar chamadas redundantes.
+
+### Se o agente perceber que começou sem Guardrails
+
+Isso é um gatilho de recuperação, não motivo para continuar silenciosamente nem para descartar trabalho automaticamente.
+
+O agente deve:
+
+1. parar no próximo ponto seguro antes de nova alteração ou conclusão;
+2. tentar o plugin; se ele falhar, carregar diretamente a skill correta;
+3. reler o contrato, governança e limites aplicáveis;
+4. revisar o trabalho feito desde o último ponto comprovadamente coberto pelo Guardrails — diff, decisões, testes, CI e efeitos externos relevantes;
+5. tratar esse trecho anterior como **ainda não verificado pelo Guardrails** até concluir a revisão;
+6. corrigir, testar ou classificar qualquer desvio encontrado dentro da autorização existente;
+7. somente então continuar a operação normal.
+
+Se plugin e skill aplicável falharem, o agente não deve iniciar nova alteração técnica nem declarar conclusão técnica. Deve informar a indisponibilidade de forma simples e registrar a pendência no checkpoint aplicável.
+
+No relatório final, `Modo executado` deve indicar se o Guardrails foi usado pelo **plugin** ou pela **skill direta como fallback**.
+
+**Rastreabilidade:** N-011 define plugin-primeiro/skill-fallback; N-013 torna o Guardrails um gate contínuo durante a operação.
 
 ## Sincronização contínua GitHub ↔ Notion
 
