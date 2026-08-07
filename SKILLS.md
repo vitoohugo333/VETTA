@@ -1,4 +1,4 @@
-<!-- VETTA_GOVERNANCE_VERSION: 2026-08-07.2 -->
+<!-- VETTA_GOVERNANCE_VERSION: 2026-08-07.3 -->
 # VETTA — índice técnico obrigatório
 
 Este arquivo é o mapa de leitura para qualquer agente. Ele deve ser lido depois de `AGENTS.md` e antes de `PROJECT_STATE.md`.
@@ -60,6 +60,30 @@ Somente declarar **Codex Engineering Guardrails indisponível** se o plugin e a 
 
 O repositório público `Comdir2/Codex-engineering-guardrails` pode ser usado para referência e versionamento do projeto, mas não é requisito para a execução normal quando o plugin ou a skill interna estiver disponível.
 
+## Sincronização contínua GitHub ↔ Notion
+
+GitHub prova o estado técnico vivo; Notion preserva a memória operacional. O agente deve manter os dois coerentes **durante o trabalho**, sem esperar o fim de uma sessão longa e sem transformar documentação em gargalo.
+
+Atualize o bloco correspondente no Notion sempre que ocorrer um **checkpoint relevante**, incluindo:
+
+- resultado observável implementado;
+- CI concluída, falha relevante classificada ou novo bloqueio;
+- decisão, escopo ou autorização alterados;
+- defeito relevante ou aprendizado reutilizável descoberto;
+- fotografia importante da branch que passe a representar novo estado;
+- validação física;
+- encerramento de um bloco ou passagem para o próximo.
+
+Não é necessário interromper a implementação por cada commit intermediário, ajuste cosmético, tentativa ou refino que não mude o estado real do projeto.
+
+Antes de encerrar um checkpoint relevante, responder ao proprietário como se ele estivesse encerrado ou iniciar o próximo bloco funcional, confirme que **branch atual + `PROJECT_STATE.md` + bloco correspondente no Notion** contam a mesma história. Divergência conhecida deve ser sincronizada antes de prosseguir.
+
+Se o Notion estiver temporariamente indisponível ou a atualização falhar, não invente sincronização concluída. Registre no `PROJECT_STATE.md` uma seção explícita **`Notion sync: PENDENTE`**, com motivo e itens que precisam ser enviados ao Notion. A operação atual pode ser concluída com segurança, mas essa pendência deve ser resolvida assim que o Notion voltar e **antes do próximo bloco funcional**.
+
+Não exigir integração externa, token ou automação GitHub Actions → Notion para o fluxo normal. Os conectores disponíveis são o caminho padrão, salvo decisão futura específica do proprietário.
+
+**Rastreabilidade:** N-012.
+
 ## Responsabilidade do agente
 
 Dentro de um bloco autorizado, o agente decide e executa os testes necessários conforme risco e evidência. UX deve ser analisada pela tarefa real, fluxo completo, estados, segurança dos dados, clareza dos números e validação mobile.
@@ -79,5 +103,7 @@ Branches temporárias ou históricas que receberam arquivos canônicos continuam
 ## Fechamento
 
 Todo bloco técnico termina com estado atualizado, evidência fresca e uma das situações de aprendizado previstas em `LEARNING_RULES.md`.
+
+Todo checkpoint relevante termina também com o Notion sincronizado; se o Notion estiver indisponível, termina apenas com `Notion sync: PENDENTE` explicitamente registrado no `PROJECT_STATE.md`, nunca com silêncio documental.
 
 Toda alteração no GitHub deve ser traduzida ao proprietário em linguagem simples: onde mudou, por quê, efeito prático, o que ficou intocado, fotografia salva, testes/CI, publicação e pendências.
