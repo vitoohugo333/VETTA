@@ -5,6 +5,26 @@
   if (!app || !root || root.dataset.block1a !== 'ready' || root.dataset.block3 === 'ready') return;
 
   const $ = id => document.getElementById(id);
+
+  // Zero is a valid UX state meaning "plan not configured yet". The legacy
+  // gross-ceiling guard may enforce R$ 500 for positive targets, but it must
+  // not silently turn an explicitly cleared target into a fake goal.
+  if (!app._r1ZeroTargetGuard && typeof app.enforceGrossCeiling === 'function') {
+    app._r1ZeroTargetGuard = true;
+    const baseEnforceGrossCeiling = app.enforceGrossCeiling;
+    app.enforceGrossCeiling = function() {
+      const preserveZero = this.number(this.state.targetProfit) === 0;
+      const ceiling = baseEnforceGrossCeiling.call(this);
+      if (preserveZero && this.number(this.state.targetProfit) !== 0) {
+        this.state.targetProfit = 0;
+        this.save();
+        const slider = document.querySelector('input[data-model="targetProfit"]');
+        if (slider) { slider.min = '0'; slider.value = '0'; }
+      }
+      return ceiling;
+    };
+  }
+
   const hero = root.firstElementChild;
   const summary = $('planningTarget')?.closest('.card-vetta');
   const note = [...root.children].find(element => element.classList.contains('rounded-2xl') && element.classList.contains('bg-blue-50'));
@@ -152,17 +172,13 @@
     setStatus('agenda', workdays > 0, workdays > 0 ? 'Agenda definida' : 'Escolher dias');
     setStatus('costs', activeCosts > 0, activeCosts > 0 ? 'Custos revisáveis' : 'Revisar custos');
     setStatus('operation', revenue > 0 && calculations.fuelKm > 0, revenue > 0 && calculations.fuelKm > 0 ? 'Operação definida' : 'Revisar operação');
-
     root.dataset.planState = target <= 0 ? 'missing-target' : 'active';
   };
 
   const showHub = ({ scroll = false } = {}) => {
     currentSection = null;
     root.dataset.planningSection = 'hub';
-    setHidden(hero, false);
-    setHidden(summary, false);
-    setHidden(hub, false);
-    setHidden(note, false);
+    setHidden(hero, false); setHidden(summary, false); setHidden(hub, false); setHidden(note, false);
     pages.forEach(page => setHidden(page, true));
     syncHub();
     if (scroll) root.scrollIntoView({ block: 'start' });
@@ -173,23 +189,17 @@
     if (!page) return showHub({ scroll });
     currentSection = key;
     root.dataset.planningSection = key;
-    setHidden(hero, true);
-    setHidden(summary, true);
-    setHidden(hub, true);
-    setHidden(note, true);
+    setHidden(hero, true); setHidden(summary, true); setHidden(hub, true); setHidden(note, true);
     pages.forEach((candidate, candidateKey) => setHidden(candidate, candidateKey !== key));
     const details = page.querySelector('details');
     if (details) details.open = true;
-    app.renderPlanning?.();
-    syncHub();
+    app.renderPlanning?.(); syncHub();
     if (scroll) root.scrollIntoView({ block: 'start' });
   };
 
   const openSection = key => {
     if (!pages.has(key)) return;
-    const currentState = history.state?.vettaNavigation
-      ? history.state
-      : { vettaNavigation: true, view: 'planning', primaryView: app.currentPrimaryView || 'dashboard' };
+    const currentState = history.state?.vettaNavigation ? history.state : { vettaNavigation: true, view: 'planning', primaryView: app.currentPrimaryView || 'dashboard' };
     history.pushState({ ...currentState, view: 'planning', planningSection: key }, '', window.location.href);
     showSection(key, { scroll: true });
   };
@@ -201,21 +211,16 @@
 
   pages.forEach(page => {
     page.querySelector('[data-planning-section-back]').addEventListener('click', () => {
-      if (history.state?.planningSection) history.back();
-      else showHub({ scroll: true });
+      if (history.state?.planningSection) history.back(); else showHub({ scroll: true });
     });
   });
 
   const baseShowView = app.showView;
   app.showView = function(view, primaryView = view) {
     baseShowView.call(this, view, primaryView);
-    if (view !== 'planning') {
-      showHub();
-      return;
-    }
+    if (view !== 'planning') { showHub(); return; }
     const section = history.state?.planningSection;
-    if (section && pages.has(section)) showSection(section);
-    else showHub();
+    if (section && pages.has(section)) showSection(section); else showHub();
   };
 
   const baseNavigateToPrimary = app.navigateToPrimary;
@@ -235,14 +240,10 @@
   };
 
   const baseRender = app.render;
-  app.render = function() {
-    baseRender.call(this);
-    syncHub();
-  };
+  app.render = function() { baseRender.call(this); syncHub(); };
 
   root.dataset.block3 = 'ready';
   root.dataset.r1 = 'ready';
   const initialSection = history.state?.planningSection;
-  if (initialSection && pages.has(initialSection) && app.currentView === 'planning') showSection(initialSection);
-  else showHub();
+  if (initialSection && pages.has(initialSection) && app.currentView === 'planning') showSection(initialSection); else showHub();
 })();
