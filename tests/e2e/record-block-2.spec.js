@@ -2,32 +2,23 @@ import { test, expect } from '@playwright/test';
 
 const STORAGE_KEY = 'vetta-driver-intelligence-v3';
 const state = {
-  version: 10,
-  onboardingComplete: true,
-  targetProfit: 4000,
-  workWeekdays: [1, 2, 3, 4, 5, 6],
-  extraDaysOff: 0,
-  revenueKm: 2.25,
+  version: 10, onboardingComplete: true, targetProfit: 4000,
+  workWeekdays: [1, 2, 3, 4, 5, 6], extraDaysOff: 0, revenueKm: 2.25,
   fuel: { type: 'gnv', label: 'GNV', unit: 'm³', price: 4.79, efficiency: 13.2 },
   compare: { gasPrice: 6.19, gasEff: 10.5, gnvPrice: 4.79, gnvEff: 13.2, period: 1 },
-  costs: [],
-  records: [],
-  events: [],
-  closings: [],
+  costs: [], records: [], events: [], closings: [],
 };
 
 async function waitForStableApp(page) {
   await expect.poll(async () => {
     try {
       const before = page.url();
-      const navigationReady = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
+      const navigationReady = await page.locator('nav.fixed.bottom-0').getAttribute('data-r1-navigation');
       const recordReady = await page.locator('#view-day').getAttribute('data-block2');
       const historyReady = await page.locator('#view-history').getAttribute('data-block4');
       await page.waitForTimeout(150);
       return navigationReady === 'ready' && recordReady === 'ready' && historyReady === 'ready' && page.url() === before ? 'stable' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
+    } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('stable');
 }
 
@@ -46,14 +37,11 @@ async function openHistoryDays(page) {
         if (await historyNav.isVisible()) await historyNav.click();
         return 'waiting';
       }
-
       if (await page.locator('#historyDaysPanel').isVisible()) return 'ready';
       const hub = page.locator('#historyHub');
       if (await hub.isVisible()) await page.locator('[data-history-section-open="days"]').click();
       return await page.locator('#historyDaysPanel').isVisible() ? 'ready' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
+    } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('ready');
 }
 
@@ -68,6 +56,7 @@ test('registro prioriza essenciais, recolhe opcionais e confirma o dia salvo', a
 
   await page.locator('#view-dashboard button[data-view="day"]').click();
   await expect(page.locator('#view-day')).toBeVisible();
+  await expect(page.locator('nav.fixed.bottom-0 [data-view="day"]')).toHaveClass(/active/);
   await expect(page.locator('[data-record-role="essential-fields"]')).toBeVisible();
   await expect(page.locator('#recordGross')).toBeVisible();
   await expect(page.locator('#recordKm')).toBeVisible();
@@ -91,7 +80,7 @@ test('registro prioriza essenciais, recolhe opcionais e confirma o dia salvo', a
   await expect(page.locator('#recordConfirmationTitle')).toHaveText('Dia registrado');
   await expect(page.locator('#recordConfirmationGross')).toContainText('321,50');
   await expect(page.locator('#recordConfirmationKm')).toHaveText('120 km');
-  await expect(page.locator('nav.fixed.bottom-0 [data-view="dashboard"]')).toHaveClass(/active/);
+  await expect(page.locator('nav.fixed.bottom-0 [data-view="day"]')).toHaveClass(/active/);
 
   let saved = await records(page);
   expect(saved).toHaveLength(1);
@@ -119,30 +108,15 @@ test('registro prioriza essenciais, recolhe opcionais e confirma o dia salvo', a
 test('edição pelo Histórico continua usando o mesmo formulário e a mesma data', async ({ page }) => {
   const stateWithRecord = {
     ...state,
-    records: [{
-      id: 'day-2026-08-03',
-      date: '2026-08-03',
-      gross: 280,
-      km: 100,
-      hours: 7,
-      fuelSpend: 38,
-      fuelTypeSnapshot: 'gnv',
-      fuelLabelSnapshot: 'GNV',
-      fuelPriceSnapshot: 4.79,
-      fuelCostKmSnapshot: 4.79 / 13.2,
-      perKmCostSnapshot: 0,
-      percentCostSnapshot: 0,
-      fixedShareSnapshot: 0,
-    }],
+    records: [{ id: 'day-2026-08-03', date: '2026-08-03', gross: 280, km: 100, hours: 7, fuelSpend: 38,
+      fuelTypeSnapshot: 'gnv', fuelLabelSnapshot: 'GNV', fuelPriceSnapshot: 4.79,
+      fuelCostKmSnapshot: 4.79 / 13.2, perKmCostSnapshot: 0, percentCostSnapshot: 0, fixedShareSnapshot: 0 }],
   };
-
   await openApp(page, stateWithRecord);
   await openHistoryDays(page);
-
   const editButton = page.locator('#historyDaysPanel [data-action="edit"][data-date="2026-08-03"]');
   await expect(editButton).toBeVisible();
   await editButton.click();
-
   await expect(page.locator('#view-day')).toBeVisible();
   await expect(page.locator('#recordDate')).toHaveValue('2026-08-03');
   await expect(page.locator('#recordGross')).toHaveValue('280');
