@@ -7,6 +7,7 @@ const root = resolve(process.argv[2] || '.');
 const canonicalRoot = process.argv[3] ? resolve(process.argv[3]) : null;
 const excludedDirectories = new Set(['.git', 'node_modules', '_site', 'playwright-report', 'test-results']);
 const canonicalFiles = ['AGENTS.md', 'SKILLS.md', 'TESTING_RULES.md', 'PWA_RULES.md', 'LEARNING_RULES.md', 'START_HERE.md'];
+const governanceVersionPattern = /VETTA_GOVERNANCE_VERSION:\s*\d{4}-\d{2}-\d{2}\.\d+/;
 
 function walk(directory) {
   const result = [];
@@ -31,11 +32,13 @@ for (const file of canonicalFiles) {
   const target = resolve(root, file);
   assert.ok(existsSync(target), `Arquivo canônico ausente: ${file}`);
   const content = readFileSync(target, 'utf8');
-  assert.ok(content.includes('VETTA_GOVERNANCE_VERSION: 2026-08-03.2'), `Versão de governança inválida em ${file}`);
+  assert.match(content, governanceVersionPattern, `Marcador de versão de governança ausente ou inválido em ${file}`);
   if (canonicalRoot) {
     const canonical = resolve(canonicalRoot, file);
     assert.ok(existsSync(canonical), `Arquivo canônico ausente na main: ${file}`);
-    assert.equal(content, readFileSync(canonical, 'utf8'), `${file} divergiu da versão canônica da main`);
+    const canonicalContent = readFileSync(canonical, 'utf8');
+    assert.match(canonicalContent, governanceVersionPattern, `Marcador de versão de governança ausente ou inválido na main: ${file}`);
+    assert.equal(content, canonicalContent, `${file} divergiu da versão canônica da main`);
   }
 }
 
