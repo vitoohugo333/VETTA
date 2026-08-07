@@ -1,4 +1,4 @@
-<!-- VETTA_GOVERNANCE_VERSION: 2026-08-07.1 -->
+<!-- VETTA_GOVERNANCE_VERSION: 2026-08-07.2 -->
 # VETTA — índice técnico obrigatório
 
 Este arquivo é o mapa de leitura para qualquer agente. Ele deve ser lido depois de `AGENTS.md` e antes de `PROJECT_STATE.md`.
@@ -42,6 +42,23 @@ O bloco não substitui a verdade técnica viva. Depois de resolver o contexto do
 `AGENTS.md`, `SKILLS.md`, `TESTING_RULES.md`, `PWA_RULES.md`, `LEARNING_RULES.md` e `.skills/vetta-product-ux/SKILL.md` são canônicos na `main` e devem permanecer iguais nas branches operacionais.
 
 `PROJECT_STATE.md`, planos, incidentes e `ci/branch-policy.json` refletem o estado específico de cada branch.
+
+## Codex Engineering Guardrails — plugin primeiro, skill como fallback
+
+O agente deve tentar primeiro usar o plugin **Codex Engineering Guardrails** como pacote normal de trabalho.
+
+Falha de descoberta, catálogo, status de instalação ou carregamento automático do plugin **não prova indisponibilidade**.
+
+Se o plugin não puder ser carregado, o agente deve usar diretamente a skill adequada:
+
+- `code-verification` para diagnóstico, auditoria, revisão, testes e validação sem alteração de produção;
+- `code-work` para qualquer mudança autorizada de código, configuração ou documentação técnica.
+
+O agente decide qual skill é aplicável a partir da tarefa. O proprietário não precisa mencionar o nome da skill.
+
+Somente declarar **Codex Engineering Guardrails indisponível** se o plugin e a skill diretamente aplicável não puderem ser carregados.
+
+O repositório público `Comdir2/Codex-engineering-guardrails` pode ser usado para referência e versionamento do projeto, mas não é requisito para a execução normal quando o plugin ou a skill interna estiver disponível.
 
 ## Responsabilidade do agente
 
