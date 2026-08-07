@@ -1,7 +1,7 @@
 # Estado oficial — VETTA (`main`)
 
 **Atualizado em:** 2026-08-07, horário de Brasília  
-**Estado:** governança canônica operacional; verificador da CI corrigido para acompanhar a governança viva sem exigir uma versão histórica fixa.  
+**Estado:** governança canônica operacional; verificador da CI corrigido para acompanhar a governança viva sem exigir uma versão histórica fixa. Guardrails agora também é gate operacional contínuo sob N-013.  
 **Papel:** `main` mantém governança, regras canônicas e orquestração; não publica o aplicativo.
 
 ## Codex Engineering Guardrails
@@ -9,14 +9,18 @@
 - plugin primeiro;
 - skill direta como fallback;
 - `code-verification` para auditoria e diagnóstico;
-- `code-work` para mudança autorizada.
+- `code-work` para mudança autorizada;
+- N-013 exige Guardrails ativo durante toda a operação, não só no preflight;
+- se um agente perceber que começou sem Guardrails, deve ativá-lo no próximo ponto seguro e revisar o trecho já executado antes de continuar.
 
 ## Governança canônica vigente
 
 - `AGENTS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.1`;
-- `SKILLS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.2`;
+- `SKILLS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.4`;
 - arquivos canônicos podem ter versões próprias, mas branches operacionais devem manter conteúdo idêntico ao correspondente da `main`;
-- criar branch continua exigindo autorização explícita do proprietário.
+- criar branch continua exigindo autorização explícita do proprietário;
+- checkpoints relevantes seguem N-012: GitHub + `PROJECT_STATE.md` + Notion devem permanecer coerentes;
+- execução técnica segue N-013: plugin Guardrails primeiro, skill direta como fallback e recuperação obrigatória se trabalho tiver começado sem cobertura confirmada.
 
 ## Correção da CI em 07/08/2026
 
@@ -48,18 +52,19 @@ Nenhuma branch foi mesclada ou sincronizada nesta correção.
 
 ## Impacto
 
-Alterados somente:
+Neste checkpoint N-013 foram alterados somente governança e documentação:
 
-- `scripts/ci/verify-repository.mjs`;
-- documentação do incidente;
-- este estado oficial.
+- `SKILLS.md`;
+- este `PROJECT_STATE.md`;
+- memória operacional correspondente no Notion.
 
 Permaneceram intocados o código funcional do aplicativo, cálculos, dados, armazenamento, interface, PWA, Netlify e GitHub Pages.
 
 ## Aprendizado
 
-**Aprendizado fechado:** o verificador deve validar marcador de governança + igualdade com a `main`, nunca uma versão histórica global fixa.
+- **Aprendizado fechado:** o verificador deve validar marcador de governança + igualdade com a `main`, nunca uma versão histórica global fixa.
+- **Aprendizado fechado:** Guardrails não pode ser tratado apenas como preflight; a operação deve recuperar cobertura no próximo ponto seguro se um trecho tiver começado sem ele.
 
 ## Próximo passo único
 
-Confirmar este checkpoint final da `main` com a CI de governança e retomar a `refatoracao-360-ux` sem sincronizar ou mesclar branches.
+Continuar os trabalhos técnicos normalmente sob N-012 e N-013: Notion sincronizado por checkpoint relevante e Codex Engineering Guardrails ativo durante toda a operação.
