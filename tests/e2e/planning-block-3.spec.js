@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const STORAGE_KEY = 'vetta-driver-intelligence-v3';
 const initialState = {
-  version: 10,
+  version: 3,
   onboardingComplete: true,
   targetProfit: 4000,
   workWeekdays: [1, 2, 3, 4, 5, 6],
@@ -10,81 +10,56 @@ const initialState = {
   revenueKm: 2.25,
   fuel: { type: 'gnv', label: 'GNV', unit: 'm³', price: 4.79, efficiency: 13.2 },
   compare: { gasPrice: 6.19, gasEff: 10.5, gnvPrice: 4.79, gnvEff: 13.2, period: 1 },
-  costs: [{ id: 'planning-3-maintenance', name: 'Manutenção', kind: 'per_km', category: 'reserve', value: 0.18, active: true }],
-  records: [],
-  events: [],
-  closings: [],
+  costs: [{ id: 'planning-maintenance', name: 'Manutenção', kind: 'per_km', category: 'reserve', value: 0.18, active: true }],
+  records: [], events: [],
 };
 
-async function openApp(page) {
-  await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: STORAGE_KEY, state: initialState });
+async function openApp(page, state = initialState) {
+  await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.waitForURL(/app-shell\.html(?:$|[?#])/);
   await expect.poll(async () => {
     try {
-      const before = page.url();
-      const navigation = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
-      const planning = await page.locator('#view-planning').getAttribute('data-block3');
-      const history = await page.locator('#view-history').getAttribute('data-block4');
-      await page.waitForTimeout(150);
-      return navigation === 'ready' && planning === 'ready' && history === 'ready' && before === page.url() ? 'stable' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
-  }, { timeout: 15000 }).toBe('stable');
+      const nav = await page.locator('nav.fixed.bottom-0').getAttribute('data-r1-navigation');
+      const plan = await page.locator('#view-planning').getAttribute('data-r1');
+      return nav === 'ready' && plan === 'ready' ? 'ready' : 'waiting';
+    } catch { return 'waiting'; }
+  }, { timeout: 15000 }).toBe('ready');
 }
 
-async function openPlanning(page) {
-  await expect.poll(async () => {
-    try {
-      if (await page.locator('#view-planning').isVisible() && await page.locator('#planningHub').isVisible()) return 'ready';
-      const button = page.locator('nav.fixed.bottom-0 [data-view="planning"]');
-      if (await button.isVisible()) await button.click();
-      return await page.locator('#view-planning').isVisible() && await page.locator('#planningHub').isVisible() ? 'ready' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
-  }, { timeout: 15000 }).toBe('ready');
+async function openPlan(page) {
+  await page.locator('#r1HeaderPlanButton').click();
+  await expect(page.locator('#view-planning')).toBeVisible();
+  await expect(page.locator('#planningHub')).toBeVisible();
 }
 
 async function openSection(page, key) {
-  await expect.poll(async () => {
-    try {
-      if (await page.locator(`#planningPage-${key}`).isVisible()) return 'ready';
-      const button = page.locator(`[data-planning-section-open="${key}"]`);
-      if (await button.isVisible()) await button.click();
-      return await page.locator(`#planningPage-${key}`).isVisible() ? 'ready' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
-  }, { timeout: 15000 }).toBe('ready');
-  await expect(page.locator('#planningHub')).toBeHidden();
+  await page.locator(`[data-planning-section-open="${key}"]`).click();
+  await expect(page.locator(`#planningPage-${key}`)).toBeVisible();
 }
 
-test('Planejar abre curto e cada recurso permanece acessível em uma tela própria', async ({ page }) => {
+test('Plano apresenta quatro decisões essenciais antes das análises', async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await openApp(page);
-  await openPlanning(page);
+  await openPlan(page);
 
-  await expect(page.locator('[data-planning-section-open]')).toHaveCount(7);
-  await expect(page.locator('#planningPage-goals')).toBeHidden();
-  await expect(page.locator('#planningTargetInput')).toBeHidden();
-  await expect(page.locator('#planningHubSummary-goals')).toContainText('R$');
-  await expect(page.locator('#planningHubSummary-operation')).toContainText('GNV');
-
-  for (const key of ['goals', 'agenda', 'operation', 'costs', 'distribution', 'learning', 'advanced']) {
-    await openSection(page, key);
-    await page.locator(`#planningPage-${key} [data-planning-section-back]`).click();
-    await expect(page.locator('#planningHub')).toBeVisible();
-    await expect(page.locator(`#planningPage-${key}`)).toBeHidden();
-  }
-
+  await expect(page.getByText('Quatro decisões formam seu plano', { exact: true })).toBeVisible();
+  const core = page.locator('#planningHub [data-planning-core]');
+  await expect(core.locator('[data-planning-section-open]')).toHaveCount(4);
+  await expect(core.locator('[data-planning-section-open]')).toHaveAttribute('data-planning-section-open', /goals|agenda|costs|operation/);
+  await expect(page.locator('#planningSecondary [data-planning-section-open]')).toHaveCount(3);
+  await expect(page.locator('#planningHub')).not.toContainText('BLOCO 3');
+  await expect(page.locator('#planningStatus-goals')).toContainText('Meta definida');
+  await expect(page.locator('#planningStatus-agenda')).toContainText('Agenda definida');
+  await expect(page.locator('#planningStatus-costs')).toContainText('Custos revisáveis');
+  await expect(page.locator('#planningStatus-operation')).toContainText('Operação definida');
   expect(errors).toEqual([]);
 });
 
-test('editar em uma área, voltar e abrir outra preserva o mesmo estado', async ({ page }) => {
+test('editar meta e agenda preserva a mesma fonte de verdade', async ({ page }) => {
   await openApp(page);
-  await openPlanning(page);
+  await openPlan(page);
 
   await openSection(page, 'goals');
   await page.locator('#planningTargetInput').fill('5200');
@@ -94,49 +69,31 @@ test('editar em uma área, voltar e abrir outra preserva o mesmo estado', async 
 
   await openSection(page, 'agenda');
   await page.locator('[data-plan-days="5"]').click();
-  await page.goBack({ waitUntil: 'domcontentloaded' }).catch(() => null);
-  await expect(page.locator('#planningHub')).toBeVisible();
+  await page.locator('#planningPage-agenda [data-planning-section-back]').click();
+  await expect(page.locator('#planningHubSummary-agenda')).toContainText('5 dias');
 
-  await openSection(page, 'operation');
-  await page.locator('#planningFuelPrice').fill('5.49');
-  await page.locator('#planningFuelPrice').press('Tab');
-  await page.locator('#planningPage-operation [data-planning-section-back]').click();
-
-  await openSection(page, 'costs');
-  await expect(page.locator('#planningCostList')).toContainText('Manutenção');
-  await page.locator('#planningPage-costs [data-planning-section-back]').click();
-
-  await openSection(page, 'distribution');
-  await expect(page.locator('#planningRevenueChart')).toBeVisible();
-  await expect(page.locator('#planningDreGross')).toContainText('R$');
-
-  const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
+  const saved = await page.evaluate(key => {
+    const state = JSON.parse(localStorage.getItem(key));
+    return { targetProfit: state.targetProfit, workWeekdays: state.workWeekdays, costs: state.costs };
+  }, STORAGE_KEY);
   expect(saved.targetProfit).toBe(5200);
   expect(saved.workWeekdays).toEqual([1, 2, 3, 4, 5]);
-  expect(saved.fuel.price).toBe(5.49);
   expect(saved.costs).toHaveLength(1);
 });
 
-test('atalho de Hoje mantém dois retornos previsíveis: assunto, Planejar e Hoje', async ({ page }) => {
+test('Custos abre diretamente da barra sem passar por diretório', async ({ page }) => {
   await openApp(page);
-  await expect.poll(async () => {
-    try {
-      if (await page.locator('#view-planning').isVisible()) return 'ready';
-      const shortcut = page.locator('[data-secondary-view="planning"]');
-      if (await shortcut.isVisible()) await shortcut.click();
-      return await page.locator('#view-planning').isVisible() ? 'ready' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
-  }, { timeout: 15000 }).toBe('ready');
-  await expect(page.locator('#view-planning > div:first-child [data-back]')).toBeVisible();
+  await page.locator('nav.fixed.bottom-0 [data-view="costs"]').click();
+  await expect(page.locator('#view-planning')).toBeVisible();
+  await expect(page.locator('#planningPage-costs')).toBeVisible();
+  await expect(page.locator('#planningCostList')).toContainText('Manutenção');
+  await expect(page.locator('#planningHub')).toBeHidden();
+});
 
-  await openSection(page, 'learning');
-  await page.locator('#planningPage-learning [data-planning-section-back]').click();
-  await expect(page.locator('#planningHub')).toBeVisible();
-  await expect(page.locator('#view-planning > div:first-child [data-back]')).toBeVisible();
-
-  await page.locator('#view-planning > div:first-child [data-back]').click();
-  await expect(page.locator('#view-dashboard')).toBeVisible();
-  await expect(page.locator('nav.fixed.bottom-0 [data-view="dashboard"]')).toHaveClass(/active/);
+test('meta zero aparece como parte incompleta do plano', async ({ page }) => {
+  await openApp(page, { ...initialState, targetProfit: 0 });
+  await openPlan(page);
+  await expect(page.locator('#view-planning')).toHaveAttribute('data-plan-state', 'missing-target');
+  await expect(page.locator('#planningStatus-goals')).toContainText('Definir meta');
+  await expect(page.locator('#planningHubSummary-goals')).toContainText('Sem meta definida');
 });
