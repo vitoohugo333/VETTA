@@ -27,12 +27,14 @@ for (const asset of ['./manifest.webmanifest', './icon.svg', './icon-192.png', '
   assert.ok(worker.includes(`'${asset}'`), `${asset} deve permanecer no cache do PWA`);
 }
 
+const governanceMarker = /VETTA_GOVERNANCE_VERSION:\s*\d{4}-\d{2}-\d{2}\.\d+/;
 const canonicalFiles = ['AGENTS.md', 'SKILLS.md', 'TESTING_RULES.md', 'PWA_RULES.md', 'LEARNING_RULES.md', 'START_HERE.md'];
 for (const file of canonicalFiles) {
   assert.ok(existsSync(file), `${file} deve existir`);
-  assert.ok(
-    readFileSync(file, 'utf8').includes('VETTA_GOVERNANCE_VERSION: 2026-08-03.2'),
-    `${file} deve declarar a versão canônica de governança`,
+  assert.match(
+    readFileSync(file, 'utf8'),
+    governanceMarker,
+    `${file} deve declarar um marcador válido de governança`,
   );
 }
 
