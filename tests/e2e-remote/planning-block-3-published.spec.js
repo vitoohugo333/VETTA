@@ -10,31 +10,27 @@ function url(path) {
 }
 
 const state = {
-  version: 10,
-  onboardingComplete: true,
-  targetProfit: 4000,
-  workWeekdays: [1, 2, 3, 4, 5, 6],
-  extraDaysOff: 0,
-  revenueKm: 2.25,
+  version: 3, onboardingComplete: true, targetProfit: 4000,
+  workWeekdays: [1, 2, 3, 4, 5, 6], extraDaysOff: 0, revenueKm: 2.25,
   fuel: { type: 'gnv', label: 'GNV', unit: 'm³', price: 4.79, efficiency: 13.2 },
   compare: { gasPrice: 6.19, gasEff: 10.5, gnvPrice: 4.79, gnvEff: 13.2, period: 1 },
   costs: [{ id: 'published-maintenance', name: 'Manutenção', kind: 'per_km', category: 'reserve', value: 0.18, active: true }],
-  records: [],
-  events: [],
-  closings: [],
+  records: [], events: [],
 };
 
-test('GitHub Pages servem Planejar curto com telas próprias e valores preservados', async ({ page, request }) => {
+test('GitHub Pages servem Plano guiado com quatro decisões essenciais', async ({ page, request }) => {
   const moduleResponse = await request.get(url('planning-3.js'));
   expect(moduleResponse.ok(), 'planning-3.js deve estar publicado.').toBeTruthy();
 
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
   await page.goto(url('app-shell.html'), { waitUntil: 'domcontentloaded' });
-  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
+  await expect.poll(() => page.locator('#view-planning').getAttribute('data-r1')).toBe('ready');
 
-  await page.locator('nav.fixed.bottom-0 [data-view="planning"]').click();
+  await page.locator('#r1HeaderPlanButton').click();
   await expect(page.locator('#planningHub')).toBeVisible();
-  await expect(page.locator('[data-planning-section-open]')).toHaveCount(7);
+  await expect(page.locator('#planningHub [data-planning-core] [data-planning-section-open]')).toHaveCount(4);
+  await expect(page.locator('#planningSecondary [data-planning-section-open]')).toHaveCount(3);
+  await expect(page.locator('#planningHub')).not.toContainText('BLOCO 3');
 
   await page.locator('[data-planning-section-open="goals"]').click();
   await expect(page.locator('#planningTargetInput')).toBeVisible();
@@ -42,10 +38,6 @@ test('GitHub Pages servem Planejar curto com telas próprias e valores preservad
   await page.locator('#planningTargetInput').press('Tab');
   await page.locator('#planningPage-goals [data-planning-section-back]').click();
   await expect(page.locator('#planningHubSummary-goals')).toContainText('5.100');
-
-  await page.locator('[data-planning-section-open="distribution"]').click();
-  await expect(page.locator('#planningRevenueChart')).toBeVisible();
-  await expect(page.locator('#planningDreGross')).toContainText('R$');
 
   const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
   expect(saved.targetProfit).toBe(5100);
