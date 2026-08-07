@@ -10,11 +10,11 @@ on:
         required: true
         type: string
       mode:
-        description: auto, full ou published
+        description: auto, full, published ou navegador isolado
         required: true
         default: full
         type: choice
-        options: [auto, full, published]
+        options: [auto, full, published, chromium, firefox, webkit]
 
 permissions:
   contents: read
@@ -84,21 +84,19 @@ jobs:
         uses: actions/github-script@v7
         env:
           TARGET_BRANCH: ${{ needs.parse.outputs.branch }}
-          BRANCH_EXISTS: ${{ needs.parse.outputs.exists }}
           TEST_RESULT: ${{ needs.test.result }}
+          TEST_MODE: ${{ needs.parse.outputs.mode }}
         with:
           script: |
             const branch = process.env.TARGET_BRANCH;
-            const exists = process.env.BRANCH_EXISTS === 'true';
             const result = process.env.TEST_RESULT;
+            const mode = process.env.TEST_MODE;
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             let body;
-            if (!exists) {
-              body = `❌ A branch \`${branch}\` não existe. Nenhum teste foi executado.`;
-            } else if (result === 'success') {
-              body = `✅ Teste autônomo concluído para \`${branch}\`. Evidência: ${runUrl}`;
+            if (result === 'success') {
+              body = `✅ Teste \`${mode}\` concluído para \`${branch}\`. Evidência: ${runUrl}`;
             } else {
-              body = `❌ O teste autônomo encontrou falha em \`${branch}\`. Logs e evidências: ${runUrl}`;
+              body = `❌ O teste \`${mode}\` encontrou falha em \`${branch}\`. Logs e evidências: ${runUrl}`;
             }
             await github.rest.issues.createComment({
               owner: context.repo.owner,
