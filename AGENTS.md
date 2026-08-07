@@ -1,11 +1,26 @@
-<!-- VETTA_GOVERNANCE_VERSION: 2026-08-06.1 -->
+<!-- VETTA_GOVERNANCE_VERSION: 2026-08-07.1 -->
 # VETTA — regras obrigatórias do projeto
 
 O VETTA é um PWA financeiro para motoristas de aplicativo. Deve permanecer simples no celular, confiável nos números, local-first e seguro para os dados existentes.
 
+## Interface humana por blocos autodirecionáveis
+
+O proprietário opera o projeto principalmente pelo celular. A complexidade técnica deve ser absorvida pelo agente, não transferida ao proprietário.
+
+Dois comandos humanos são suficientes para operar a memória de trabalho:
+
+- **“Liste os blocos ativos do VETTA.”** O agente consulta o Notion e apresenta os blocos em linguagem simples, com nome, objetivo, branch quando aplicável e estado atual, sem exigir que o proprietário memorize códigos internos.
+- **“Leia o bloco X e siga-o.”** O bloco citado passa a ser o ponto de entrada operacional. O agente deve resolver sozinho todas as referências necessárias: Central Oficial, Estado Oficial, Roadmap, decisões, aprendizados, códigos `N-xxx`, branch-alvo, fotografia atual, governança aplicável, PR, CI, ambiente publicado e demais fontes vivas relacionadas.
+
+O proprietário não é responsável por memorizar ou enumerar `N-xxx`, SHAs, arquivos de governança, workflows, links de CI ou dependências técnicas para iniciar um trabalho já registrado.
+
+Um bloco autodirecionável funciona como **roteador de contexto**, não como substituto das fontes técnicas vivas. O bloco explica missão, limites, autorizações e dependências; GitHub, PR, CI e ambientes servidos continuam provando o estado técnico atual.
+
+Quando um bloco apontar para regras ou decisões relacionadas, cabe ao agente localizar e ler essas fontes. Se houver divergência entre Notion e GitHub, o agente deve declarar a divergência e determinar qual registro está desatualizado; nunca pedir ao proprietário para reconstruir manualmente o contexto já registrado.
+
 ## Comece sempre por esta sequência
 
-Antes de qualquer diagnóstico, contrato, alteração ou conclusão técnica, leia nesta ordem **na branch que será realmente afetada**:
+Quando houver um bloco do Notion explicitamente citado pelo proprietário, leia primeiro esse bloco como ponto de entrada humano e siga suas dependências. Antes de qualquer diagnóstico, contrato, alteração ou conclusão técnica, leia nesta ordem **na branch que será realmente afetada**:
 
 1. `AGENTS.md`;
 2. `SKILLS.md`;
@@ -23,7 +38,8 @@ Os arquivos pertencem à branch onde estão. A cópia da `main` é o padrão can
 2. `AGENTS.md`, `SKILLS.md`, `TESTING_RULES.md` e regras especializadas da branch-alvo;
 3. fontes vivas atuais;
 4. `PROJECT_STATE.md` da branch-alvo;
-5. memória, resumos e capturas apenas como contexto auxiliar.
+5. Notion como memória operacional de missão, decisões, aprendizados e blocos;
+6. memória, resumos e capturas apenas como contexto auxiliar.
 
 O `PROJECT_STATE.md` é o registro oficial vivo da branch e deve ser atualizado no mesmo bloco sempre que estado, papel, ambiente, fotografia, CI, validação ou próximo passo mudarem. Fontes vivas confirmam e corrigem o registro; não autorizam encerrar o bloco deixando o documento desatualizado.
 
@@ -72,6 +88,7 @@ Para o VETTA, enquanto não houver mudança confirmada e registrada:
 
 - `netlify/teste-fechado-ux` alimenta o GitHub Pages e é a branch de desenvolvimento de UX;
 - `netlify/teste-fechado` alimenta o Netlify estável;
+- `refatoracao-360-ux` é experimento temporário de UI/UX, sem ambiente publicado próprio;
 - `main` mantém a governança canônica;
 - `migration/vetta-clean-3-5-1` é referência histórica e cabeça da PR #1.
 
@@ -92,6 +109,21 @@ Uma autorização para um bloco cobre as etapas previsíveis e diretamente neces
 Não peça autorização separada para executar testes. O agente é responsável por escolher, executar, interpretar e ampliar a verificação necessária.
 
 Continuam exigindo autorização explícita separada: mudança de objetivo, área fora do contrato, alteração em `main` não citada, merge, tag, release, mudança do alvo de produção, deploy manual fora do fluxo conhecido, alteração destrutiva, exclusão de dados ou credenciais não previstas.
+
+### Regra absoluta para criação de branch
+
+Criar uma branch nova sempre exige autorização explícita do proprietário. Auditoria, evidência técnica, conveniência, isolamento, existência de outro agente ou preferência operacional não substituem essa autorização.
+
+Antes mesmo de recomendar uma nova branch, o agente deve reavaliar a própria necessidade e responder internamente: o objetivo pode continuar com segurança e clareza na branch atual? A proposta nasceu de um impedimento real ou apenas de pressa, conveniência ou coexistência momentânea de trabalhos?
+
+Se ainda considerar necessária uma nova branch, o agente deve explicar de forma didática e objetiva:
+
+- qual problema real a nova branch resolve;
+- por que a branch atual não basta;
+- quais alternativas foram consideradas;
+- qual o custo de fragmentar conhecimento e estado.
+
+Em fase de descoberta, a preferência é preservar continuidade de conhecimento. Mesmo após essa justificativa, o agente deve aguardar autorização explícita antes de criar a branch.
 
 ## Responsabilidade autônoma pelos testes
 
@@ -133,12 +165,13 @@ O issue #2 é a console do agente para testes adicionais de qualquer branch. Som
 - `main`: governança, regras canônicas e orquestração; não é a fonte atual do aplicativo.
 - `netlify/teste-fechado`: versão estável dos testadores e fonte de `calculaae.netlify.app`.
 - `netlify/teste-fechado-ux`: desenvolvimento e validação manual da reorganização de interface; GitHub Pages é o ambiente publicado aplicável.
+- `refatoracao-360-ux`: experimento temporário de UI/UX; não possui ambiente publicado próprio até decisão explícita do proprietário.
 - `migration/vetta-clean-3-5-1`: referência histórica permanente e cabeça da PR #1; não reutilizar para desenvolvimento.
 - branches antigas e temporárias não devem ser reutilizadas sem apuração e ordem explícita.
 
 Uma branch nova deve nascer de uma branch ativa apropriada e herdar, antes da primeira mudança funcional, os arquivos canônicos, `ci/branch-policy.json` e o workflow autônomo. A CI deve falhar se essa preparação estiver ausente.
 
-Nenhuma mudança da branch UX pode ser levada à branch estável, à `main` ou ao Netlify sem autorização específica posterior.
+Nenhuma mudança da branch UX ou experimental pode ser levada à branch estável, à `main`, ao Netlify ou ao GitHub Pages sem autorização específica posterior.
 
 ## Regras de escopo e segurança
 
@@ -177,6 +210,20 @@ Defeito, quase falha ou descoberta reutilizável deve seguir `LEARNING_RULES.md`
 ## Comunicação
 
 Fale com o proprietário como leigo em programação: didático, direto e curto.
+
+Sempre que qualquer alteração for feita no GitHub, o agente deve explicar proativamente:
+
+- repositório e branch;
+- o que mudou, em linguagem simples;
+- por que mudou;
+- efeito prático;
+- o que permaneceu intocado;
+- a fotografia salva do projeto e o que ela representa;
+- testes/CI executados e resultado;
+- se GitHub Pages, Netlify ou outra publicação mudou;
+- o que permanece pendente ou não confirmado.
+
+Nunca conclua um trabalho apenas com SHA, nome de branch, arquivo, link ou resultado de Actions sem traduzir seu significado.
 
 Explique sempre:
 
