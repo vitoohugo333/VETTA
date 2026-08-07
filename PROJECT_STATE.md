@@ -1,59 +1,52 @@
 # Estado oficial — VETTA (`main`)
 
-**Atualizado em:** 2026-08-06  
-**Estado:** governança canônica operacional; skill `vetta-product-ux` distribuída nas branches existentes.  
-**Alteração em curso:** padronizar a descoberta da skill nas branches antigas e limpar branches temporárias com autorização e ferramenta apropriada.
+**Atualizado em:** 2026-08-07, horário de Brasília  
+**Estado:** governança canônica operacional sincronizada com o modelo de blocos autodirecionáveis do Notion.  
+**Papel:** `main` mantém governança, regras canônicas e orquestração; não publica o aplicativo.
 
-## Papel da `main`
+## Sincronização operacional de 07/08/2026
 
-A `main` mantém governança, regras canônicas e orquestração. Não publica o aplicativo.
+O modelo de trabalho em que o proprietário opera por comandos humanos simples foi incorporado à governança canônica:
 
-## Ambientes e branches operacionais
+- `Liste os blocos ativos do VETTA.`
+- `Leia o bloco X e siga-o.`
+
+A partir de um bloco citado, o agente deve recuperar sozinho Central Oficial, Estado, Roadmap, decisões, aprendizados, códigos `N-xxx`, branch, fotografia, PR, CI, ambiente, regras técnicas e demais dependências. O proprietário não precisa memorizar códigos, SHAs, arquivos ou sequências técnicas.
+
+O Notion continua sendo memória operacional de missão, decisões e aprendizados. GitHub, PR, CI e ambientes servidos continuam sendo a prova técnica viva.
+
+## Governança canônica vigente
+
+- `AGENTS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.1`;
+- `SKILLS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.1`;
+- fotografia da `main` após esses dois arquivos: `2b848291f21065463e794b3898ce2e777a53ae0d`;
+- a branch `refatoracao-360-ux` foi incluída na governança como experimento temporário de UI/UX sem ambiente publicado próprio;
+- criação de branch exige autorização explícita do proprietário, precedida de reavaliação e justificativa didática quando recomendada.
+
+## Branches e ambientes relevantes
 
 | Finalidade | Branch | Ambiente |
 |---|---|---|
 | Governança canônica | `main` | não publica o app |
-| Produção estável/testadores | `netlify/teste-fechado` | `https://calculaae.netlify.app/` |
-| Desenvolvimento de UX | `netlify/teste-fechado-ux` | `https://vitoohugo333.github.io/VETTA/` |
-| Referência histórica/PR #1 | `migration/vetta-clean-3-5-1` | sem desenvolvimento novo |
+| Produção estável/testadores | `netlify/teste-fechado` | Netlify estável |
+| Desenvolvimento de UX atual | `netlify/teste-fechado-ux` | GitHub Pages |
+| Experimento Refatoração 360 | `refatoracao-360-ux` | nenhum ambiente publicado próprio confirmado |
+| Referência histórica | `migration/vetta-clean-3-5-1` | sem desenvolvimento novo |
 
-## Skill VETTA Product UX
+`netlify/teste-fechado` e `netlify/teste-fechado-ux` não foram alteradas neste bloco de sincronização, evitando qualquer efeito em Netlify ou GitHub Pages.
 
-O arquivo `.skills/vetta-product-ux/SKILL.md` foi adicionado a todas as branches existentes em 2026-08-06. Ele exige análise por tarefa real, fluxo completo, estados, segurança dos dados, clareza dos números, comportamento mobile e validação física quando aplicável.
+## Impacto deste bloco
 
-O índice `SKILLS.md` foi atualizado na `main`, na branch de UX e na branch estável. Branches antigas e temporárias receberam o arquivo da skill, mas não passam a ser branches válidas de trabalho por causa disso.
+Somente governança e documentação foram alteradas. Nenhum arquivo funcional do aplicativo, cálculo financeiro, dado, armazenamento, interface, PWA, Netlify ou GitHub Pages foi alterado.
 
-## Branches existentes no momento do bloco
+## Validação
 
-- `main`;
-- `netlify/teste-fechado`;
-- `netlify/teste-fechado-ux`;
-- `migration/vetta-clean-3-5-1`;
-- `feature/bloco-1-navegacao-secundaria`;
-- `governance/vetta-product-ux`;
-- `tmp/pwa-gate-apply`;
-- `tmp/pwa-gate-apply-2`;
-- `tmp/robot-access-safe`;
-- `noop`.
-
-`governance/vetta-product-ux` e `noop` foram criadas sem necessidade durante esta operação. O conector disponível não oferece exclusão de branch. Elas não alimentam Pages ou Netlify e não devem ser reutilizadas.
-
-## Proteção incorporada
-
-- trabalhar na branch atual quando ela comportar o objetivo com segurança;
-- não criar branch apenas para documentação ou governança que pode ser aplicada na branch em uso;
-- distinguir branch em uso, mais recentemente modificada, mais atual por finalidade e efetivamente publicada;
-- manter `PROJECT_STATE.md` atualizado no mesmo bloco;
-- não transformar branch temporária ou histórica em branch operacional por acidente.
-
-## Impacto
-
-Nenhum arquivo do aplicativo, cálculo, armazenamento, PWA, interface, GitHub Pages ou Netlify foi alterado por este bloco. Os commits foram exclusivamente documentais.
+A prova necessária é documental: `AGENTS.md` e `SKILLS.md` da `main` devem conter o modelo novo e a branch experimental deve receber as mesmas cópias canônicas. CI deve ser verificada na fotografia final, mas nenhum teste funcional/mobile é necessário porque o aplicativo não foi modificado.
 
 ## Aprendizado
 
-**Aprendizado fechado:** a criação automática de branch sem necessidade aumenta divergência e confusão. A regra agora é usar a branch atual adequada e só criar nova branch quando houver necessidade técnica comprovada.
+**Nenhum aprendizado permanente novo.** Este bloco sincroniza no GitHub decisões operacionais já aprovadas no Notion.
 
 ## Próximo passo único
 
-Limpar as branches temporárias e acidentais quando houver ferramenta de exclusão disponível ou autorização para usar outro meio seguro, preservando apenas as branches operacionais definidas.
+Usar o comando humano do bloco desejado; o agente deve resolver todo o restante do contexto sem exigir que o proprietário reconstrua a memória técnica.
