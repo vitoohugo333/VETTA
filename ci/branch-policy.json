@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "app": true,
-  "branch": "netlify/teste-fechado-ux",
+  "branch": "refatoracao-360-ux",
   "role": "ux-development",
   "published": {
     "type": "github-pages",
