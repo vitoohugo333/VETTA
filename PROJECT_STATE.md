@@ -1,7 +1,7 @@
 # Estado oficial — VETTA (`main`)
 
 **Atualizado em:** 2026-08-07, horário de Brasília  
-**Estado:** governança canônica operacional sincronizada com o modelo de blocos autodirecionáveis do Notion.  
+**Estado:** governança canônica operacional sincronizada com o modelo de blocos autodirecionáveis do Notion e com a política de fallback do Codex Engineering Guardrails.  
 **Papel:** `main` mantém governança, regras canônicas e orquestração; não publica o aplicativo.
 
 ## Sincronização operacional de 07/08/2026
@@ -15,12 +15,24 @@ A partir de um bloco citado, o agente deve recuperar sozinho Central Oficial, Es
 
 O Notion continua sendo memória operacional de missão, decisões e aprendizados. GitHub, PR, CI e ambientes servidos continuam sendo a prova técnica viva.
 
+## Codex Engineering Guardrails
+
+A regra operacional vigente é simples:
+
+1. tentar primeiro o plugin **Codex Engineering Guardrails**;
+2. se a descoberta ou o carregamento do plugin falhar, usar diretamente a skill adequada;
+3. `code-verification` para diagnóstico, auditoria, revisão, testes e validação sem alteração de produção;
+4. `code-work` para qualquer mudança autorizada;
+5. só declarar o Guardrails indisponível se o plugin e a skill aplicável falharem.
+
+O agente escolhe a skill correta pela natureza da tarefa. O proprietário não precisa indicar o nome da skill.
+
 ## Governança canônica vigente
 
 - `AGENTS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.1`;
-- `SKILLS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.1`;
-- fotografia da `main` após esses dois arquivos: `2b848291f21065463e794b3898ce2e777a53ae0d`;
-- a branch `refatoracao-360-ux` foi incluída na governança como experimento temporário de UI/UX sem ambiente publicado próprio;
+- `SKILLS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.2`;
+- fotografia da `main` que incorporou a política de fallback no índice técnico: `e8a862ca3be037c7e3db27311a4f6ae42c337f67`;
+- a branch `refatoracao-360-ux` recebeu a mesma política canônica;
 - criação de branch exige autorização explícita do proprietário, precedida de reavaliação e justificativa didática quando recomendada.
 
 ## Branches e ambientes relevantes
@@ -33,7 +45,7 @@ O Notion continua sendo memória operacional de missão, decisões e aprendizado
 | Experimento Refatoração 360 | `refatoracao-360-ux` | nenhum ambiente publicado próprio confirmado |
 | Referência histórica | `migration/vetta-clean-3-5-1` | sem desenvolvimento novo |
 
-`netlify/teste-fechado` e `netlify/teste-fechado-ux` não foram alteradas neste bloco de sincronização, evitando qualquer efeito em Netlify ou GitHub Pages.
+`netlify/teste-fechado` e `netlify/teste-fechado-ux` não foram alteradas neste bloco, evitando qualquer efeito em Netlify ou GitHub Pages.
 
 ## Impacto deste bloco
 
@@ -41,12 +53,12 @@ Somente governança e documentação foram alteradas. Nenhum arquivo funcional d
 
 ## Validação
 
-A prova necessária é documental: `AGENTS.md` e `SKILLS.md` da `main` devem conter o modelo novo e a branch experimental deve receber as mesmas cópias canônicas. CI deve ser verificada na fotografia final, mas nenhum teste funcional/mobile é necessário porque o aplicativo não foi modificado.
+A prova necessária é documental: `SKILLS.md` da `main` e da branch experimental devem ser idênticos e conter a política plugin-primeiro/skill-fallback. Nenhum teste funcional ou validação mobile é necessário porque o aplicativo não foi modificado.
 
 ## Aprendizado
 
-**Nenhum aprendizado permanente novo.** Este bloco sincroniza no GitHub decisões operacionais já aprovadas no Notion.
+**Aprendizado fechado:** falha de descoberta do plugin não prova indisponibilidade do Guardrails quando a skill aplicável pode ser carregada diretamente.
 
 ## Próximo passo único
 
-Usar o comando humano do bloco desejado; o agente deve resolver todo o restante do contexto sem exigir que o proprietário reconstrua a memória técnica.
+Continuar o trabalho normalmente; agentes devem tentar o plugin primeiro e recorrer à skill adequada sem transferir essa escolha ao proprietário.
