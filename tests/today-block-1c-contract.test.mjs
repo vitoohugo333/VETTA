@@ -1,46 +1,45 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const [shell, app, planning, history, today, policy, styles] = await Promise.all([
+const [shell, app, planning, history, today, policy, serviceWorker] = await Promise.all([
   readFile(new URL('../app-shell.html', import.meta.url), 'utf8'),
   readFile(new URL('../app.js', import.meta.url), 'utf8'),
   readFile(new URL('../planning-1a.js', import.meta.url), 'utf8'),
   readFile(new URL('../history-1b.js', import.meta.url), 'utf8'),
   readFile(new URL('../today-1c.js', import.meta.url), 'utf8'),
   readFile(new URL('../ci/branch-policy.json', import.meta.url), 'utf8'),
-  readFile(new URL('../styles.css', import.meta.url), 'utf8'),
+  readFile(new URL('../sw.js', import.meta.url), 'utf8'),
 ]);
 
 assert.match(app, /const STORAGE_KEY = 'vetta-driver-intelligence-v3'/, 'A chave dos dados locais deve permanecer intacta.');
-assert.match(history, /today-1c\.js\?v=1/, 'O Bloco 1C deve carregar somente depois de Histórico e Planejar.');
-assert.match(policy, /"today-1c\.js"/, 'O módulo do Bloco 1C deve participar da prova publicada.');
+assert.match(history, /today-1c\.js\?v=1/, 'R1 deve continuar carregando no encadeamento existente.');
+assert.match(policy, /"today-1c\.js"/, 'Hoje deve participar da prova publicada.');
 
-for (const retainedId of ['kpiGrossDaily', 'kpiNetDaily', 'kpiKmDaily', 'monthStatusTitle', 'monthProgress', 'insightTitle']) {
-  assert.match(shell, new RegExp(`id="${retainedId}"`), `Hoje deve preservar ${retainedId}.`);
+for (const id of ['targetProfitDisplay', 'kpiGrossDaily', 'kpiNetDaily', 'kpiKmDaily', 'monthStatusTitle', 'insightTitle']) {
+  assert.match(shell, new RegExp(`id="${id}"`), `A base funcional deve preservar ${id}.`);
 }
-assert.match(shell, /data-view="day"[^>]*>[^]*Registrar meu dia/, 'Registrar meu dia deve continuar acessível em Hoje.');
-assert.match(shell, /data-secondary-view="planning"/, 'O atalho para Planejar deve continuar acessível.');
-
-for (const sourceId of ['targetProfitDisplay', 'weekStatusTitle', 'revenueChart']) {
-  assert.match(shell, new RegExp(`id="${sourceId}"`), `O fallback ${sourceId} deve permanecer no HTML.`);
-  assert.ok(today.includes(`getElementById('${sourceId}')`), `O Bloco 1C deve tratar somente a duplicação ${sourceId}.`);
+for (const id of ['planningTargetInput', 'planningDaysOffInput', 'planningRevenueChart']) {
+  assert.match(planning, new RegExp(`id="${id}"`), `O Plano deve manter ${id}.`);
 }
 
-for (const planningId of ['planningTargetInput', 'planningDaysOffInput', 'planningRevenueChart', 'planningDreGross']) {
-  assert.match(planning, new RegExp(`id="${planningId}"`), `Planejar deve manter o destino ${planningId}.`);
-  assert.ok(today.includes(`getElementById('${planningId}')`), `O Bloco 1C deve validar o destino ${planningId}.`);
-}
-for (const historyId of ['historyAnalysisPanel', 'historyWeekStatusTitle', 'historyWeekTarget']) {
-  assert.match(history, new RegExp(`id="${historyId}"`), `Histórico deve manter o destino ${historyId}.`);
-  assert.ok(today.includes(`getElementById('${historyId}')`), `O Bloco 1C deve validar o destino ${historyId}.`);
-}
+assert.match(today, /targetCard\.dataset\.r1Role = 'monthly-plan'/, 'A meta deve virar Plano do mês em Agora, não ser escondida.');
+assert.doesNotMatch(today, /\[targetCard,[^\]]*'Plano/, 'O card de meta não pode ser tratado como duplicação a esconder.');
+assert.match(today, /id = 'r1PlanSummary'/, 'O Plano em Agora deve explicar a consequência financeira.');
+assert.match(today, /id = 'r1NextAction'/, 'Agora deve possuir próxima ação contextual.');
+assert.match(today, /targetMissing[\s\S]*Comece definindo sua meta/, 'Meta zero deve produzir orientação explícita.');
+assert.match(today, /Montar meu plano/, 'Meta zero deve oferecer CTA para montar o plano.');
+assert.match(today, /Registre seu primeiro dia/, 'Plano definido sem registros deve orientar o primeiro registro.');
+assert.match(today, /Revise seu ritmo do mês/, 'Ritmo abaixo do esperado deve levar a Resultados.');
+assert.match(today, /id = 'r1HeaderPlanButton'/, 'Plano deve ter acesso global de um toque.');
+assert.match(today, /installButton\.dataset\.relocatedTo = 'Mais → Aplicativo'/, 'Instalação deve sair do espaço global prioritário sem ser removida do produto.');
+assert.match(today, /labels\[0\]\.textContent = 'Agora'/, 'Primeiro destino deve ser Agora.');
+assert.match(today, /labels\[1\]\.textContent = 'Registrar'/, 'Registrar deve ser destino primário.');
+assert.match(today, /labels\[2\]\.textContent = 'Resultados'/, 'Resultados deve ser destino primário.');
+assert.match(today, /labels\[3\]\.textContent = 'Custos'/, 'Custos deve ser destino primário.');
+assert.match(today, /new Set\(\['dashboard', 'day', 'history', 'costs', 'more'\]\)/, 'A navegação deve manter cinco tarefas humanas.');
 
-assert.match(today, /item\.source\.hidden = true/, 'As duplicações devem sair visualmente por atributo nativo e reversível.');
-assert.match(today, /requiredDestinations\.some\(item => !item\)/, 'A retirada deve falhar de forma segura quando faltar destino.');
-assert.match(today, /relocations\.some\(item => !item\.source\)/, 'A retirada deve ser atômica quando faltar uma origem.');
-assert.doesNotMatch(today, /item\.source\.remove\s*\(/, 'O Bloco 1C não pode apagar fisicamente os cartões de fallback.');
-assert.doesNotMatch(today, /style\.display|display\s*:\s*none|classList\.(?:add|toggle)\(['"]hidden/, 'O Bloco 1C não pode usar CSS ou classes para esconder cartões.');
-assert.doesNotMatch(today, /localStorage|sessionStorage|app\.state\s*=|\.save\s*\(/, 'O Bloco 1C não pode alterar dados ou armazenamento.');
-assert.doesNotMatch(styles, /block1c|today-1c|relocatedTo/, 'Nenhuma regra específica do Bloco 1C deve ser criada no CSS.');
+assert.doesNotMatch(today, /localStorage|sessionStorage|app\.state\s*=|\.save\s*\(/, 'R1 não pode criar persistência ou alterar estado financeiro diretamente.');
+assert.doesNotMatch(today, /serviceWorker|caches\.|manifest\.webmanifest/, 'R1 não pode alterar o PWA como efeito visual.');
+assert.doesNotMatch(serviceWorker, /r1NextAction|r1PlanButton/, 'O service worker deve permanecer independente do R1.');
 
-console.log('Contrato do Bloco 1C validado: Hoje consolidado somente após destinos confirmados e com fallback preservado.');
+console.log('Contrato R1 validado: Plano é primeira classe, meta zero orienta e a navegação usa cinco tarefas humanas.');
