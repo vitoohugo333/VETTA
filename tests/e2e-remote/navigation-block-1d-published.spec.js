@@ -10,46 +10,36 @@ function url(path) {
 }
 
 const state = {
-  version: 10,
-  onboardingComplete: true,
-  targetProfit: 4000,
-  workWeekdays: [1, 2, 3, 4, 5, 6],
-  extraDaysOff: 0,
-  revenueKm: 2.25,
+  version: 3, onboardingComplete: true, targetProfit: 4000,
+  workWeekdays: [1, 2, 3, 4, 5, 6], extraDaysOff: 0, revenueKm: 2.25,
   fuel: { type: 'gnv', label: 'GNV', unit: 'm³', price: 4.79, efficiency: 13.2 },
   compare: { gasPrice: 6.19, gasEff: 10.5, gnvPrice: 4.79, gnvEff: 13.2, period: 1 },
-  costs: [],
-  records: [],
-  events: [],
-  closings: [],
+  costs: [], records: [], events: [],
 };
 
-test('GitHub Pages servem a navegação final e preservam as rotas secundárias', async ({ page, request }) => {
+test('GitHub Pages servem a navegação R1 e o Plano contextual', async ({ page, request }) => {
   const moduleResponse = await request.get(url('today-1c.js'));
   expect(moduleResponse.ok(), 'today-1c.js deve estar publicado.').toBeTruthy();
 
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: STORAGE_KEY, value: state });
   await page.goto(url('app-shell.html'), { waitUntil: 'domcontentloaded' });
-  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
-  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
+  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-r1-navigation')).toBe('ready');
+  await expect.poll(() => page.locator('#view-planning').getAttribute('data-r1')).toBe('ready');
 
   const nav = page.locator('nav.fixed.bottom-0');
-  await expect(nav.locator('[data-view]')).toHaveCount(4);
-  await expect(nav.locator('[data-view] span')).toHaveText(['Hoje', 'Histórico', 'Planejar', 'Mais']);
+  await expect(nav.locator('[data-view]')).toHaveCount(5);
+  await expect(nav.locator('[data-view] span')).toHaveText(['Agora', 'Registrar', 'Resultados', 'Custos', 'Mais']);
 
-  await nav.locator('[data-view="planning"]').click();
-  await expect(page.locator('#view-planning')).toBeVisible();
-  await expect(page.locator('#planningHub')).toBeVisible();
-  await expect(page.locator('#view-planning > div:first-child [data-back]')).toBeHidden();
-  await page.locator('[data-planning-section-open="distribution"]').click();
-  await expect(page.locator('#planningRevenueChart')).toBeVisible();
-
-  await nav.locator('[data-view="dashboard"]').click();
-  await page.locator('#view-dashboard button[data-view="day"]').click();
+  await nav.locator('[data-view="day"]').click();
   await expect(page.locator('#view-day')).toBeVisible();
-  await expect(nav.locator('[data-view="dashboard"]')).toHaveClass(/active/);
+  await nav.locator('[data-view="dashboard"]').click();
 
-  await page.goBack();
-  await expect(page.locator('#view-dashboard')).toBeVisible();
-  await expect(nav.locator('[data-view="dashboard"]')).toHaveClass(/active/);
+  await page.locator('#r1HeaderPlanButton').click();
+  await expect(page.locator('#planningHub')).toBeVisible();
+  await expect(page.locator('#view-planning > div:first-child [data-back]')).toBeVisible();
+  await page.locator('#view-planning > div:first-child [data-back]').click();
+
+  await nav.locator('[data-view="costs"]').click();
+  await expect(page.locator('#planningPage-costs')).toBeVisible();
+  await expect(nav.locator('[data-view="costs"]')).toHaveClass(/active/);
 });
