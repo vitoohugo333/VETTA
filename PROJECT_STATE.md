@@ -1,99 +1,214 @@
-# Estado oficial — VETTA (`netlify/teste-fechado-ux`)
+# Estado oficial — VETTA (`refatoracao-360-ux`)
 
-**Atualizado em:** 2026-08-06, 06:55, horário de Brasília  
-**Estado funcional:** Blocos 1A a 5 validados fisicamente; Bloco 6 corrigido e aguardando nova prova automatizada e validação física.  
-**Estado de governança:** skill `vetta-product-ux` instalada e registrada.  
-**Alteração funcional em curso:** simplificação da montagem inicial da meta.
+**Atualizado em:** 2026-08-07, horário de Brasília  
+**Estado:** nova Refatoração 360 criada do zero; preparação de governança concluída; nenhuma mudança funcional aplicada ainda.  
+**Objetivo:** reconstruir a experiência do VETTA de ponta a ponta como um copiloto financeiro humano, autoguiado, responsivo e premium, preservando os cálculos e os dados.
 
-## Identificação da branch
+## Identificação viva
 
 | Item | Estado atual |
 |---|---|
 | Repositório | `vitoohugo333/VETTA` |
-| Branch em uso pelo GitHub Pages | `netlify/teste-fechado-ux` |
-| Papel | desenvolvimento e validação de UX |
-| Site de validação | `https://vitoohugo333.github.io/VETTA/` |
-| Fotografia funcional desta correção | `db51e7ad8aebff30a3e6723a195356bd92d0cb91` |
-| Última execução aprovada anterior | `31070928713` sobre `374f0b9f53918d3519185ca72c451a9a8384f7f7` |
-| Nova execução publicada | solicitada no issue #2; resultado ainda não confirmado |
-| Branch estável | `netlify/teste-fechado` |
-| Produção estável | `https://calculaae.netlify.app/` |
+| Branch | `refatoracao-360-ux` |
+| Origem confirmada | `netlify/teste-fechado-ux` |
+| Fotografia funcional de origem | `6594c98eb78b7eda67dbdde6ddcc841836bb6f3d` |
+| Relação com a origem no nascimento | idêntica, `0` commits de diferença |
+| Papel | experimento limpo de UI/UX |
+| Ambiente pretendido/informado pelo proprietário | GitHub Pages — `https://vitoohugo333.github.io/VETTA/` |
+| Política da branch | `ci/branch-policy.json` aponta GitHub Pages |
+| SHA efetivamente servido pelo Pages | **não confirmado ainda nesta nova branch** |
+| PR | nenhum |
+| Netlify | fora desta operação; continua associado à linha estável dos testadores |
 
-Uma fotografia salva é identificada por um commit. A fotografia `db51e7a...` contém a correção solicitada pelo proprietário, mas ainda não pode ser declarada aprovada até a nova CI terminar.
+A nova branch foi recriada com o mesmo nome da experiência anterior, mas **não herda nenhum commit da implementação 360 apagada**. Ela nasceu diretamente da fotografia funcional `6594c98...` da `netlify/teste-fechado-ux`.
 
-## Estado funcional preservado
+## Preparação antes do primeiro bloco funcional
 
-Continuam validados fisicamente:
+Concluído:
+- branch criada por autorização explícita do proprietário;
+- política de CI alterada para identificar `refatoracao-360-ux`;
+- GitHub Pages declarado como ambiente de validação esperado da branch;
+- `AGENTS.md` sincronizado com a governança canônica atual da `main`;
+- `SKILLS.md` sincronizado com a governança canônica atual da `main`;
+- `TESTING_RULES.md`, `PWA_RULES.md`, `LEARNING_RULES.md` e `.skills/vetta-product-ux/SKILL.md` já eram iguais aos canônicos;
+- `.github/workflows/ci-autonomous.yml` presente e chamando o motor canônico da `main`.
 
-- Bloco 1A — Planejar;
-- Bloco 1B — Histórico com Dias e Análise;
-- Bloco 1C — Consolidar Hoje;
-- Bloco 1D — Navegação final;
-- Bloco 2 — Registro diário;
-- Bloco 3 — Refinamento de Planejar;
-- Bloco 4 — Refinamento de Histórico;
-- Bloco 5 — Organização de Mais.
+Ainda não feito:
+- nenhuma mudança de interface;
+- nenhuma mudança de cálculo;
+- nenhuma mudança de armazenamento;
+- nenhum merge;
+- nenhuma alteração em `main`, `netlify/teste-fechado` ou Netlify;
+- nenhuma afirmação de paridade do GitHub Pages sem prova do conteúdo servido.
 
-A navegação permanece:
+## Por que a experiência anterior foi descartada
 
-```text
-Hoje | Histórico | Planejar | Mais
-```
+A validação física mostrou que a execução anterior organizou telas, mas não redesenhou suficientemente a experiência humana. Problemas observados:
+- Planejamento/Meta perdeu importância e ficou difícil de encontrar;
+- o aplicativo ainda exigia procura manual por funções;
+- estados vazios não conduziam o usuário;
+- registro, resultados, custos e planejamento não formavam um ciclo único;
+- animações e microinterações eram genéricas;
+- responsividade não foi tratada como sistema;
+- CI validava estrutura e funcionamento, mas não a qualidade da jornada humana.
 
-## Bloco 6 — correção da montagem inicial
+## Princípio central desta nova 360
 
-O proprietário validou a direção visual e corrigiu a lógica de primeiro uso:
+O VETTA não deve ser um catálogo de funções. Deve guiar o motorista em um ciclo simples:
 
-- o onboarding não deve pedir contas mensais;
-- não deve existir conceito de “contas iniciais”;
-- ao tocar em `Montar minha meta`, o VETTA deve montar somente a meta inicial;
-- contas e outras reservas devem ser adicionadas depois em `Planejar → Custos e reservas`;
-- a estimativa inicial de faturamento deve ser `R$ 1,75 por km`.
+**planejar → trabalhar → registrar → administrar contas → acompanhar → ajustar**
 
-### Resultado implementado
+Cada tela deve responder três perguntas sem exigir interpretação técnica:
+1. **O que está acontecendo?**
+2. **O que isso significa para meu dinheiro?**
+3. **Qual é a próxima ação útil?**
 
-- o campo antigo de contas mensais foi retirado da experiência;
-- seu valor é forçado para zero antes da conclusão, impedindo a criação automática do custo mensal de R$ 650;
-- permanece somente a reserva inicial de manutenção de R$ 0,18 por km;
-- o resumo final informa que contas serão adicionadas depois em Planejar;
-- o campo de faturamento por km abre com R$ 1,75 e continua editável;
-- usuários existentes e dados já salvos permanecem intocados;
-- a mesma chave `vetta-driver-intelligence-v3` e a mesma lógica de conclusão continuam sendo usadas.
+## Contrato global de experiência
 
-### Arquivos desta correção
+### Estados zerados e incompletos
+Nenhuma tela importante pode terminar em silêncio.
 
-- `onboarding-6.js`: remove contas do primeiro uso, aplica R$ 1,75/km e atualiza a orientação;
-- `tests/onboarding-block-6-contract.test.mjs`: impede retorno do campo, do custo automático e do valor anterior;
-- `PROJECT_STATE.md`: registra o estado atual e a prova pendente.
+Exemplos obrigatórios:
+- meta = 0 → CTA dominante para definir meta;
+- onboarding interrompido/incompleto → retomada contextual, sem bloquear uso desnecessariamente;
+- nenhum registro → convite explícito para registrar o primeiro dia;
+- nenhum custo → explicar por que cadastrar custos melhora a meta e oferecer cadastro;
+- contas vencidas → prioridade sobre conteúdo secundário;
+- nenhuma conta pendente → estado positivo e próximo passo coerente;
+- mês novo → reorientação para plano, contas e primeiro registro;
+- dados insuficientes para aprendizado/comparação → dizer o que falta e como produzir a evidência.
 
-### O que permaneceu intocado
+### Próxima ação
+O VETTA deve derivar uma ação contextual do estado atual, sem obrigar o usuário a procurar manualmente o que fazer.
 
-- fórmulas financeiras gerais;
-- formato dos dados;
-- registros, custos, eventos e fechamentos existentes;
-- chave de armazenamento;
-- navegação dos Blocos 1A a 5;
-- manifesto, service worker, cache e instalação;
-- branch estável, Netlify e `main`.
+Prioridade inicial planejada:
+1. completar plano/meta essencial;
+2. resolver conta vencida ou atenção financeira crítica;
+3. registrar dia quando necessário;
+4. revisar ritmo do mês;
+5. ajustar plano quando a realidade divergir;
+6. manter continuidade quando tudo estiver coerente.
 
-## Evidência
+### Feedback e microinteração
+- toque principal: resposta visual imediata;
+- salvamento: confirmação curta, sem tela morta;
+- pagamento: mudança de estado perceptível e reversível;
+- progresso/meta: transição animada proporcional;
+- erro: mensagem perto da causa e ação de recuperação;
+- feedback háptico: melhoria progressiva somente quando o navegador/dispositivo suportar, nunca única forma de comunicar sucesso/erro;
+- `prefers-reduced-motion`: sempre respeitado.
 
-Confirmado agora:
+### Responsividade
+A experiência será testada como composição, não só como largura:
+- celular pequeno em retrato;
+- celular grande;
+- teclado virtual aberto;
+- tablet;
+- landscape;
+- áreas seguras e barra inferior;
+- toque com uma mão.
 
-- commit `20e8f97882704fce5d54504b31ca5f61126d6d4a`: alterou o módulo de onboarding;
-- commit `db51e7ad8aebff30a3e6723a195356bd92d0cb91`: atualizou a proteção determinística;
-- comando `/vetta test netlify/teste-fechado-ux published` enviado no issue #2.
+### Identidade
+Preservar a identidade VETTA aprovada: tipografia, paleta, sofisticação visual, cards quando representarem uma unidade real, cantos e linguagem. A reformulação muda hierarquia, fluxo, comportamento e composição — não transforma o produto em outra marca.
 
-Ainda não confirmado:
+## Referências de produto
 
-- resultado da nova CI;
-- paridade da fotografia `db51e7a...` no GitHub Pages;
-- validação física desta correção no celular.
+Princípios absorvidos, sem copiar estética:
+- **Revolut:** visão financeira consolidada próxima do Início; orçamento/análise como parte do núcleo financeiro;
+- **Tesla:** estado atual + consequência + controle contextual na mesma superfície;
+- **Duolingo:** próxima ação inequívoca, hábito separado de objetivo maior, progresso e celebração proporcionais ao marco;
+- **Life360:** alertas contextuais/proativos em vez de exigir procura manual;
+- **VETTA:** números confiáveis, consequência financeira clara e baixa carga mental para motorista de aplicativo.
 
-## Aprendizado
+## Blocos da nova Refatoração 360
 
-**Aprendizado fechado:** a primeira configuração deve pedir apenas dados necessários para produzir um primeiro resultado compreensível. Custos detalhados pertencem ao fluxo específico de Planejar, não ao onboarding.
+### R1 — Agora + Plano do mês
+Objetivo: tornar planejamento/meta parte de primeira classe da experiência.
+
+Resultado esperado:
+- plano do mês visível sem caça por menus;
+- meta zero chama explicitamente para configuração;
+- Agora mostra estado atual + plano + próxima ação;
+- instalação do PWA não compete visualmente com tarefa financeira recorrente;
+- Planejamento deixa de ser diretório e passa a contar uma sequência financeira coerente.
+
+### R2 — Administração do mês
+Objetivo: transformar Custos em administração financeira real.
+
+Resultado esperado:
+- contas vencidas, de hoje, próximas, pendentes e pagas claramente separadas;
+- marcar/desmarcar pagamento;
+- revisão do mês e impacto das despesas;
+- reservas e custos operacionais visualmente distintos de contas a pagar;
+- pagamento não remove custo da matemática.
+
+### R3 — Registrar ↔ Resultados
+Objetivo: fechar o ciclo entre trabalho realizado e consequência no plano.
+
+Resultado esperado:
+- registrar é rápido e mostra resultado antes de salvar;
+- depois de salvar, usuário entende o que o dia mudou no mês;
+- Resultados mostra ritmo, diferença para meta e ação sugerida;
+- edição/atualização da mesma data continua segura;
+- rascunho e contexto sobrevivem a navegação/interrupção quando aplicável.
+
+### R4 — Autoguiado + Onboarding + estados
+Objetivo: garantir que usuário nunca fique perdido.
+
+Resultado esperado:
+- onboarding produz um plano inicial compreensível;
+- abandono do onboarding não deixa a Home muda;
+- estados vazios/incompletos têm CTA;
+- VETTA prioriza a próxima ação com base em estado real;
+- mensagens explicam por que uma ação importa.
+
+### R5 — Motion + háptico + responsividade + acabamento
+Objetivo: transformar consistência funcional em experiência premium.
+
+Resultado esperado:
+- sistema de motion por significado;
+- feedback háptico progressivo quando suportado;
+- números e progresso mudam com transições legíveis;
+- pagamentos/salvamentos têm feedback satisfatório sem exagero;
+- telas adaptadas a celular/tablet/landscape;
+- acessibilidade, foco, zoom, áreas de toque e movimento reduzido preservados.
+
+## Invariantes
+
+Não alterar sem novo contrato:
+- fórmulas centrais e significado dos números;
+- chave `vetta-driver-intelligence-v3`;
+- registros existentes;
+- lógica econômica de custos;
+- `main`;
+- `netlify/teste-fechado`;
+- Netlify;
+- merge, tag ou release.
+
+Mudança de schema de dados somente se um comportamento aprovado realmente exigir persistência nova, com migração, compatibilidade, testes independentes e checkpoint específico.
+
+## Estratégia de teste
+
+Cada bloco deve ter:
+- teste determinístico/contrato quando houver regra de estado;
+- E2E móvel da tarefa principal;
+- estados vazio/erro/interrupção relevantes;
+- preservação de dados e cálculos;
+- Chromium móvel e desktop;
+- Firefox e WebKit para mudanças de UI/navegação;
+- prova do GitHub Pages quando o ambiente estiver efetivamente servindo esta branch;
+- validação física final do proprietário no celular.
+
+A CI não deve apenas provar que elementos existem. Ela deve provar **descoberta, prioridade, continuidade e consequência da tarefa**.
+
+## Governança de branches
+
+Na checagem de criação existiam 5 branches remotas antes de recriar esta experiência, acima da estrutura planejada de 4. A criação desta branch foi autorizada explicitamente pelo proprietário. Nenhuma branch antiga foi apagada automaticamente. **Limpeza de branches permanece pendente de autorização destrutiva específica e não deve ser misturada à implementação de UX.**
+
+## Notion
+
+O bloco `Experimento — Refatoração 360 UX` deve registrar este reinício limpo e cada checkpoint R1→R5. O histórico da tentativa anterior deve permanecer como aprendizado, não como base técnica.
 
 ## Próximo passo único
 
-Aguardar a conclusão da CI publicada e, depois, validar no celular que o onboarding mostra R$ 1,75/km, não pede contas e monta a meta sem criar custo mensal automático.
+Implementar **R1 — Agora + Plano do mês** sobre a fotografia funcional limpa, provar o fluxo e o GitHub Pages, registrar checkpoint e seguir automaticamente para R2 dentro da autorização atual.
