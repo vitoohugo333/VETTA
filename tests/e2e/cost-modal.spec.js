@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 
 const STORAGE_KEY = 'vetta-driver-intelligence-v3';
-
 const initialState = {
   version: 3,
   onboardingComplete: true,
@@ -15,46 +14,34 @@ const initialState = {
     { id: 'maintenance-default', name: 'Reserva de manutenção', kind: 'per_km', category: 'reserve', value: 0.18, active: true },
     { id: 'fixed-default', name: 'Outros custos mensais', kind: 'monthly', category: 'obligation', value: 650, active: true }
   ],
-  records: [],
-  events: [],
-  closings: []
+  records: [], events: [], closings: []
 };
 
 test('modal fecha e salva uma despesa sem carregar patches no navegador', async ({ page }) => {
   const partRequests = [];
   const pageErrors = [];
-
-  page.on('request', request => {
-    if (request.url().includes('/parts/')) partRequests.push(request.url());
-  });
+  page.on('request', request => { if (request.url().includes('/parts/')) partRequests.push(request.url()); });
   page.on('pageerror', error => pageErrors.push(error.message));
 
-  await page.addInitScript(({ key, state }) => {
-    localStorage.setItem(key, JSON.stringify(state));
-  }, { key: STORAGE_KEY, state: initialState });
-
+  await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: STORAGE_KEY, state: initialState });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.waitForURL(/app-shell\.html/);
   await expect(page.locator('#appVersionLabel')).toHaveText('Versão 3.5.1');
-  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-block1d')).toBe('ready');
-  await expect.poll(() => page.locator('#view-planning').getAttribute('data-block3')).toBe('ready');
+  await expect.poll(() => page.locator('nav.fixed.bottom-0').getAttribute('data-r1-navigation')).toBe('ready');
+  await expect.poll(() => page.locator('#view-planning').getAttribute('data-r1')).toBe('ready');
 
-  await page.locator('nav.fixed.bottom-0 [data-view="planning"]').click();
-  await expect(page.locator('#planningHub')).toBeVisible();
-  await page.locator('[data-planning-section-open="costs"]').click();
+  await page.locator('nav.fixed.bottom-0 [data-view="costs"]').click();
   await expect(page.locator('#planningPage-costs')).toBeVisible();
   await expect(page.locator('#planningAddCostButton')).toBeVisible();
   await page.locator('#planningAddCostButton').click();
 
   const modal = page.locator('#costModal');
   await expect(modal).toBeVisible();
-
   await page.locator('#closeCostModal i').click();
   await expect(modal).toBeHidden();
 
   await page.locator('#planningAddCostButton').click();
   await expect(modal).toBeVisible();
-
   await page.locator('#costName').fill('Seguro de teste E2E');
   await page.locator('#costValue').fill('123.45');
   await page.locator('#saveCostButton').click();
@@ -62,7 +49,6 @@ test('modal fecha e salva uma despesa sem carregar patches no navegador', async 
 
   const stored = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
   const saved = stored.costs.filter(cost => cost.name === 'Seguro de teste E2E');
-
   expect(saved).toHaveLength(1);
   expect(Number(saved[0].value)).toBeCloseTo(123.45, 2);
   expect(partRequests).toEqual([]);
