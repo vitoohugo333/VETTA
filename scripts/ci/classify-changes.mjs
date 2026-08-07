@@ -10,6 +10,13 @@ const writeOutput = (key, value) => {
   process.stdout.write(`${key}=${value}\n`);
 };
 
+if (['chromium', 'firefox', 'webkit'].includes(forcedMode)) {
+  writeOutput('profile', 'full');
+  writeOutput('browser_matrix', JSON.stringify([forcedMode]));
+  writeOutput('published_required', 'false');
+  process.exit(0);
+}
+
 if (forcedMode === 'full' || forcedMode === 'published' || files.length === 0) {
   writeOutput('profile', 'full');
   writeOutput('browser_matrix', JSON.stringify(['chromium', 'firefox', 'webkit']));
