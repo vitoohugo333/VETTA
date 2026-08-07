@@ -30,7 +30,8 @@ assert.doesNotMatch(planningRefinement, /O que você quer planejar\?/, 'O diret�
 assert.doesNotMatch(planningRefinement, />BLOCO 3</, 'Linguagem técnica de implementação não pode aparecer ao motorista.');
 assert.match(planningRefinement, /data-planning-core/, 'As quatro decisões essenciais devem formar uma lista contínua.');
 assert.match(planningRefinement, /id="planningSecondary"/, 'Análises e opções devem ficar disponíveis sob demanda.');
-assert.match(planningRefinement, /planningStatus-goals/, 'O Plano deve informar se a meta está definida.');
+assert.match(planningRefinement, /id="planningStatus-\$\{definition\.key\}"/, 'Cada decisão essencial deve criar um indicador de estado observável.');
+assert.match(planningRefinement, /setStatus\('goals', target > 0, target > 0 \? 'Meta definida' : 'Definir meta'\)/, 'O estado do objetivo deve responder à existência real da meta.');
 assert.match(planningRefinement, /target <= 0 \? 'missing-target' : 'active'/, 'O Plano deve expor estado incompleto de meta.');
 assert.match(planningRefinement, /view === 'costs'[\s\S]*planningSection: 'costs'/, 'Custos deve abrir diretamente sua seção.');
 assert.match(planningRefinement, /history\.pushState[\s\S]*planningSection/, 'Navegação interna deve participar do histórico do navegador.');
