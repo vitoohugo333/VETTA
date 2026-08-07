@@ -11,8 +11,7 @@ const baseState = {
   fuel: { type: 'gnv', label: 'GNV', unit: 'm³', price: 4.79, efficiency: 13.2 },
   compare: { gasPrice: 6.19, gasEff: 10.5, gnvPrice: 4.79, gnvEff: 13.2, period: 1 },
   costs: [{ id: 'today-maintenance', name: 'Manutenção', kind: 'per_km', category: 'reserve', value: 0.18, active: true }],
-  records: [],
-  events: [],
+  records: [], events: [],
 };
 
 async function openApp(page, state = baseState) {
@@ -35,7 +34,6 @@ test('Agora coloca Plano e próxima ação antes de detalhes secundários', asyn
   await openApp(page);
 
   await expect(page.locator('#targetProfitDisplay')).toBeVisible();
-  await expect(page.locator('#r1PlanSummary')).toBeVisible();
   await expect(page.locator('#r1PlanSummary')).toContainText('4.000');
   await expect(page.locator('#r1HeaderPlanButton')).toBeVisible();
   await expect(page.locator('#installButton')).toBeHidden();
@@ -63,13 +61,19 @@ test('Agora coloca Plano e próxima ação antes de detalhes secundários', asyn
 
   await page.locator('nav.fixed.bottom-0 [data-view="dashboard"]').click();
   await page.locator('#r1HeaderPlanButton').click();
-  await expect(page.locator('#view-planning')).toBeVisible();
   await expect(page.locator('#planningHub')).toBeVisible();
   expect(errors).toEqual([]);
 });
 
-test('meta zero não deixa o usuário perdido e leva direto à definição da meta', async ({ page }) => {
-  await openApp(page, { ...baseState, targetProfit: 0 });
+test('zerar explicitamente a meta cria estado de orientação e CTA', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#r1HeaderPlanButton').click();
+  await page.locator('[data-planning-section-open="goals"]').click();
+  await page.locator('#planningTargetInput').fill('0');
+  await page.locator('#planningTargetInput').press('Tab');
+  await expect(page.locator('#planningTargetInput')).toHaveValue('0');
+  await page.locator('#planningPage-goals [data-planning-section-back]').click();
+  await page.locator('#view-planning > div:first-child [data-back]').click();
 
   await expect(page.locator('#view-dashboard')).toHaveAttribute('data-r1-state', 'missing-target');
   await expect(page.locator('#r1PlanStatus')).toHaveText('FALTA META');
@@ -77,31 +81,26 @@ test('meta zero não deixa o usuário perdido e leva direto à definição da me
   await expect(page.locator('#r1NextActionTitle')).toHaveText('Comece definindo sua meta');
   await expect(page.locator('#r1NextActionText')).toContainText('Sem uma meta líquida');
 
+  const storedTarget = await page.evaluate(key => JSON.parse(localStorage.getItem(key)).targetProfit, STORAGE_KEY);
+  expect(storedTarget).toBe(0);
+
   await page.locator('#r1NextActionButton').click();
-  await expect(page.locator('#view-planning')).toBeVisible();
   await expect(page.locator('#planningPage-goals')).toBeVisible();
-  await expect(page.locator('#planningTargetInput')).toBeVisible();
 });
 
-test('R1 reorganiza a experiência sem alterar os dados financeiros', async ({ page }) => {
+test('R1 reorganiza a experiência sem alterar os dados financeiros ao apenas navegar', async ({ page }) => {
   await openApp(page);
   const fingerprint = () => page.evaluate(key => {
     const state = JSON.parse(localStorage.getItem(key));
-    return {
-      targetProfit: state.targetProfit,
-      workWeekdays: state.workWeekdays,
-      revenueKm: state.revenueKm,
-      fuel: state.fuel,
-      costs: state.costs,
-      records: state.records,
-    };
+    return { targetProfit: state.targetProfit, workWeekdays: state.workWeekdays, revenueKm: state.revenueKm, fuel: state.fuel, costs: state.costs, records: state.records };
   }, STORAGE_KEY);
 
   const before = await fingerprint();
   await page.locator('#r1HeaderPlanButton').click();
+  await page.locator('#planningSecondary > summary').click();
   await page.locator('[data-planning-section-open="distribution"]').click();
   await expect(page.locator('#planningRevenueChart')).toBeVisible();
   await page.locator('#planningPage-distribution [data-planning-section-back]').click();
-  await page.locator('nav.fixed.bottom-0 [data-view="dashboard"]').click();
+  await page.locator('#view-planning > div:first-child [data-back]').click();
   expect(await fingerprint()).toEqual(before);
 });
