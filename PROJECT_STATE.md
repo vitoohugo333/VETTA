@@ -1,39 +1,38 @@
 # Estado oficial — VETTA (`main`)
 
 **Atualizado em:** 2026-08-07, horário de Brasília  
-**Estado:** governança canônica operacional sincronizada com o modelo de blocos autodirecionáveis do Notion e com a política de fallback do Codex Engineering Guardrails.  
+**Estado:** governança canônica operacional; verificador da CI corrigido para acompanhar a governança viva sem exigir uma versão histórica fixa.  
 **Papel:** `main` mantém governança, regras canônicas e orquestração; não publica o aplicativo.
-
-## Sincronização operacional de 07/08/2026
-
-O modelo de trabalho em que o proprietário opera por comandos humanos simples foi incorporado à governança canônica:
-
-- `Liste os blocos ativos do VETTA.`
-- `Leia o bloco X e siga-o.`
-
-A partir de um bloco citado, o agente deve recuperar sozinho Central Oficial, Estado, Roadmap, decisões, aprendizados, códigos `N-xxx`, branch, fotografia, PR, CI, ambiente, regras técnicas e demais dependências. O proprietário não precisa memorizar códigos, SHAs, arquivos ou sequências técnicas.
-
-O Notion continua sendo memória operacional de missão, decisões e aprendizados. GitHub, PR, CI e ambientes servidos continuam sendo a prova técnica viva.
 
 ## Codex Engineering Guardrails
 
-A regra operacional vigente é simples:
-
-1. tentar primeiro o plugin **Codex Engineering Guardrails**;
-2. se a descoberta ou o carregamento do plugin falhar, usar diretamente a skill adequada;
-3. `code-verification` para diagnóstico, auditoria, revisão, testes e validação sem alteração de produção;
-4. `code-work` para qualquer mudança autorizada;
-5. só declarar o Guardrails indisponível se o plugin e a skill aplicável falharem.
-
-O agente escolhe a skill correta pela natureza da tarefa. O proprietário não precisa indicar o nome da skill.
+- plugin primeiro;
+- skill direta como fallback;
+- `code-verification` para auditoria e diagnóstico;
+- `code-work` para mudança autorizada.
 
 ## Governança canônica vigente
 
 - `AGENTS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.1`;
 - `SKILLS.md`: `VETTA_GOVERNANCE_VERSION: 2026-08-07.2`;
-- fotografia da `main` que incorporou a política de fallback no índice técnico: `e8a862ca3be037c7e3db27311a4f6ae42c337f67`;
-- a branch `refatoracao-360-ux` recebeu a mesma política canônica;
-- criação de branch exige autorização explícita do proprietário, precedida de reavaliação e justificativa didática quando recomendada.
+- arquivos canônicos podem ter versões próprias, mas branches operacionais devem manter conteúdo idêntico ao correspondente da `main`;
+- criar branch continua exigindo autorização explícita do proprietário.
+
+## Correção da CI em 07/08/2026
+
+A execução `full` da `refatoracao-360-ux` revelou que `scripts/ci/verify-repository.mjs` ainda exigia `VETTA_GOVERNANCE_VERSION: 2026-08-03.2` em todos os arquivos canônicos. Isso bloqueava a CI antes dos testes do aplicativo.
+
+A correção autorizada na `main` foi restrita à governança:
+
+- o verificador exige agora um marcador válido no formato `AAAA-MM-DD.N`;
+- ao verificar outra branch, continua exigindo igualdade exata com os arquivos canônicos da `main`;
+- não existe mais dependência de uma data histórica fixa.
+
+Fotografia da correção do verificador: `7de5ef4325f856c732af4dacbba08c6495fe2845`.
+
+Prova: execução `full` da `main` `31199195848` concluída com sucesso em classificação, integridade, sintaxe, JSON e testes determinísticos. Navegadores foram corretamente ignorados porque `main` não é a branch do aplicativo.
+
+O aprendizado completo foi registrado em `docs/incidents/2026-08-07-ci-governance-version-drift.md`.
 
 ## Branches e ambientes relevantes
 
@@ -41,24 +40,26 @@ O agente escolhe a skill correta pela natureza da tarefa. O proprietário não p
 |---|---|---|
 | Governança canônica | `main` | não publica o app |
 | Produção estável/testadores | `netlify/teste-fechado` | Netlify estável |
-| Desenvolvimento de UX atual | `netlify/teste-fechado-ux` | GitHub Pages |
+| Desenvolvimento de UX anterior | `netlify/teste-fechado-ux` | GitHub Pages |
 | Experimento Refatoração 360 | `refatoracao-360-ux` | nenhum ambiente publicado próprio confirmado |
 | Referência histórica | `migration/vetta-clean-3-5-1` | sem desenvolvimento novo |
 
-`netlify/teste-fechado` e `netlify/teste-fechado-ux` não foram alteradas neste bloco, evitando qualquer efeito em Netlify ou GitHub Pages.
+Nenhuma branch foi mesclada ou sincronizada nesta correção.
 
-## Impacto deste bloco
+## Impacto
 
-Somente governança e documentação foram alteradas. Nenhum arquivo funcional do aplicativo, cálculo financeiro, dado, armazenamento, interface, PWA, Netlify ou GitHub Pages foi alterado.
+Alterados somente:
 
-## Validação
+- `scripts/ci/verify-repository.mjs`;
+- documentação do incidente;
+- este estado oficial.
 
-A prova necessária é documental: `SKILLS.md` da `main` e da branch experimental devem ser idênticos e conter a política plugin-primeiro/skill-fallback. Nenhum teste funcional ou validação mobile é necessário porque o aplicativo não foi modificado.
+Permaneceram intocados o código funcional do aplicativo, cálculos, dados, armazenamento, interface, PWA, Netlify e GitHub Pages.
 
 ## Aprendizado
 
-**Aprendizado fechado:** falha de descoberta do plugin não prova indisponibilidade do Guardrails quando a skill aplicável pode ser carregada diretamente.
+**Aprendizado fechado:** o verificador deve validar marcador de governança + igualdade com a `main`, nunca uma versão histórica global fixa.
 
 ## Próximo passo único
 
-Continuar o trabalho normalmente; agentes devem tentar o plugin primeiro e recorrer à skill adequada sem transferir essa escolha ao proprietário.
+Confirmar este checkpoint final da `main` com a CI de governança e retomar a `refatoracao-360-ux` sem sincronizar ou mesclar branches.
