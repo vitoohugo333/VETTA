@@ -17,8 +17,9 @@ async function waitForStableNavigation(page) {
       const record = await page.locator('#view-day').getAttribute('data-block2');
       const planning = await page.locator('#view-planning').getAttribute('data-r1');
       const history = await page.locator('#view-history').getAttribute('data-block4');
+      const r360 = await page.locator('body').getAttribute('data-r360');
       await page.waitForTimeout(150);
-      return navigation === 'ready' && record === 'ready' && planning === 'ready' && history === 'ready' && page.url() === before ? 'stable' : 'waiting';
+      return navigation === 'ready' && record === 'ready' && planning === 'ready' && history === 'ready' && r360 === 'r10' && page.url() === before ? 'stable' : 'waiting';
     } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('stable');
 }
@@ -30,13 +31,13 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Registrar e Plano preservam contexto e voltar retorna à área correta', async ({ page }) => {
-  await page.locator('#view-dashboard button[data-view="day"]').click();
+  await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
   await expect(page.locator('#view-day')).toBeVisible();
-  await expect(page.locator('nav.fixed.bottom-0 [data-view="day"]')).toHaveClass(/active/);
+  await expect(page.locator('nav.fixed.bottom-0')).toBeHidden();
   await page.locator('#recordGross').fill('321.50');
   await page.locator('#recordKm').fill('120');
 
-  await page.locator('nav.fixed.bottom-0 [data-view="dashboard"]').click();
+  await page.evaluate(() => window.history.back());
   await expect(page.locator('#view-dashboard')).toBeVisible();
   await page.locator('#r1HeaderPlanButton').click();
   await expect(page.locator('#planningTarget')).toHaveText('R$ 4.000');
@@ -46,7 +47,7 @@ test('Registrar e Plano preservam contexto e voltar retorna à área correta', a
   await expect(page.locator('#view-dashboard')).toBeVisible();
   await expect(page.locator('nav.fixed.bottom-0 [data-view="dashboard"]')).toHaveClass(/active/);
 
-  await page.locator('#view-dashboard button[data-view="day"]').click();
+  await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
   await expect(page.locator('#recordGross')).toHaveValue('321.50');
   await expect(page.locator('#recordKm')).toHaveValue('120');
 });
