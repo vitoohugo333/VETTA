@@ -13,13 +13,13 @@ const [shell,main,context,model,store,css,sw,onboarding,policyText]=await Promis
 ]);
 const policy=JSON.parse(policyText);
 assert.match(model,/vetta-driver-intelligence-v3/,'A Refatoração 360 não pode mudar a chave financeira.');
-assert.match(model,/paidPeriods/);assert.match(main,/setPaid\(cost,!was\)/);assert.match(main,/showSnackbar/,'Pagamento deve oferecer desfazer.');
+assert.match(model,/paidPeriods/);assert.match(main,/setPaid\(cost,\s*!wasPaid\)|setPaid\(cost,\s*!was\)/);assert.match(main,/showSnackbar/,'Pagamento deve oferecer desfazer.');
 assert.match(model,/resultsPeriod/);assert.match(main,/data-r360-period|r360Period|dataset\.r360Period/);
 assert.match(context,/RECORD_DRAFT_KEY/);assert.match(context,/ONBOARDING_DRAFT_KEY/);
-assert.match(onboarding,/data-r360-vehicle="rental"/);assert.match(main,/kind:'weekly'/);
+assert.match(onboarding,/data-r360-vehicle="rental"/);assert.match(main,/kind:\s*'weekly'/);
 assert.match(main,/importCandidate/);assert.match(main,/Notification\.requestPermission/);
 assert.match(sw,/SHOW_CONTEXT_NOTIFICATION/);assert.match(sw,/notificationclick/);assert.match(sw,/targetUrl/);
-assert.match(main,/document\.body\.dataset\.r360='r10'/);assert.match(main,/document\.body\.dataset\.uiAuthority='premium-v1'/);
+assert.match(main,/document\.body\.dataset\.r360\s*=\s*'r10'/);assert.match(main,/document\.body\.dataset\.uiAuthority\s*=\s*'premium-v1'/);
 assert.match(store,/history\.pushState/);assert.match(store,/popstate/);
 assert.match(css,/@media \(min-width:840px\)/);assert.match(css,/prefers-reduced-motion:reduce/);
 assert.ok(!shell.includes('maximum-scale=1')&&!shell.includes('user-scalable=no'),'Shell premium deve liberar zoom de acessibilidade.');
