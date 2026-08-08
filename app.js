@@ -311,7 +311,7 @@ const app = {
     const first = new Date(year, month, 1, 12), last = new Date(year, month + 1, 0, 12);
     const selectedDates = [];
     for (let cursor = new Date(first); cursor <= last; cursor.setDate(cursor.getDate() + 1)) if (this.state.workWeekdays.includes(cursor.getDay())) selectedDates.push(this.dateKey(cursor));
-     const monthRecords = this.state.records.filter(record => record.date.startsWith(this.monthKey(reference))).sort((a, b) => a.date.localeCompare(b.date));
+    const monthRecords = this.state.records.filter(record => record.date.startsWith(this.monthKey(reference))).sort((a, b) => a.date.localeCompare(b.date));
     const recordDates = new Set(monthRecords.map(record => record.date));
     const today = this.todayKey();
     const elapsedSelected = selectedDates.filter(key => key < today).length;
@@ -914,7 +914,8 @@ const app = {
   app.enforceGrossCeiling = function() {
     const slider = document.querySelector('input[data-model="targetProfit"]');
     const ceiling = this.grossCeilingContext();
-    const sliderMinimum = ceiling.maximumTarget >= 500 ? 500 : 0;
+    const hasPositiveTarget = this.number(this.state.targetProfit) > 0;
+    const sliderMinimum = hasPositiveTarget && ceiling.maximumTarget >= 500 ? 500 : 0;
     const sliderMaximum = Math.max(sliderMinimum, ceiling.maximumTarget);
 
     if (slider) {
@@ -934,7 +935,7 @@ const app = {
       }
     }
 
-    if (this.state.targetProfit < sliderMinimum) {
+    if (hasPositiveTarget && this.state.targetProfit < sliderMinimum) {
       this.state.targetProfit = sliderMinimum;
       this.save();
     }
@@ -1025,7 +1026,8 @@ const app = {
   app.enforceGrossCeiling = function() {
     const slider = document.querySelector('input[data-model="targetProfit"]');
     const ceiling = this.grossCeilingContext();
-    const sliderMinimum = ceiling.maximumTarget >= 500 ? 500 : 0;
+    const hasPositiveTarget = this.number(this.state.targetProfit) > 0;
+    const sliderMinimum = hasPositiveTarget && ceiling.maximumTarget >= 500 ? 500 : 0;
     const sliderMaximum = Math.max(sliderMinimum, ceiling.maximumTarget);
     if (slider) {
       slider.min = String(sliderMinimum);
@@ -1036,7 +1038,7 @@ const app = {
       this.state.targetProfit = ceiling.maximumTarget;
       this.save();
     }
-    if (this.state.targetProfit < sliderMinimum) {
+    if (hasPositiveTarget && this.state.targetProfit < sliderMinimum) {
       this.state.targetProfit = sliderMinimum;
       this.save();
     }
@@ -1080,7 +1082,6 @@ const app = {
     if (this.$('appVersionLabel')) this.$('appVersionLabel').textContent = `Versão ${RELEASE}`;
   };
 })();
-
 
 const CURRENT_STATE_VERSION = 10;
 const OBSOLETE_STORAGE_KEYS = ['vetta-driver-intelligence-v2', 'vetta-state'];
