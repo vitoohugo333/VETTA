@@ -2,7 +2,7 @@ import { model, ui, h, fuelPresets } from '../context.js';
 
 const sectionHead = (title, copy) => `
   <div class="page-head">
-    <button type="button" class="back-button" data-planning-section-back aria-label="Voltar">←</button>
+    <button type="button" class="back-button" data-planning-section-open="" aria-label="Voltar">←</button>
     <div><span class="eyebrow">Meu plano</span><h2 class="title">${title}</h2><p class="subtitle">${copy}</p></div>
   </div>`;
 
@@ -48,7 +48,7 @@ function goals() {
       <div class="input-group"><label class="input-label" for="planningTargetInput">Objetivo líquido mensal</label><div class="money-input"><span>R$</span><input id="planningTargetInput" class="input" type="number" min="0" step="100" value="${target}"></div></div>
       <input id="planningTargetSlider" type="range" min="0" max="20000" step="100" value="${Math.min(20000, target)}" aria-label="Ajuste rápido da meta">
       <div class="metric-grid"><div class="metric"><small>Por semana</small><strong>${model.money(target / 4.345, 0)}</strong></div><div class="metric"><small>Por dia planejado</small><strong>${model.money(target / Math.max(1, model.calculations().ctx.plannedDays), 0)}</strong></div></div>
-      <button class="primary full" type="button" data-planning-save-back>Salvar objetivo</button>
+      <button class="primary full" type="button" data-planning-section-back>Salvar objetivo</button>
     </div>
   </section>`;
 }
@@ -61,7 +61,7 @@ function agenda() {
       <div class="day-count-grid">${[5, 6, 7].map(value => `<button type="button" data-plan-days="${value}" class="day-count ${count === value ? 'active' : ''}">${value} dias</button>`).join('')}</div>
       <div class="weekday-grid">${labels.map((label, day) => `<button type="button" class="weekday ${model.state.workWeekdays.includes(day) ? 'active' : ''}" data-plan-weekday="${day}">${label}</button>`).join('')}</div>
       <div class="input-group"><label class="input-label" for="planningDaysOff">Folgas extras neste mês</label><input id="planningDaysOff" class="input" type="number" min="0" max="31" value="${model.state.extraDaysOff}"></div>
-      <button class="primary full" type="button" data-planning-save-back>Salvar agenda</button>
+      <button class="primary full" type="button" data-planning-section-back>Salvar agenda</button>
     </div>
   </section>`;
 }
@@ -74,7 +74,7 @@ function operation() {
       <div class="input-row"><div class="input-group"><label class="input-label">Preço</label><input id="planningFuelPrice" class="input" type="number" step=".01" value="${fuel.price}"></div><div class="input-group"><label class="input-label">Rendimento (${h(fuel.unit)})</label><input id="planningFuelEff" class="input" type="number" step=".1" value="${fuel.efficiency}"></div></div>
       <div class="input-group"><label class="input-label">Receita esperada por km</label><input id="planningRevenueKm" class="input" type="number" step=".01" value="${model.state.revenueKm}"></div>
       <div class="positive"><strong>Custo de combustível: ${model.money(model.fuelCostKm())}/km</strong><small>Este valor entra nos mesmos cálculos que sustentam suas metas e registros.</small></div>
-      <button class="primary full" type="button" data-planning-save-back>Salvar operação</button>
+      <button class="primary full" type="button" data-planning-section-back>Salvar operação</button>
     </div>
   </section>`;
 }
@@ -122,7 +122,7 @@ function costs() {
   const operational = model.state.costs.filter(cost => cost.category === 'reserve' || ['per_km', 'percent'].includes(cost.kind));
   const group = (id, items, empty, payment = true) => `<div id="${id}" class="r360-list">${items.length ? items.map(item => costLine(item.cost || item, payment)).join('') : `<div class="r360-empty">${empty}</div>`}</div>`;
   return `<section id="planningPage-costs">
-    <div class="page-head">${ui.state.primary === 'costs' ? '' : '<button type="button" class="back-button" data-planning-section-back>←</button>'}<div><span class="eyebrow">Custos</span><h2 class="title">Para onde seu dinheiro precisa ir</h2><p class="subtitle">Pagamento é estado administrativo. O custo continua na matemática enquanto estiver ativo.</p></div></div>
+    <div class="page-head">${ui.state.primary === 'costs' ? '' : '<button type="button" class="back-button" data-planning-section-open="">←</button>'}<div><span class="eyebrow">Custos</span><h2 class="title">Para onde seu dinheiro precisa ir</h2><p class="subtitle">Pagamento é estado administrativo. O custo continua na matemática enquanto estiver ativo.</p></div></div>
     <section id="r360Costs">
       <div id="r360CostAttention">${urgent.length ? `<div class="attention"><strong>${urgent.length} compromisso(s) pedem atenção</strong><small>${urgent.slice(0, 2).map(item => `${h(item.cost.name)} — ${h(item.meta.label)}`).join(' · ')}</small></div>` : '<div class="positive"><strong>Nenhuma conta crítica agora</strong><small>Os próximos compromissos continuam organizados abaixo.</small></div>'}</div>
       <div id="r360CostAddSlot" class="section-gap"><button id="planningAddCostButton" class="primary full" type="button">+ Adicionar custo</button></div>
