@@ -8,10 +8,11 @@ const [results,model,store,policyText]=await Promise.all([
 ]);
 const policy=JSON.parse(policyText);
 assert.match(model,/vetta-driver-intelligence-v3/);
-for(const key of ['days','summary','week','comparison']) assert.match(results,new RegExp(`historySection==='${key}'`),`Histórico deve declarar ${key}.`);
+for(const key of ['days','summary','week','comparison']) assert.match(results,new RegExp(`historySection\\s*===\\s*'${key}'`),`Histórico deve declarar ${key}.`);
 assert.match(results,/id="historyHub"/);
 assert.match(results,/O que formou este resultado/);
 assert.match(results,/data-history-section-back/);
+assert.match(results,/resultDetail/,'Detalhe contextual deve existir sem criar uma nova rota financeira.');
 assert.match(store,/popstate/,'Voltar do navegador deve restaurar contexto.');
 assert.doesNotMatch(results,/localStorage|sessionStorage|\.save\(/,'A apresentação de Resultados não deve escrever dados.');
 assert.ok(policy.published.verifyFiles.includes('ui/screens/results.js'));
