@@ -14,7 +14,8 @@ assert.match(shell, /\.\/ui\/main\.js/, 'O shell deve carregar uma única autori
 assert.match(model, /vetta-driver-intelligence-v3/, 'A chave dos dados locais deve permanecer intacta.');
 for (const id of ['r360ResultsOverview','r360ResultsHero','r360ResultsMetrics','r360ResultsReading','r360ResultsDeepDive','historyCount','historyList','historyWeekStatusTitle','historyWeekTarget','historyChart','historyInsight']) assert.match(results,new RegExp(id),`Resultados deve preservar a capacidade ${id}.`);
 assert.match(results,/data-r360-period="week"/);assert.match(results,/data-r360-period="month"/);
-for (const key of ['days','summary','week','comparison']) assert.match(results,new RegExp(`historySection==='${key}'`),`Resultados deve possuir ${key}.`);
+for (const key of ['days','summary','week','comparison']) assert.match(results,new RegExp(`historySection\\s*===\\s*'${key}'`),`Resultados deve possuir ${key}.`);
+assert.match(results,/if \(ui\.state\.resultDetail\) body = detail/,'Detalhe do dia deve substituir o hub, não empilhar sobre ele.');
 assert.match(store,/history\.pushState/,'A navegação aprofundada deve participar do histórico do navegador.');
 assert.doesNotMatch(results,/localStorage|STORAGE_KEY/,'A tela não deve criar outra persistência financeira.');
 assert.ok(policy.published.verifyFiles.includes('ui/screens/results.js'));
