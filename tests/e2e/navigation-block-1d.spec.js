@@ -79,7 +79,7 @@ test('Plano é global e contextual sem ocupar uma sexta aba', async ({ page }) =
   await expect(page.locator('#view-dashboard')).toBeVisible();
 });
 
-test('rascunho de Registrar sobrevive a interrupção e recarga', async ({ page }) => {
+test('rascunho de Registrar sobrevive a interrupção e recarga e retoma direto na tarefa', async ({ page }) => {
   await openApp(page);
   const nav = page.locator('nav.fixed.bottom-0');
 
@@ -90,7 +90,8 @@ test('rascunho de Registrar sobrevive a interrupção e recarga', async ({ page 
 
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.locator('body').getAttribute('data-r360'), { timeout: 15000 }).toBe('r10');
-  await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
+  await expect(page.locator('#view-day')).toBeVisible();
+  await expect(page.locator('nav.fixed.bottom-0')).toBeHidden();
   await expect.poll(async () => Number(await page.locator('#recordGross').inputValue())).toBe(321.5);
   await expect.poll(async () => Number(await page.locator('#recordKm').inputValue())).toBe(120);
 });
