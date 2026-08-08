@@ -21,37 +21,21 @@ function currentWeekDates() {
 
 function stateWithRecords(records) {
   return {
-    version: 10,
-    onboardingComplete: true,
-    targetProfit: 4000,
-    workWeekdays: [0, 1, 2, 3, 4, 5, 6],
-    extraDaysOff: 0,
-    revenueKm: 2.25,
+    version: 10, onboardingComplete: true, targetProfit: 4000,
+    workWeekdays: [0, 1, 2, 3, 4, 5, 6], extraDaysOff: 0, revenueKm: 2.25,
     fuel: { type: 'gnv', label: 'GNV', unit: 'm³', price: 4.79, efficiency: 13.2 },
     compare: { gasPrice: 6.19, gasEff: 10.5, gnvPrice: 4.79, gnvEff: 13.2, period: 1 },
     costs: [{ id: 'history-maintenance', name: 'Manutenção', kind: 'per_km', category: 'reserve', value: 0.18, active: true }],
-    records,
-    events: [],
-    closings: [],
+    records, events: [], closings: [],
   };
 }
 
 function record(date, gross, km) {
   return {
-    id: `day-${date}`,
-    date,
-    gross,
-    km,
-    hours: 8,
-    fuelSpend: 0,
-    fuelTypeSnapshot: 'gnv',
-    fuelLabelSnapshot: 'GNV',
-    fuelPriceSnapshot: 4.79,
-    fuelCostKmSnapshot: 4.79 / 13.2,
-    perKmCostSnapshot: 0.18,
-    percentCostSnapshot: 0,
-    fixedShareSnapshot: 0,
-    updatedAt: new Date().toISOString(),
+    id: `day-${date}`, date, gross, km, hours: 8, fuelSpend: 0,
+    fuelTypeSnapshot: 'gnv', fuelLabelSnapshot: 'GNV', fuelPriceSnapshot: 4.79,
+    fuelCostKmSnapshot: 4.79 / 13.2, perKmCostSnapshot: 0.18,
+    percentCostSnapshot: 0, fixedShareSnapshot: 0, updatedAt: new Date().toISOString(),
   };
 }
 
@@ -61,11 +45,10 @@ async function waitForStableApp(page) {
       const before = page.url();
       const navigationReady = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
       const historyReady = await page.locator('#view-history').getAttribute('data-block4');
+      const r360 = await page.locator('body').getAttribute('data-r360');
       await page.waitForTimeout(150);
-      return navigationReady === 'ready' && historyReady === 'ready' && page.url() === before ? 'stable' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
+      return navigationReady === 'ready' && historyReady === 'ready' && r360 === 'r10' && page.url() === before ? 'stable' : 'waiting';
+    } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('stable');
 }
 
@@ -84,14 +67,12 @@ async function openHistoryHub(page) {
         const historyNav = page.locator('nav.fixed.bottom-0 [data-view="history"]');
         if (await historyNav.isVisible()) await historyNav.click();
       }
-      if (await page.locator('#historyHub').isVisible()) return 'ready';
-      const historyNav = page.locator('nav.fixed.bottom-0 [data-view="history"]');
-      if (await historyNav.isVisible()) await historyNav.click();
       return await page.locator('#historyHub').isVisible() ? 'ready' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
+    } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('ready');
+  const deep = page.locator('#r360ResultsDeepDive');
+  if (await deep.count() && !(await deep.getAttribute('open'))) await deep.locator('summary').click();
+  await expect(page.locator('[data-history-section-open="days"]')).toBeVisible();
 }
 
 async function openHistorySection(page, section) {
@@ -119,6 +100,7 @@ test('Dias registrados mantém edição e exclusão sem duplicar registros', asy
   expect(saved.records).toHaveLength(2);
   expect(saved.records.find(item => item.date === monday)?.gross).toBe(650);
 
+  await page.locator('#recordDoneButton').click();
   await openHistorySection(page, 'days');
   await expect(page.locator('#historyCount')).toContainText('2 REGISTROS');
   page.once('dialog', dialog => dialog.accept());
@@ -141,6 +123,7 @@ test('Resumo, Semana e Comparação preservam os mesmos cálculos do Histórico 
   await expect(page.locator('#historyDays')).toHaveText('2');
   await page.locator('#historyPage-summary [data-history-section-back]').click();
 
+  await openHistoryHub(page);
   await page.locator('[data-history-section-open="week"]').click();
   const historyWeek = await page.evaluate(() => ({
     title: document.getElementById('historyWeekStatusTitle').textContent,
@@ -151,7 +134,7 @@ test('Resumo, Semana e Comparação preservam os mesmos cálculos do Histórico 
     revenueKm: document.getElementById('historyWeekRevenueKm').textContent,
   }));
 
-  await page.locator('[data-view="dashboard"]').first().click();
+  await page.locator('nav.fixed.bottom-0 [data-view="dashboard"]').click();
   await expect(page.locator('#view-dashboard')).toBeVisible();
   const dashboardWeek = await page.evaluate(() => ({
     title: document.getElementById('weekStatusTitle').textContent,
@@ -174,10 +157,12 @@ test('Estados sem dados e com um único dia continuam claros', async ({ page }) 
   await expect(page.locator('#historyList')).toContainText('Nenhum dia registrado ainda');
   await page.locator('#historyPage-days [data-history-section-back]').click();
 
+  await openHistoryHub(page);
   await page.locator('[data-history-section-open="comparison"]').click();
   await expect(page.locator('#historyInsight')).toContainText('Ainda não há dias suficientes');
   await page.locator('#historyPage-comparison [data-history-section-back]').click();
 
+  await openHistoryHub(page);
   await page.locator('[data-history-section-open="week"]').click();
   await expect(page.locator('#historyWeekStatusPill')).toHaveText('SEMANA');
 });
