@@ -11,6 +11,12 @@ const APP_SHELL = [
   './icon-512.png'
 ];
 
+// Capturado durante a instalação: na primeira instalação ainda não existe
+// um worker ativo anterior. Em atualizações, existe. Isso evita que o primeiro
+// worker tome o controle da página já aberta e provoque um reload no meio da
+// navegação, sem retirar a troca imediata de versão nas atualizações reais.
+const HAD_ACTIVE_WORKER = Boolean(self.registration.active);
+
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
@@ -23,7 +29,7 @@ self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
     await Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)));
-    await self.clients.claim();
+    if (HAD_ACTIVE_WORKER) await self.clients.claim();
   })());
 });
 
