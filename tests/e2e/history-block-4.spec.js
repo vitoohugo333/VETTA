@@ -21,37 +21,21 @@ function currentWeekDates() {
 
 function record(date, gross, km) {
   return {
-    id: `day-${date}`,
-    date,
-    gross,
-    km,
-    hours: 8,
-    fuelSpend: 0,
-    fuelTypeSnapshot: 'gnv',
-    fuelLabelSnapshot: 'GNV',
-    fuelPriceSnapshot: 4.79,
-    fuelCostKmSnapshot: 4.79 / 13.2,
-    perKmCostSnapshot: 0.18,
-    percentCostSnapshot: 0,
-    fixedShareSnapshot: 0,
-    updatedAt: new Date().toISOString(),
+    id: `day-${date}`, date, gross, km, hours: 8, fuelSpend: 0,
+    fuelTypeSnapshot: 'gnv', fuelLabelSnapshot: 'GNV', fuelPriceSnapshot: 4.79,
+    fuelCostKmSnapshot: 4.79 / 13.2, perKmCostSnapshot: 0.18,
+    percentCostSnapshot: 0, fixedShareSnapshot: 0, updatedAt: new Date().toISOString(),
   };
 }
 
 function stateWithRecords(records) {
   return {
-    version: 10,
-    onboardingComplete: true,
-    targetProfit: 4000,
-    workWeekdays: [0, 1, 2, 3, 4, 5, 6],
-    extraDaysOff: 0,
-    revenueKm: 2.25,
+    version: 10, onboardingComplete: true, targetProfit: 4000,
+    workWeekdays: [0, 1, 2, 3, 4, 5, 6], extraDaysOff: 0, revenueKm: 2.25,
     fuel: { type: 'gnv', label: 'GNV', unit: 'm³', price: 4.79, efficiency: 13.2 },
     compare: { gasPrice: 6.19, gasEff: 10.5, gnvPrice: 4.79, gnvEff: 13.2, period: 1 },
     costs: [{ id: 'history4-maintenance', name: 'Manutenção', kind: 'per_km', category: 'reserve', value: 0.18, active: true }],
-    records,
-    events: [],
-    closings: [],
+    records, events: [], closings: [],
   };
 }
 
@@ -64,36 +48,39 @@ async function openApp(page, state) {
       const before = page.url();
       const navigation = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
       const history = await page.locator('#view-history').getAttribute('data-block4');
+      const r360 = await page.locator('body').getAttribute('data-r360');
       await page.waitForTimeout(150);
-      return navigation === 'ready' && history === 'ready' && before === page.url() ? 'stable' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
+      return navigation === 'ready' && history === 'ready' && r360 === 'r10' && before === page.url() ? 'stable' : 'waiting';
+    } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('stable');
 }
 
 async function openHistory(page) {
   await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
   await expect(page.locator('#view-history')).toBeVisible();
-  await expect(page.locator('#historyHub')).toBeVisible();
+  await expect(page.locator('#r360ResultsOverview')).toBeVisible();
+  const deep = page.locator('#r360ResultsDeepDive');
+  await expect(deep).toBeVisible();
+  await deep.locator('summary').click();
+  await expect(page.locator('[data-history-section-open="days"]')).toBeVisible();
 }
 
 async function backToHub(page, pageKey) {
   await page.locator(`#historyPage-${pageKey} [data-history-section-back]`).click();
   await expect(page.locator('#historyHub')).toBeVisible();
+  if (!(await page.locator('#r360ResultsDeepDive').getAttribute('open'))) await page.locator('#r360ResultsDeepDive summary').click();
 }
 
-test('Histórico abre curto e separa Dias, Resumo, Semana e Comparação', async ({ page }) => {
+test('Resultados abre Semana/Mês e mantém Dias, Resumo, Semana e Comparação para aprofundar', async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   const { monday, tuesday } = currentWeekDates();
   await openApp(page, stateWithRecords([record(monday, 500, 100), record(tuesday, 420, 80)]));
   await openHistory(page);
 
+  await expect(page.locator('[data-r360-period]')).toHaveCount(2);
   await expect(page.locator('[data-history-section-open]')).toHaveCount(4);
   await expect(page.locator('[data-history-section-open="days"]')).toContainText('2 registros');
-  await expect(page.locator('[role="tablist"]')).toBeHidden();
-  await expect(page.locator('#historyDaysPanel')).toBeHidden();
 
   await page.locator('[data-history-section-open="days"]').click();
   await expect(page.locator('#historyPage-days')).toBeVisible();
@@ -109,6 +96,7 @@ test('Histórico abre curto e separa Dias, Resumo, Semana e Comparação', async
   await expect(page.locator('#historyChart')).toBeVisible();
   await page.evaluate(() => window.history.back());
   await expect(page.locator('#historyHub')).toBeVisible();
+  if (!(await page.locator('#r360ResultsDeepDive').getAttribute('open'))) await page.locator('#r360ResultsDeepDive summary').click();
 
   await page.locator('[data-history-section-open="week"]').click();
   await expect(page.locator('#historyPage-week')).toBeVisible();
@@ -120,13 +108,14 @@ test('Histórico abre curto e separa Dias, Resumo, Semana e Comparação', async
   await expect(page.locator('#historyPage-comparison')).toBeVisible();
   await expect(page.locator('#historyInsight')).toContainText('Comparação entre dias');
   await expect(page.locator('nav.fixed.bottom-0 [data-view="history"]')).toHaveClass(/active/);
-
   expect(errors).toEqual([]);
 });
 
-test('Histórico mantém estados vazios claros em cada destino', async ({ page }) => {
+test('Resultados mantém estados vazios claros sem inventar gráfico ou dados', async ({ page }) => {
   await openApp(page, stateWithRecords([]));
   await openHistory(page);
+  await expect(page.locator('#r360ResultsHero')).toContainText('Ainda sem resultado');
+  await expect(page.locator('#r360ResultsChartCard')).toBeHidden();
 
   await expect(page.locator('[data-history-section-open="days"]')).toContainText('0 registros');
   await page.locator('[data-history-section-open="days"]').click();
