@@ -15,6 +15,8 @@
       "ui/model.js",
       "ui/store.js",
       "ui/premium.css",
+      "ui/interaction.js",
+      "ui/friendly.css",
       "ui/screens/dashboard.js",
       "ui/screens/planning.js",
       "ui/screens/record.js",
