@@ -22,26 +22,30 @@ async function openApp(page) {
     try {
       const nav = await page.locator('nav.fixed.bottom-0').getAttribute('data-r1-navigation');
       const plan = await page.locator('#view-planning').getAttribute('data-r1');
-      return nav === 'ready' && plan === 'ready' ? 'ready' : 'waiting';
+      const r360 = await page.locator('body').getAttribute('data-r360');
+      return nav === 'ready' && plan === 'ready' && r360 === 'r10' ? 'ready' : 'waiting';
     } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('ready');
 }
 
-test('barra principal mostra Agora, Registrar, Resultados, Custos e Mais', async ({ page }) => {
+test('barra principal mostra Agora, Resultados, Registrar, Custos e Mais com Registrar focado', async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await openApp(page);
 
   const nav = page.locator('nav.fixed.bottom-0');
   await expect(nav.locator('[data-view]')).toHaveCount(5);
-  await expect(nav.locator('[data-view] span')).toHaveText(['Agora', 'Registrar', 'Resultados', 'Custos', 'Mais']);
-  await expect(nav.locator('[data-view="day"]')).toHaveCount(1);
+  await expect(nav.locator('[data-view] span')).toHaveText(['Agora', 'Resultados', 'Registrar', 'Custos', 'Mais']);
+  await expect(nav.locator('[data-view="day"]')).toHaveClass(/r360-register-action/);
   await expect(nav.locator('[data-view="costs"]')).toHaveCount(1);
   await expect(nav.locator('[data-view="settings"]')).toHaveCount(0);
 
   await nav.locator('[data-view="day"]').click();
   await expect(page.locator('#view-day')).toBeVisible();
-  await expect(nav.locator('[data-view="day"]')).toHaveClass(/active/);
+  await expect(nav).toBeHidden();
+  await page.locator('#r360RecordCancel').click();
+  await expect(page.locator('#view-dashboard')).toBeVisible();
+  await expect(nav).toBeVisible();
 
   await nav.locator('[data-view="history"]').click();
   await expect(page.locator('#view-history')).toBeVisible();
@@ -75,15 +79,18 @@ test('Plano é global e contextual sem ocupar uma sexta aba', async ({ page }) =
   await expect(page.locator('#view-dashboard')).toBeVisible();
 });
 
-test('rascunho de Registrar continua preservado ao navegar e voltar', async ({ page }) => {
+test('rascunho de Registrar sobrevive a interrupção e recarga', async ({ page }) => {
   await openApp(page);
   const nav = page.locator('nav.fixed.bottom-0');
 
   await nav.locator('[data-view="day"]').click();
   await page.locator('#recordGross').fill('321.50');
   await page.locator('#recordKm').fill('120');
-  await nav.locator('[data-view="dashboard"]').click();
-  await nav.locator('[data-view="day"]').click();
+  await expect.poll(async () => page.evaluate(() => JSON.parse(localStorage.getItem('vetta-r360-record-draft-v1') || 'null')?.recordGross)).toBe('321.50');
+
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await expect.poll(() => page.locator('body').getAttribute('data-r360'), { timeout: 15000 }).toBe('r10');
+  await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
   await expect(page.locator('#recordGross')).toHaveValue('321.50');
   await expect(page.locator('#recordKm')).toHaveValue('120');
 });
