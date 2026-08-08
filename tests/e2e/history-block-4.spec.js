@@ -55,20 +55,25 @@ async function openApp(page, state) {
   }, { timeout: 15000 }).toBe('stable');
 }
 
+async function ensureDeepDiveOpen(page) {
+  const deep = page.locator('#r360ResultsDeepDive');
+  await expect(deep).toBeVisible();
+  if (!(await deep.evaluate(element => element.open))) await deep.locator('summary').click();
+  await expect(deep).toHaveJSProperty('open', true);
+}
+
 async function openHistory(page) {
   await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
   await expect(page.locator('#view-history')).toBeVisible();
   await expect(page.locator('#r360ResultsOverview')).toBeVisible();
-  const deep = page.locator('#r360ResultsDeepDive');
-  await expect(deep).toBeVisible();
-  await deep.locator('summary').click();
+  await ensureDeepDiveOpen(page);
   await expect(page.locator('[data-history-section-open="days"]')).toBeVisible();
 }
 
 async function backToHub(page, pageKey) {
   await page.locator(`#historyPage-${pageKey} [data-history-section-back]`).click();
   await expect(page.locator('#historyHub')).toBeVisible();
-  if (!(await page.locator('#r360ResultsDeepDive').getAttribute('open'))) await page.locator('#r360ResultsDeepDive summary').click();
+  await ensureDeepDiveOpen(page);
 }
 
 test('Resultados abre Semana/Mês e mantém Dias, Resumo, Semana e Comparação para aprofundar', async ({ page }) => {
@@ -96,7 +101,7 @@ test('Resultados abre Semana/Mês e mantém Dias, Resumo, Semana e Comparação 
   await expect(page.locator('#historyChart')).toBeVisible();
   await page.evaluate(() => window.history.back());
   await expect(page.locator('#historyHub')).toBeVisible();
-  if (!(await page.locator('#r360ResultsDeepDive').getAttribute('open'))) await page.locator('#r360ResultsDeepDive summary').click();
+  await ensureDeepDiveOpen(page);
 
   await page.locator('[data-history-section-open="week"]').click();
   await expect(page.locator('#historyPage-week')).toBeVisible();
