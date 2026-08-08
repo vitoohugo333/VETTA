@@ -179,3 +179,11 @@
     app.renderOnboardingStep();
   }
 })();
+
+if (!document.querySelector('script[data-vetta-module="refactor-360"]')) {
+  const refactorScript = document.createElement('script');
+  refactorScript.src = './refactor-360.js?v=1';
+  refactorScript.async = false;
+  refactorScript.dataset.vettaModule = 'refactor-360';
+  document.head.appendChild(refactorScript);
+}
