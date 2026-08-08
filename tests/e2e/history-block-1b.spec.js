@@ -67,6 +67,9 @@ async function openHistoryHub(page) {
         const historyNav = page.locator('nav.fixed.bottom-0 [data-view="history"]');
         if (await historyNav.isVisible()) await historyNav.click();
       }
+      if (await page.locator('#historyHub').isVisible()) return 'ready';
+      const sectionBack = page.locator('#view-history [data-history-section-back]').first();
+      if (await sectionBack.isVisible()) await sectionBack.click();
       return await page.locator('#historyHub').isVisible() ? 'ready' : 'waiting';
     } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('ready');
@@ -76,6 +79,7 @@ async function openHistoryHub(page) {
 }
 
 async function openHistorySection(page, section) {
+  if (await page.locator(`#historyPage-${section}`).isVisible()) return;
   await openHistoryHub(page);
   await page.locator(`[data-history-section-open="${section}"]`).click();
   await expect(page.locator(`#historyPage-${section}`)).toBeVisible();
