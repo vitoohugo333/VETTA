@@ -154,6 +154,15 @@
   app.showView = function(view, primaryView = view) {
     baseShowView.call(this, view, primaryView);
     if (view !== 'day') return;
+
+    const editingFromResults = confirmationActive
+      && primaryView === 'day'
+      && app.r360ReturnContext?.view === 'history';
+    if (editingFromResults) {
+      confirmationActive = false;
+      confirmationDate = null;
+    }
+
     if (confirmationActive) {
       setMode('confirmation');
       return;
@@ -180,6 +189,14 @@
     confirmationDate = null;
     optionalDetails.open = false;
     setMode('form');
+
+    const returnContext = app.r360ReturnContext;
+    app.r360ReturnContext = null;
+    if (returnContext?.view === 'history') {
+      if (history.length > 1) history.back();
+      else app.navigateToPrimary('history');
+      return;
+    }
     app.showView('dashboard');
   });
 
