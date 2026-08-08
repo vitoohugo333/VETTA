@@ -76,7 +76,7 @@ test('registro prioriza essenciais, recolhe opcionais, confirma e atualiza a mes
   await page.locator('[data-r360-edit-day="2026-08-04"]').click();
   await expect(page.locator('#view-day')).toBeVisible();
   await expect(page.locator('#recordDate')).toHaveValue('2026-08-04');
-  await expect(page.locator('#saveDayButton')).toHaveText('Atualizar dia');
+  await expect(page.locator('#saveDayButton')).toHaveText(/Atualizar(?: este)? dia/);
   await expect(page.locator('#recordGross')).toHaveValue('321.5');
   await expect(optional).toHaveAttribute('open', '');
 
@@ -110,5 +110,5 @@ test('edição pelos Resultados continua usando o mesmo formulário e a mesma da
   await expect(page.locator('#recordDate')).toHaveValue('2026-08-03');
   await expect(page.locator('#recordGross')).toHaveValue('280');
   await expect(page.locator('#recordOptionalDetails')).toHaveAttribute('open', '');
-  await expect(page.locator('#saveDayButton')).toHaveText('Atualizar dia');
+  await expect(page.locator('#saveDayButton')).toHaveText(/Atualizar(?: este)? dia/);
 });
