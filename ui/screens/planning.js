@@ -21,7 +21,7 @@ function hub() {
     <div class="surface">
       <span class="eyebrow">Plano do mês</span><h2 class="title">Organize o mês antes de correr atrás da meta</h2><p class="subtitle">Quatro decisões formam seu plano</p>
       <div class="metric-grid section-gap">
-        <div class="metric"><small>Objetivo líquido</small><strong>${missingTarget ? '—' : model.money(model.state.targetProfit, 0)}</strong></div>
+        <div class="metric"><small>Objetivo líquido</small><strong id="planningTarget">${missingTarget ? '—' : model.money(model.state.targetProfit, 0)}</strong></div>
         <div class="metric"><small>Dias planejados</small><strong>${calculation.ctx.plannedDays}</strong></div>
         <div class="metric"><small>Bruto necessário</small><strong>${model.money(calculation.totalGross, 0)}</strong></div>
         <div class="metric"><small>Ritmo semanal</small><strong>${model.money(weeklyTarget, 0)}</strong></div>
@@ -48,7 +48,7 @@ function goals() {
       <div class="input-group"><label class="input-label" for="planningTargetInput">Objetivo líquido mensal</label><div class="money-input"><span>R$</span><input id="planningTargetInput" class="input" type="number" min="0" step="100" value="${target}"></div></div>
       <input id="planningTargetSlider" type="range" min="0" max="20000" step="100" value="${Math.min(20000, target)}" aria-label="Ajuste rápido da meta">
       <div class="metric-grid"><div class="metric"><small>Por semana</small><strong>${model.money(target / 4.345, 0)}</strong></div><div class="metric"><small>Por dia planejado</small><strong>${model.money(target / Math.max(1, model.calculations().ctx.plannedDays), 0)}</strong></div></div>
-      <button class="primary full" type="button" data-planning-section-back>Salvar objetivo</button>
+      <button class="primary full" type="button" data-planning-save-back>Salvar objetivo</button>
     </div>
   </section>`;
 }
@@ -61,7 +61,7 @@ function agenda() {
       <div class="day-count-grid">${[5, 6, 7].map(value => `<button type="button" data-plan-days="${value}" class="day-count ${count === value ? 'active' : ''}">${value} dias</button>`).join('')}</div>
       <div class="weekday-grid">${labels.map((label, day) => `<button type="button" class="weekday ${model.state.workWeekdays.includes(day) ? 'active' : ''}" data-plan-weekday="${day}">${label}</button>`).join('')}</div>
       <div class="input-group"><label class="input-label" for="planningDaysOff">Folgas extras neste mês</label><input id="planningDaysOff" class="input" type="number" min="0" max="31" value="${model.state.extraDaysOff}"></div>
-      <button class="primary full" type="button" data-planning-section-back>Salvar agenda</button>
+      <button class="primary full" type="button" data-planning-save-back>Salvar agenda</button>
     </div>
   </section>`;
 }
@@ -74,7 +74,7 @@ function operation() {
       <div class="input-row"><div class="input-group"><label class="input-label">Preço</label><input id="planningFuelPrice" class="input" type="number" step=".01" value="${fuel.price}"></div><div class="input-group"><label class="input-label">Rendimento (${h(fuel.unit)})</label><input id="planningFuelEff" class="input" type="number" step=".1" value="${fuel.efficiency}"></div></div>
       <div class="input-group"><label class="input-label">Receita esperada por km</label><input id="planningRevenueKm" class="input" type="number" step=".01" value="${model.state.revenueKm}"></div>
       <div class="positive"><strong>Custo de combustível: ${model.money(model.fuelCostKm())}/km</strong><small>Este valor entra nos mesmos cálculos que sustentam suas metas e registros.</small></div>
-      <button class="primary full" type="button" data-planning-section-back>Salvar operação</button>
+      <button class="primary full" type="button" data-planning-save-back>Salvar operação</button>
     </div>
   </section>`;
 }
@@ -155,7 +155,7 @@ export function renderCostModal() {
   const kind = cost?.kind || 'monthly';
   const valuePrefix = kind === 'percent' ? '%' : 'R$';
   return `<div id="costModal" class="modal"><div class="sheet">
-    <div class="sheet-head"><div><span class="eyebrow">Planejamento financeiro</span><h3 id="costModalTitle" class="section-title">${cost ? 'Editar custo' : 'Adicionar custo'}</h3></div><button id="closeCostModal" class="icon-button" type="button">×</button></div>
+    <div class="sheet-head"><div><span class="eyebrow">Planejamento financeiro</span><h3 id="costModalTitle" class="section-title">${cost ? 'Editar custo' : 'Adicionar custo'}</h3></div><button id="closeCostModal" class="icon-button" type="button" aria-label="Fechar"><i aria-hidden="true">×</i></button></div>
     <input id="costId" type="hidden" value="${h(cost?.id || '')}">
     <div class="modal-grid">
       <div class="input-group"><label class="input-label">Nome</label><input id="costName" class="input" value="${h(cost?.name || '')}"></div>
