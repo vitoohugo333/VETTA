@@ -8,8 +8,8 @@ const model = await readFile(new URL('../ui/model.js', import.meta.url), 'utf8')
 const policy = JSON.parse(await readFile(new URL('../ci/branch-policy.json', import.meta.url), 'utf8'));
 
 assert.match(model, /vetta-driver-intelligence-v3/);
-for (const section of ['goals','agenda','costs','operation']) assert.ok(planning.includes(`planningSection==='${section}'`), `Plano deve possuir ${section}.`);
-for (const section of ['distribution','learning','advanced']) assert.ok(planning.includes(`planningSection==='${section}'`), `${section} deve existir sob demanda.`);
+for (const section of ['goals','agenda','costs','operation']) assert.match(planning, new RegExp(`planningSection\\s*===\\s*'${section}'`), `Plano deve possuir ${section}.`);
+for (const section of ['distribution','learning','advanced']) assert.match(planning, new RegExp(`planningSection\\s*===\\s*'${section}'`), `${section} deve existir sob demanda.`);
 assert.ok(planning.includes('Quatro decisões formam seu plano'));
 assert.ok(planning.includes('data-planning-core'));
 assert.ok(planning.includes('planningSecondary'));
