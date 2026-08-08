@@ -142,14 +142,16 @@ test('R6: importação inválida preserva dados e backup válido só entra após
   await seed(page);
   await page.locator('nav.fixed.bottom-0 [data-view="more"]').click();
   await page.locator('[data-more-section-open="data"]').click();
-  await expect(page.locator('#importInput')).toBeVisible();
+  const importInput = page.locator('#importInput');
+  await expect(importInput).toHaveAttribute('type', 'file');
+  await expect(page.locator('label:has(#importInput)')).toBeVisible();
 
   const before = await page.evaluate(key => localStorage.getItem(key), STORAGE_KEY);
-  await page.locator('#importInput').setInputFiles({ name: 'invalido.json', mimeType: 'application/json', buffer: Buffer.from('{quebrado') });
+  await importInput.setInputFiles({ name: 'invalido.json', mimeType: 'application/json', buffer: Buffer.from('{quebrado') });
   await expect.poll(async () => page.evaluate(key => localStorage.getItem(key), STORAGE_KEY)).toBe(before);
 
   const imported = { ...baseState, targetProfit: 7777, records: [], costs: [] };
-  await page.locator('#importInput').setInputFiles({ name: 'backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ data: imported })) });
+  await importInput.setInputFiles({ name: 'backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ data: imported })) });
   await expect(page.locator('#r360ImportPreview')).toBeVisible();
   expect(JSON.parse(await page.evaluate(key => localStorage.getItem(key), STORAGE_KEY)).targetProfit).toBe(4000);
   await page.locator('[data-r360-import-confirm]').click();
@@ -169,5 +171,10 @@ test('R9: zoom fica liberado, layout expandido vira rail e movimento reduzido é
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const duration = await page.locator('nav.fixed.bottom-0 .nav-item').first().evaluate(el => getComputedStyle(el).transitionDuration);
-  expect(duration).toMatch(/0\.00001s|0s/);
+  const maxDurationSeconds = duration.split(',').reduce((max, token) => {
+    const value = Number.parseFloat(token);
+    const seconds = token.trim().endsWith('ms') ? value / 1000 : value;
+    return Math.max(max, seconds);
+  }, 0);
+  expect(maxDurationSeconds).toBeLessThanOrEqual(0.00001);
 });
