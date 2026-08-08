@@ -55,16 +55,14 @@ function normalizeState(value = {}) {
   state.events = Array.isArray(value.events) ? value.events : [];
   state.closings = Array.isArray(value.closings) ? value.closings : [];
   state.workWeekdays = Array.isArray(value.workWeekdays) && value.workWeekdays.length ? [...value.workWeekdays] : base.workWeekdays;
-  state.costs = (Array.isArray(value.costs) ? value.costs : base.costs)
-    .filter(cost => cost?.kind !== 'percent')
-    .map(cost => ({
-      ...cost,
-      name: ['fixed-default', 'fixed-migrated'].includes(cost?.id) || /custos?\s+fixos?\s+(migrados?|iniciais?)/i.test(cost?.name || '') ? 'Outros custos mensais' : cost.name,
-      active: cost?.active !== false,
-      paidPeriods: Array.isArray(cost?.paidPeriods) ? [...cost.paidPeriods] : [],
-      legacySource: false,
-      dueWeekday: Number.isInteger(cost?.dueWeekday) ? cost.dueWeekday : undefined,
-    }));
+  state.costs = (Array.isArray(value.costs) ? value.costs : base.costs).map(cost => ({
+    ...cost,
+    name: ['fixed-default', 'fixed-migrated'].includes(cost?.id) || /custos?\s+fixos?\s+(migrados?|iniciais?)/i.test(cost?.name || '') ? 'Outros custos mensais' : cost.name,
+    active: cost?.active !== false,
+    paidPeriods: Array.isArray(cost?.paidPeriods) ? [...cost.paidPeriods] : [],
+    legacySource: false,
+    dueWeekday: Number.isInteger(cost?.dueWeekday) ? cost.dueWeekday : undefined,
+  }));
   state.r360 = { ...base.r360, ...(value.r360 || {}) };
   state.r360.notifications = { ...base.r360.notifications, ...(value.r360?.notifications || {}) };
   state.targetProfit = Math.max(0, number(state.targetProfit));
@@ -217,13 +215,13 @@ export class VettaModel {
   isPaid(cost,date=new Date()){return(cost.paidPeriods||[]).includes(this.paymentPeriodKey(cost,date));}
   setPaid(cost,paid,date=new Date()){const key=this.paymentPeriodKey(cost,date),set=new Set(cost.paidPeriods||[]);if(paid)set.add(key);else set.delete(key);cost.paidPeriods=[...set];this.save();}
   dueMeta(cost,date=new Date()) {
-    if(cost.category!=='obligation'||!cost.active||cost.kind==='per_km')return{group:'operational',label:'Operacional',rank:90}; if(this.isPaid(cost,date))return{group:'paid',label:'Pago',rank:80};
+    if(cost.category!=='obligation'||!cost.active||cost.kind==='per_km'||cost.kind==='percent')return{group:'operational',label:'Operacional',rank:90}; if(this.isPaid(cost,date))return{group:'paid',label:'Pago',rank:80};
     const today=new Date(date);today.setHours(12,0,0,0);let due=null;
     if((cost.kind==='monthly'||cost.kind==='one_time')&&cost.dueDay)due=new Date(today.getFullYear(),today.getMonth(),Math.min(Number(cost.dueDay),new Date(today.getFullYear(),today.getMonth()+1,0).getDate()),12);
     else if(cost.kind==='weekly'&&Number.isInteger(cost.dueWeekday)){const monday=new Date(today);monday.setDate(today.getDate()-((today.getDay()+6)%7));const offset=cost.dueWeekday===0?6:cost.dueWeekday-1;due=new Date(monday);due.setDate(monday.getDate()+offset);}
     if(!due)return{group:'upcoming',label:'Sem vencimento definido',rank:50};const diff=Math.round((due-today)/86400000);if(diff<0)return{group:'urgent',label:`Vencida há ${Math.abs(diff)} dia(s)`,rank:0};if(diff===0)return{group:'urgent',label:'Vence hoje',rank:1};if(diff===1)return{group:'upcoming',label:'Vence amanhã',rank:10};return{group:'upcoming',label:`Vence em ${diff} dias`,rank:20+diff};
   }
-  costCadence(cost){if(cost.kind==='weekly')return`${this.money(cost.value)}/semana`;if(cost.kind==='per_km')return`${this.money(cost.value)}/km`;if(cost.kind==='one_time')return`${this.money(cost.value)} neste mês`;return`${this.money(cost.value)}/mês`;}
+  costCadence(cost){if(cost.kind==='weekly')return`${this.money(cost.value)}/semana`;if(cost.kind==='per_km')return`${this.money(cost.value)}/km`;if(cost.kind==='percent')return`${this.number(cost.value)}% do faturamento`;if(cost.kind==='one_time')return`${this.money(cost.value)} neste mês`;return`${this.money(cost.value)}/mês`;}
   upsertEvent(input){const id=input.id||`event-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`,event={id,title:String(input.title||'').trim(),date:input.date,note:String(input.note||'').trim()};if(!event.title||!event.date)return{ok:false};const index=this.state.events.findIndex(item=>item.id===id);if(index>=0)this.state.events[index]=event;else this.state.events.push(event);this.state.events.sort((a,b)=>a.date.localeCompare(b.date));this.save();return{ok:true,event};}
   deleteEvent(id){this.state.events=this.state.events.filter(event=>event.id!==id);this.save();}
   exportPayload(){return{app:'VETTA',version:STATE_VERSION,exportedAt:new Date().toISOString(),data:clone(this.state)};}
