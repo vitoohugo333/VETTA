@@ -3,19 +3,13 @@ import { test, expect } from '@playwright/test';
 const STORAGE_KEY = 'vetta-driver-intelligence-v3';
 
 const initialState = {
-  version: 10,
-  release: '3.5.1',
-  onboardingComplete: true,
-  targetProfit: 4000,
-  workWeekdays: [1, 2, 3, 4, 5, 6],
-  extraDaysOff: 0,
-  revenueKm: 2.25,
+  version: 10, release: '3.5.1', onboardingComplete: true, targetProfit: 4000,
+  workWeekdays: [1, 2, 3, 4, 5, 6], extraDaysOff: 0, revenueKm: 2.25,
   fuel: { type: 'gnv', label: 'GNV', unit: 'm³', price: 4.79, efficiency: 13.2 },
   compare: { gasPrice: 6.19, gasEff: 10.5, gnvPrice: 4.79, gnvEff: 13.2, period: 1 },
   costs: [{ id: 'more5-maintenance', name: 'Manutenção', kind: 'per_km', category: 'reserve', value: 0.18, active: true }],
   records: [{ id: 'more5-day', date: '2026-08-01', gross: 300, km: 100, hours: 8, fuelSpend: 0, fuelTypeSnapshot: 'gnv', fuelLabelSnapshot: 'GNV', fuelPriceSnapshot: 4.79, fuelCostKmSnapshot: 4.79 / 13.2, perKmCostSnapshot: 0.18, percentCostSnapshot: 0, fixedShareSnapshot: 0, updatedAt: new Date().toISOString() }],
-  events: [],
-  closings: [],
+  events: [], closings: [],
 };
 
 async function openApp(page, state = initialState) {
@@ -27,11 +21,10 @@ async function openApp(page, state = initialState) {
       const before = page.url();
       const navigation = await page.locator('nav.fixed.bottom-0').getAttribute('data-block1d');
       const more = await page.locator('#view-more').getAttribute('data-block5');
+      const r360 = await page.locator('body').getAttribute('data-r360');
       await page.waitForTimeout(150);
-      return navigation === 'ready' && more === 'ready' && before === page.url() ? 'stable' : 'waiting';
-    } catch {
-      return 'waiting';
-    }
+      return navigation === 'ready' && more === 'ready' && r360 === 'r10' && before === page.url() ? 'stable' : 'waiting';
+    } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('stable');
 }
 
@@ -53,6 +46,7 @@ test('Mais abre curto e mantém Ferramentas, Relatórios, Dados, Radar e Aplicat
   await openMore(page);
 
   await expect(page.locator('[data-more-section-open]')).toHaveCount(5);
+  await expect(page.locator('[data-r360-more-open="notifications"]')).toHaveCount(1);
   await expect(page.locator('#compareDetails')).toBeHidden();
   await expect(page.locator('#reportButton')).toBeHidden();
 
@@ -101,11 +95,10 @@ test('Mais abre curto e mantém Ferramentas, Relatórios, Dados, Radar e Aplicat
   await expect(page.locator('#installModal')).toBeVisible();
   await page.locator('#closeInstallModal').click();
   await expect(page.locator('#installModal')).toBeHidden();
-
   expect(errors).toEqual([]);
 });
 
-test('importação continua usando a mesma fonte de dados e o Voltar retorna ao resumo', async ({ page }) => {
+test('importação valida e explica antes de substituir a mesma fonte de dados', async ({ page }) => {
   await openApp(page);
   await openMore(page);
   await page.locator('[data-more-section-open="data"]').click();
@@ -117,13 +110,19 @@ test('importação continua usando a mesma fonte de dados e o Voltar retorna ao 
   };
 
   await page.locator('#importInput').setInputFiles({
-    name: 'vetta-backup.json',
-    mimeType: 'application/json',
+    name: 'vetta-backup.json', mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ app: 'VETTA', version: 10, data: imported })),
   });
-  await expect(page.locator('#toast')).toContainText('Backup importado');
+  await expect(page.locator('#r360ImportPreview')).toBeVisible();
+  await expect(page.locator('#r360ImportPreview')).toContainText('2 registros');
 
-  const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
+  let saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
+  expect(saved.targetProfit).toBe(4000);
+  expect(saved.records).toHaveLength(1);
+
+  await page.locator('[data-r360-import-confirm]').click();
+  await expect(page.locator('#toast')).toContainText('Backup importado');
+  saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
   expect(saved.targetProfit).toBe(5200);
   expect(saved.records).toHaveLength(2);
 
