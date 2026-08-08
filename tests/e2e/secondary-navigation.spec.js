@@ -48,8 +48,8 @@ test('Registrar e Plano preservam contexto e voltar retorna à área correta', a
   await expect(page.locator('nav.fixed.bottom-0 [data-view="dashboard"]')).toHaveClass(/active/);
 
   await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
-  await expect(page.locator('#recordGross')).toHaveValue('321.50');
-  await expect(page.locator('#recordKm')).toHaveValue('120');
+  await expect.poll(async () => Number(await page.locator('#recordGross').inputValue())).toBe(321.5);
+  await expect.poll(async () => Number(await page.locator('#recordKm').inputValue())).toBe(120);
 });
 
 test('voltar do navegador ou Android retorna do Plano para Agora', async ({ page }) => {
