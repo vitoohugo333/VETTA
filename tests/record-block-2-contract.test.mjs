@@ -27,7 +27,7 @@ assert.match(record, /appendChild\(optionalGrid\)/, 'Os campos opcionais existen
 assert.match(record, /Você pode salvar sem preencher esta parte/, 'A interface deve explicar que os opcionais não são obrigatórios.');
 assert.match(record, /recordConfirmation/, 'O salvamento deve possuir uma confirmação dedicada.');
 assert.match(record, /recordDoneButton/, 'A confirmação deve permitir concluir o fluxo.');
-assert.match(record, /recordEditButton/, 'A confirmação deve permitir editar o mesmo dia.');
+assert.match(record, /recordEditButton/, 'A confirmação deve manter uma ação secundária no fluxo salvo.');
 assert.match(record, /const baseSaveDay = app\.saveDay/, 'O módulo deve preservar a gravação canônica do aplicativo.');
 assert.match(record, /baseSaveDay\.call\(this\)/, 'O módulo deve delegar a gravação ao comportamento validado.');
 assert.match(record, /this\.state\.records\.some\(record => record\.date === draft\.date\)/, 'A confirmação deve distinguir criação de atualização pela data.');
@@ -38,11 +38,15 @@ assert.match(record, /const hero = root\.firstElementChild/, 'O cabeçalho deve 
 assert.match(record, /heroTitle\.textContent\.trim\(\) !== 'Como foi seu dia\?'/, 'A reorganização deve confirmar o título real antes de agir.');
 assert.doesNotMatch(record, /querySelector\([^\n]*rounded-\[/, 'Classes Tailwind com colchetes não podem ser usadas diretamente como seletor CSS.');
 
-assert.doesNotMatch(record, /localStorage|sessionStorage/, 'O módulo visual não pode criar outra persistência.');
-assert.doesNotMatch(record, /state\.records\.push|state\.records\s*=|splice\(/, 'O módulo visual não pode implementar uma segunda gravação.');
+assert.doesNotMatch(record, /localStorage|sessionStorage/, 'O módulo visual original não pode criar outra persistência.');
+assert.doesNotMatch(record, /state\.records\.push|state\.records\s*=|splice\(/, 'O módulo visual original não pode implementar uma segunda gravação.');
 assert.doesNotMatch(record, /\.remove\(\)/, 'Nenhum campo ou botão original pode ser removido.');
 assert.doesNotMatch(styles, /record-block-2|block2-record/, 'O Bloco 2 não deve depender de remendo específico em CSS.');
-assert.doesNotMatch(serviceWorker, /record-2|block2/, 'O service worker deve permanecer independente do Bloco 2.');
+
+// No R10, Registrar faz parte do shell offline. O SW pode armazenar o módulo,
+// mas não pode conhecer nem executar a lógica do formulário ou dos registros.
+assert.match(serviceWorker, /'\.\/record-2\.js\?v=1'/, 'Registrar deve fazer parte do shell offline completo.');
+assert.doesNotMatch(serviceWorker, /recordGross|recordKm|saveDayButton|state\.records|findIndex\(record/, 'O service worker deve permanecer independente da lógica do Registrar.');
 assert.match(policy, /"record-2\.js"/, 'O arquivo publicado do Bloco 2 deve entrar na prova de paridade.');
 
-console.log('Contrato do Bloco 2 validado: essenciais prioritários, opcionais preservados, confirmação e uma data por registro.');
+console.log('Contrato do Bloco 2 validado: essenciais prioritários, opcionais preservados, confirmação, uma data por registro e shell offline sem lógica duplicada.');
