@@ -89,7 +89,8 @@ test('registro prioriza essenciais, recolhe opcionais, confirma e atualiza a mes
   expect(saved[0].gross).toBe(350);
 
   await page.locator('#recordDoneButton').click();
-  await expect(page.locator('#view-dashboard')).toBeVisible();
+  await expect(page.locator('#view-history')).toBeVisible();
+  await expect(page.locator('#r360ResultDetail')).toBeVisible();
   expect(errors).toEqual([]);
 });
 
