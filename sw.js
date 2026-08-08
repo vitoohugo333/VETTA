@@ -1,8 +1,8 @@
-const CACHE = 'vetta-premium-ui-1';
+const CACHE = 'vetta-premium-ui-2';
 const HAD_ACTIVE_WORKER = Boolean(self.registration.active);
 const APP_SHELL = [
   './', './index.html', './app-shell.html',
-  './ui/main.js', './ui/context.js', './ui/model.js', './ui/store.js', './ui/premium.css',
+  './ui/main.js', './ui/context.js', './ui/model.js', './ui/store.js', './ui/premium.css', './ui/interaction.js', './ui/friendly.css',
   './ui/screens/dashboard.js', './ui/screens/planning.js', './ui/screens/record.js', './ui/screens/results.js', './ui/screens/more.js', './ui/screens/onboarding.js',
   './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png'
 ];
