@@ -1,14 +1,12 @@
 import { model, ui, vibrate } from './context.js';
 
-const STATE = {
-  lastRoute: null,
-  lastSavedAt: null,
-  searchOpen: false,
-};
+const BACKUP_STAMP_KEY = 'vetta-friendly-backup-last-v1';
+const STATE = { lastRoute: null, lastSavedAt: null };
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const money = value => model.money(Number(value || 0), 0);
+const escapeSelector = value => globalThis.CSS?.escape ? CSS.escape(String(value)) : String(value).replace(/["\\]/g, '\\$&');
 
 function safeVibrate(duration = 8) {
   try { vibrate(duration); } catch (_) {}
@@ -74,8 +72,7 @@ function dashboardEnhancements() {
     <div class="friendly-progress-track" role="progressbar" aria-label="Progresso da semana" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"><span style="width:${pct}%"></span></div>`;
   hero.appendChild(progress);
 
-  const metrics = $$('.hero-metric', hero);
-  metrics.forEach(metric => {
+  $$('.hero-metric', hero).forEach(metric => {
     metric.tabIndex = 0;
     metric.setAttribute('role', 'button');
     metric.setAttribute('aria-label', `${metric.querySelector('small')?.textContent || 'Número'}. Toque para entender.`);
@@ -104,8 +101,7 @@ function recordEnhancements() {
     status.className = 'friendly-save-status';
     status.setAttribute('aria-live', 'polite');
     status.innerHTML = '<span class="friendly-save-dot"></span><span>Rascunho protegido automaticamente</span>';
-    const essential = view.querySelector('[data-record-role="essential-fields"]');
-    essential?.insertAdjacentElement('afterend', status);
+    view.querySelector('[data-record-role="essential-fields"]')?.insertAdjacentElement('afterend', status);
   }
 
   const date = $('#recordDate');
@@ -158,6 +154,7 @@ function pulseRecordDraft() {
   const status = $('#friendlyRecordStatus');
   if (!status) return;
   STATE.lastSavedAt = Date.now();
+  status.classList.remove('is-saved');
   status.classList.add('is-saving');
   status.innerHTML = '<span class="friendly-save-dot"></span><span>Salvando rascunho…</span>';
   clearTimeout(pulseRecordDraft.timer);
@@ -169,15 +166,16 @@ function pulseRecordDraft() {
   }, 280);
 }
 
+function periodRecords() {
+  const calculation = model.calculations();
+  return (model.state.r360.resultsPeriod || 'week') === 'week' ? model.weekContext(calculation).records : calculation.records;
+}
+
 function resultsEnhancements() {
   const overview = $('#r360ResultsOverview');
   if (!overview || overview.dataset.friendlyReady) return;
   overview.dataset.friendlyReady = 'true';
-
-  const calculation = model.calculations();
-  const records = (model.state.r360.resultsPeriod || 'week') === 'week'
-    ? model.weekContext(calculation).records
-    : calculation.records;
+  const records = periodRecords();
 
   if (records.length) {
     const best = [...records].sort((a, b) => b.net - a.net)[0];
@@ -187,15 +185,29 @@ function resultsEnhancements() {
     insight.innerHTML = `
       <button type="button" class="friendly-insight" data-friendly-result-date="${best.date}"><small>Melhor líquido</small><strong>${money(best.net)}</strong><span>Ver o dia ›</span></button>
       ${efficient ? `<button type="button" class="friendly-insight" data-friendly-result-date="${efficient.date}"><small>Melhor eficiência</small><strong>${model.money(efficient.gross / efficient.km)}/km</strong><span>Ver o dia ›</span></button>` : ''}`;
-    const reading = $('#r360ResultsReading');
-    reading?.insertAdjacentElement('beforebegin', insight);
+    $('#r360ResultsReading')?.insertAdjacentElement('beforebegin', insight);
   }
 
+  const chartRecords = records.slice(-10);
   $$('.chart span', overview).forEach((bar, index) => {
+    const record = chartRecords[index];
+    if (!record) return;
     bar.tabIndex = 0;
     bar.setAttribute('role', 'button');
-    bar.dataset.friendlyBarIndex = String(index);
+    bar.dataset.friendlyResultDate = record.date;
+    bar.setAttribute('aria-label', `Abrir resultado de ${record.date}`);
   });
+
+  const deepDive = $('#r360ResultsDeepDive');
+  if (deepDive && !$('#friendlyQuestionShortcuts')) {
+    const questions = document.createElement('div');
+    questions.id = 'friendlyQuestionShortcuts';
+    questions.className = 'friendly-question-list section-gap';
+    questions.innerHTML = `
+      <button type="button" data-friendly-question="yield">Por que ganhei mais em alguns dias?<span>›</span></button>
+      <button type="button" data-friendly-question="pace">Estou melhorando meu ritmo?<span>›</span></button>`;
+    deepDive.insertAdjacentElement('beforebegin', questions);
+  }
 }
 
 function costsEnhancements() {
@@ -211,6 +223,17 @@ function costsEnhancements() {
     ? top.map(({ cost, meta }) => `<button type="button" data-friendly-cost="${cost.id}" class="friendly-due-chip"><small>${meta.label}</small><strong>${cost.name}</strong></button>`).join('')
     : '<div class="friendly-empty-chip">Nenhum compromisso ativo.</div>';
   $('#r360CostAttention')?.insertAdjacentElement('afterend', strip);
+
+  const calculation = model.calculations();
+  const plannedDays = Math.max(1, calculation.ctx.plannedDays);
+  if (active.length && !$('#friendlyCostConsequence')) {
+    const monthly = model.costContext().monthlyFixed;
+    const box = document.createElement('div');
+    box.id = 'friendlyCostConsequence';
+    box.className = 'friendly-consequence section-gap';
+    box.innerHTML = `<small>Traduzindo para sua rotina</small><strong>${money(monthly / plannedDays)} por dia planejado</strong><span>É a parcela diária aproximada dos custos fixos ativos no seu plano.</span>`;
+    $('#r360CostMetrics')?.insertAdjacentElement('afterend', box);
+  }
 }
 
 function planningEnhancements() {
@@ -220,11 +243,12 @@ function planningEnhancements() {
   const ready = [
     model.state.targetProfit > 0,
     model.state.workWeekdays.length > 0,
-    model.state.costs.some(cost => cost.active),
+    true,
     Number(model.state.fuel?.price) > 0 && Number(model.state.fuel?.efficiency) > 0,
   ];
   const completed = ready.filter(Boolean).length;
-  const next = ['goals', 'agenda', 'costs', 'operation'][Math.max(0, ready.findIndex(value => !value))] || 'goals';
+  const missingIndex = ready.findIndex(value => !value);
+  const next = ['goals', 'agenda', 'costs', 'operation'][missingIndex >= 0 ? missingIndex : 0];
   const card = document.createElement('div');
   card.className = 'friendly-plan-progress section-gap';
   card.innerHTML = `
@@ -234,17 +258,33 @@ function planningEnhancements() {
   hub.firstElementChild?.insertAdjacentElement('afterend', card);
 }
 
+function dataEnhancements() {
+  const page = $('#morePage-data');
+  if (!page || page.dataset.friendlyReady) return;
+  page.dataset.friendlyReady = 'true';
+  const stamp = localStorage.getItem(BACKUP_STAMP_KEY);
+  const status = document.createElement('div');
+  status.id = 'friendlyBackupStatus';
+  status.className = 'friendly-backup-status';
+  status.innerHTML = stamp
+    ? `<span>Última cópia exportada</span><strong>${new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short'}).format(new Date(stamp))}</strong>`
+    : '<span>Backup</span><strong>Você ainda não registrou uma exportação neste aparelho</strong>';
+  page.querySelector('.surface')?.prepend(status);
+}
+
 function moreEnhancements() {
   const hub = $('#moreHub');
-  if (!hub || hub.dataset.friendlyReady) return;
-  hub.dataset.friendlyReady = 'true';
-  const search = document.createElement('div');
-  search.className = 'friendly-search section-gap';
-  search.innerHTML = `
-    <label for="friendlyGlobalSearch">Encontrar no VETTA</label>
-    <div class="friendly-search-box"><span aria-hidden="true">⌕</span><input id="friendlyGlobalSearch" type="search" placeholder="Ex.: meta, backup, GNV, relatório"></div>
-    <div id="friendlySearchResults" class="friendly-search-results hidden"></div>`;
-  hub.firstElementChild?.insertAdjacentElement('afterend', search);
+  if (hub && !hub.dataset.friendlyReady) {
+    hub.dataset.friendlyReady = 'true';
+    const search = document.createElement('div');
+    search.className = 'friendly-search section-gap';
+    search.innerHTML = `
+      <label for="friendlyGlobalSearch">Encontrar no VETTA</label>
+      <div class="friendly-search-box"><span aria-hidden="true">⌕</span><input id="friendlyGlobalSearch" type="search" placeholder="Ex.: meta, backup, GNV, relatório"></div>
+      <div id="friendlySearchResults" class="friendly-search-results hidden"></div>`;
+    hub.firstElementChild?.insertAdjacentElement('afterend', search);
+  }
+  dataEnhancements();
 }
 
 function onboardingEnhancements() {
@@ -258,6 +298,15 @@ function onboardingEnhancements() {
   helper.className = 'friendly-onboarding-roadmap';
   helper.innerHTML = labels.map((label, index) => `<span class="${index + 1 <= step ? 'active' : ''}">${index + 1 < step ? '✓' : index + 1}<small>${label}</small></span>`).join('');
   $('#onboardingProgress')?.parentElement?.insertAdjacentElement('afterend', helper);
+
+  if (step === 3 && !$('#friendlyOnboardingSummary', card)) {
+    const target = Number($('#onboardingTarget')?.value || model.state.targetProfit || 0);
+    const summary = document.createElement('div');
+    summary.id = 'friendlyOnboardingSummary';
+    summary.className = 'friendly-onboarding-summary section-gap';
+    summary.innerHTML = `<small>Seu primeiro plano</small><strong>${target > 0 ? `${money(target)} líquidos por mês` : 'Meta ainda em aberto'}</strong><span>Ao entrar, o VETTA transforma isso em acompanhamento semanal e próxima ação.</span>`;
+    card.querySelector('.positive')?.insertAdjacentElement('afterend', summary);
+  }
 }
 
 function openFriendSheet(title, text, action = null) {
@@ -281,6 +330,21 @@ function explainDashboardMetric(metric) {
   }
 }
 
+function explainResultQuestion(kind) {
+  const records = periodRecords();
+  if (kind === 'yield') {
+    if (records.length < 2) return openFriendSheet('O que fez diferença', 'Ainda faltam pelo menos dois dias para comparar sem inventar uma tendência.');
+    const ranked = [...records].sort((a,b) => b.net - a.net);
+    const best = ranked[0], worst = ranked[ranked.length - 1];
+    const bestRate = best.km > 0 ? best.gross / best.km : 0;
+    const worstRate = worst.km > 0 ? worst.gross / worst.km : 0;
+    return openFriendSheet('O que fez diferença', `Seu melhor líquido no período foi ${money(best.net)}. A receita por km desse dia ficou em ${model.money(bestRate)}/km, contra ${model.money(worstRate)}/km no dia de menor líquido. O VETTA mostra a diferença observada sem culpar o dia.`);
+  }
+  const calculation = model.calculations();
+  const week = model.weekContext(calculation);
+  openFriendSheet('Seu ritmo agora', week.records.length ? (week.actual >= week.target ? 'A semana está no ritmo planejado neste momento. Continue registrando para separar consistência de um pico isolado.' : `A semana está abaixo do ritmo planejado em ${money(Math.max(0, week.target - week.actual))}. O próximo registro atualizará essa distância.`) : 'Ainda não há registro nesta semana. O primeiro dia cria uma base real para acompanhar ritmo.');
+}
+
 const SEARCH_ITEMS = [
   { terms: ['meta', 'objetivo', 'plano'], label: 'Objetivo e meta', route: 'planning', section: 'goals' },
   { terms: ['agenda', 'dias', 'trabalho'], label: 'Agenda de trabalho', route: 'planning', section: 'agenda' },
@@ -300,7 +364,7 @@ function runSearch(value) {
   if (query.length < 2) { box.classList.add('hidden'); box.innerHTML = ''; return; }
   const results = SEARCH_ITEMS.filter(item => item.terms.some(term => term.includes(query) || query.includes(term))).slice(0, 5);
   box.innerHTML = results.length
-    ? results.map((item, index) => `<button type="button" data-friendly-search-index="${SEARCH_ITEMS.indexOf(item)}"><span>${item.label}</span><span>›</span></button>`).join('')
+    ? results.map(item => `<button type="button" data-friendly-search-index="${SEARCH_ITEMS.indexOf(item)}"><span>${item.label}</span><span>›</span></button>`).join('')
     : '<div class="friendly-search-empty">Não encontrei uma função com esse nome.</div>';
   box.classList.remove('hidden');
 }
@@ -308,14 +372,8 @@ function runSearch(value) {
 function activateSearchItem(index) {
   const item = SEARCH_ITEMS[index];
   if (!item) return;
-  if (item.route === 'day') {
-    document.querySelector('[data-view="day"]')?.click();
-    return;
-  }
-  if (item.route === 'planning') {
-    ui.secondary('planning', { planningSection: item.section, primary: ui.state.primary });
-    return;
-  }
+  if (item.route === 'day') { document.querySelector('[data-view="day"]')?.click(); return; }
+  if (item.route === 'planning') { ui.secondary('planning', { planningSection: item.section, primary: ui.state.primary }); return; }
   if (item.primary === 'costs') { ui.primary('costs'); return; }
   if (item.primary === 'history') { ui.primary('history'); return; }
   if (item.primary === 'more') {
@@ -335,10 +393,9 @@ function bindDelegatedEvents() {
     const heroMetric = event.target.closest('#r360NowHero .hero-metric');
     if (heroMetric) { explainDashboardMetric(heroMetric); return; }
 
-    const explain = event.target.closest('[data-friend-explain="projection"]');
-    if (explain) {
+    if (event.target.closest('[data-friend-explain="projection"]')) {
       const calculation = model.calculations();
-      openFriendSheet('Leitura VETTA', calculation.records.length < 2 ? 'Ainda há poucos dias reais. O VETTA prefere dizer que a evidência está começando a fingir certeza.' : `A leitura cruza seus registros com a meta, a agenda e os custos ativos. A projeção atual é ${money(calculation.projectedNet)}.`);
+      openFriendSheet('Leitura VETTA', calculation.records.length < 2 ? 'Ainda há poucos dias reais. O VETTA prefere dizer que a evidência está começando em vez de fingir certeza.' : `A leitura cruza seus registros com a meta, a agenda e os custos ativos. A projeção atual é ${money(calculation.projectedNet)}.`);
       return;
     }
 
@@ -347,18 +404,30 @@ function bindDelegatedEvents() {
 
     const cost = event.target.closest('[data-friendly-cost]');
     if (cost) {
-      const original = document.querySelector(`[data-cost-edit="${CSS.escape(cost.dataset.friendlyCost)}"]`);
-      original?.click();
-      return;
+      const original = document.querySelector(`[data-cost-edit="${escapeSelector(cost.dataset.friendlyCost)}"]`);
+      original?.click(); return;
     }
 
     const planNext = event.target.closest('[data-friendly-plan-next]');
     if (planNext) { ui.secondary('planning', { planningSection: planNext.dataset.friendlyPlanNext }); return; }
 
+    const question = event.target.closest('[data-friendly-question]');
+    if (question) { explainResultQuestion(question.dataset.friendlyQuestion); return; }
+
     const search = event.target.closest('[data-friendly-search-index]');
     if (search) { activateSearchItem(Number(search.dataset.friendlySearchIndex)); return; }
 
-    if (event.target.closest('[data-friendly-close]') || (event.target.id === 'friendlySheet')) $('#friendlySheet')?.remove();
+    if (event.target.closest('#exportButton')) {
+      const stamp = new Date().toISOString();
+      localStorage.setItem(BACKUP_STAMP_KEY, stamp);
+      queueMicrotask(() => {
+        const box = $('#friendlyBackupStatus');
+        if (box) box.innerHTML = `<span>Última cópia exportada</span><strong>${new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short'}).format(new Date(stamp))}</strong>`;
+      });
+      announce('Backup exportado.');
+    }
+
+    if (event.target.closest('[data-friendly-close]') || event.target.id === 'friendlySheet') $('#friendlySheet')?.remove();
   });
 
   document.addEventListener('input', event => {
@@ -372,6 +441,9 @@ function bindDelegatedEvents() {
   document.addEventListener('keydown', event => {
     if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('#r360NowHero .hero-metric')) {
       event.preventDefault(); explainDashboardMetric(event.target);
+    }
+    if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('.chart span[data-friendly-result-date]')) {
+      event.preventDefault(); ui.set({ resultDetail: event.target.dataset.friendlyResultDate });
     }
     if (event.key === 'Escape') $('#friendlySheet')?.remove();
   });
@@ -388,7 +460,7 @@ function enhance() {
   planningEnhancements();
   moreEnhancements();
   onboardingEnhancements();
-  document.body.dataset.friendlyUx = 'v1';
+  document.body.dataset.friendlyUx = 'v2';
 }
 
 let queued = false;
