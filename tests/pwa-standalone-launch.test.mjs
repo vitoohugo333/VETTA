@@ -15,6 +15,9 @@ assert.ok(redirectPosition > -1 && redirectPosition < bodyPosition, 'instalaçõ
 assert.ok(installPage.includes('html.standalone-launch body'));
 assert.ok(installPage.includes('visibility: hidden') || installPage.includes('visibility:hidden'));
 assert.ok(!installPage.includes("fetch('./app-shell.html'"), 'troca assíncrona causava a piscada da instalação');
-assert.ok(sw.includes("calculaae-install-flow-5"), 'cache deve mudar após alteração crítica do fluxo PWA');
+assert.ok(sw.includes("calculaae-install-flow-6"), 'cache deve mudar após alteração crítica do fluxo PWA');
+assert.ok(sw.includes('HAD_ACTIVE_WORKER'), 'primeira instalação e atualização devem permanecer estados distintos');
+assert.ok(sw.includes("'./refactor-360.js?v=1'"), 'camada 360 deve fazer parte do app shell offline');
+assert.ok(sw.includes("'./refactor-360.css?v=1'"), 'estilos 360 devem fazer parte do app shell offline');
 
 console.log('PWA standalone launch contract passed');
