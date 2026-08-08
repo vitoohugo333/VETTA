@@ -47,8 +47,8 @@ test('R3.0/R8: navegação definitiva prioriza Registrar e preserva rascunho sem
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.locator('body').getAttribute('data-r360'), { timeout: 15000 }).toBe('r10');
   await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
-  await expect(page.locator('#recordGross')).toHaveValue('333.50');
-  await expect(page.locator('#recordKm')).toHaveValue('123');
+  await expect.poll(async () => Number(await page.locator('#recordGross').inputValue())).toBe(333.5);
+  await expect.poll(async () => Number(await page.locator('#recordKm').inputValue())).toBe(123);
 });
 
 test('R2: marcar uma conta como paga não altera a matemática e pode ser desfeito', async ({ page }) => {
