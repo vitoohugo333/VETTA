@@ -71,7 +71,7 @@ async function openHistoryHub(page) {
     } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('ready');
   const deep = page.locator('#r360ResultsDeepDive');
-  if (await deep.count() && !(await deep.getAttribute('open'))) await deep.locator('summary').click();
+  if (await deep.count() && !(await deep.evaluate(element => element.open))) await deep.locator('summary').click();
   await expect(page.locator('[data-history-section-open="days"]')).toBeVisible();
 }
 
