@@ -40,6 +40,10 @@
 .friendly-insight span{display:block;margin-top:12px;color:var(--blue);font-size:10px;font-weight:800}
 .friendly-insight:active{transform:scale(.98)}
 
+.friendly-question-list{display:grid;gap:8px}
+.friendly-question-list button{width:100%;min-height:48px;padding:0 14px;border:1px solid var(--line);border-radius:15px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;font-size:11px;font-weight:800}
+.friendly-question-list button span{color:var(--blue);font-size:17px}
+
 .chart span[role="button"]{cursor:pointer;transition:filter var(--friendly-fast) ease,transform var(--friendly-fast) ease,opacity var(--friendly-fast) ease}
 .chart span[role="button"]:hover,.chart span[role="button"]:focus-visible{filter:brightness(1.08);transform:translateY(-2px);outline:2px solid rgba(37,99,235,.28);outline-offset:2px}
 
@@ -49,6 +53,11 @@
 .friendly-due-chip small{display:block;color:var(--amber);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
 .friendly-due-chip strong{display:block;margin-top:5px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .friendly-empty-chip{padding:12px 14px;border:1px dashed var(--line);border-radius:16px;color:var(--muted);font-size:11px}
+
+.friendly-consequence{padding:15px 16px;border:1px solid #dbeafe;border-radius:18px;background:linear-gradient(145deg,#eff6ff,#fff)}
+.friendly-consequence small{display:block;color:#64748b;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.friendly-consequence strong{display:block;margin-top:6px;color:#1d4ed8;font-size:18px}
+.friendly-consequence span{display:block;margin-top:5px;color:#64748b;font-size:10px;line-height:1.45}
 
 .friendly-plan-progress{padding:17px;border:1px solid #dbeafe;border-radius:21px;background:linear-gradient(145deg,#eff6ff,#fff)}
 .friendly-plan-progress .friendly-progress-copy{color:#475569}
@@ -65,10 +74,18 @@
 .friendly-search-results button span:last-child{color:var(--blue);font-size:17px}
 .friendly-search-empty{padding:10px 5px;color:var(--muted);font-size:11px}
 
+.friendly-backup-status{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:0 0 14px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.friendly-backup-status span{color:var(--muted);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.friendly-backup-status strong{max-width:62%;text-align:right;font-size:11px;line-height:1.4}
+
 .friendly-onboarding-roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 20px}
 .friendly-onboarding-roadmap>span{min-height:52px;padding:9px 7px;border:1px solid var(--line);border-radius:14px;background:#f8fafc;color:#94a3b8;display:grid;place-items:center;font-size:11px;font-weight:800;text-align:center}
 .friendly-onboarding-roadmap>span.active{background:var(--blue-soft);border-color:#bfdbfe;color:var(--blue)}
 .friendly-onboarding-roadmap small{display:block;margin-top:2px;font-size:8px;line-height:1.15;text-transform:uppercase;letter-spacing:.04em}
+.friendly-onboarding-summary{padding:15px;border-radius:18px;background:linear-gradient(145deg,#0b1121,#17233d);color:#fff}
+.friendly-onboarding-summary small{display:block;color:#9fb8f6;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.friendly-onboarding-summary strong{display:block;margin-top:6px;font-size:18px}
+.friendly-onboarding-summary span{display:block;margin-top:5px;color:#cbd5e1;font-size:10px;line-height:1.45}
 
 .friendly-modal{opacity:0;transition:opacity var(--friendly-fast) ease}
 .friendly-modal.is-open{opacity:1}
@@ -76,9 +93,11 @@
 .friendly-modal.is-open .friendly-sheet{transform:translateY(0)}
 .friendly-sheet-copy{margin:18px 0 0;color:var(--muted);font-size:13px;line-height:1.65}
 
-.nav-item,.row,.choice,.hero-metric,.friendly-insight,.friendly-due-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.nav-item,.row,.choice,.hero-metric,.friendly-insight,.friendly-due-chip,.friendly-question-list button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .nav-item.active span:last-child{animation:friendlyNavLabel var(--friendly-medium) var(--friendly-spring)}
 @keyframes friendlyNavLabel{from{transform:translateY(2px);opacity:.45}to{transform:translateY(0);opacity:1}}
+
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role="button"]:focus-visible{outline:3px solid rgba(37,99,235,.28);outline-offset:3px}
 
 @media(max-width:430px){
   .app-main{padding-left:16px;padding-right:16px}
