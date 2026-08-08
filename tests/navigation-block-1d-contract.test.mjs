@@ -10,7 +10,8 @@ const [dashboard,main,store,model,serviceWorker]=await Promise.all([
 assert.match(model,/vetta-driver-intelligence-v3/);
 for(const label of ['Agora','Resultados','Registrar','Custos','Mais']) assert.match(dashboard,new RegExp(`'${label}'`),`Navegação deve conter ${label}.`);
 assert.match(dashboard,/r360-register-action/,'Registrar deve ter tratamento transversal central.');
-assert.match(main,/view==='costs'/,'Custos deve abrir diretamente sua área financeira.');
+assert.match(store,/view === 'costs'[^]*planningSection: 'costs'/,'A store deve traduzir Custos diretamente para sua superfície financeira.');
+assert.match(main,/ui\.primary\('costs'\)/,'A UI deve encaminhar ações contextuais diretamente para Custos.');
 assert.match(main,/openPlan/,'Plano deve permanecer contextual, não sexto destino.');
 assert.match(store,/history\.pushState/);assert.match(store,/popstate/);
 assert.doesNotMatch(dashboard,/localStorage|sessionStorage|\.save\(/,'Navegação visual não pode escrever dados.');
