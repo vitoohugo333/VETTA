@@ -16,8 +16,9 @@ async function waitForStableApp(page) {
       const navigationReady = await page.locator('nav.fixed.bottom-0').getAttribute('data-r1-navigation');
       const recordReady = await page.locator('#view-day').getAttribute('data-block2');
       const historyReady = await page.locator('#view-history').getAttribute('data-block4');
+      const r360 = await page.locator('body').getAttribute('data-r360');
       await page.waitForTimeout(150);
-      return navigationReady === 'ready' && recordReady === 'ready' && historyReady === 'ready' && page.url() === before ? 'stable' : 'waiting';
+      return navigationReady === 'ready' && recordReady === 'ready' && historyReady === 'ready' && r360 === 'r10' && page.url() === before ? 'stable' : 'waiting';
     } catch { return 'waiting'; }
   }, { timeout: 15000 }).toBe('stable');
 }
@@ -28,35 +29,18 @@ async function openApp(page, initialState = state) {
   await waitForStableApp(page);
 }
 
-async function openHistoryDays(page) {
-  await expect.poll(async () => {
-    try {
-      const historyView = page.locator('#view-history');
-      if (!await historyView.isVisible()) {
-        const historyNav = page.locator('nav.fixed.bottom-0 [data-view="history"]');
-        if (await historyNav.isVisible()) await historyNav.click();
-        return 'waiting';
-      }
-      if (await page.locator('#historyDaysPanel').isVisible()) return 'ready';
-      const hub = page.locator('#historyHub');
-      if (await hub.isVisible()) await page.locator('[data-history-section-open="days"]').click();
-      return await page.locator('#historyDaysPanel').isVisible() ? 'ready' : 'waiting';
-    } catch { return 'waiting'; }
-  }, { timeout: 15000 }).toBe('ready');
-}
-
 async function records(page) {
   return page.evaluate(key => JSON.parse(localStorage.getItem(key) || '{}').records || [], STORAGE_KEY);
 }
 
-test('registro prioriza essenciais, recolhe opcionais e confirma o dia salvo', async ({ page }) => {
+test('registro prioriza essenciais, recolhe opcionais, confirma e atualiza a mesma data pelos Resultados', async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await openApp(page);
 
-  await page.locator('#view-dashboard button[data-view="day"]').click();
+  await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
   await expect(page.locator('#view-day')).toBeVisible();
-  await expect(page.locator('nav.fixed.bottom-0 [data-view="day"]')).toHaveClass(/active/);
+  await expect(page.locator('nav.fixed.bottom-0')).toBeHidden();
   await expect(page.locator('[data-record-role="essential-fields"]')).toBeVisible();
   await expect(page.locator('#recordGross')).toBeVisible();
   await expect(page.locator('#recordKm')).toBeVisible();
@@ -80,16 +64,20 @@ test('registro prioriza essenciais, recolhe opcionais e confirma o dia salvo', a
   await expect(page.locator('#recordConfirmationTitle')).toHaveText('Dia registrado');
   await expect(page.locator('#recordConfirmationGross')).toContainText('321,50');
   await expect(page.locator('#recordConfirmationKm')).toHaveText('120 km');
-  await expect(page.locator('nav.fixed.bottom-0 [data-view="day"]')).toHaveClass(/active/);
+  await expect(page.locator('#recordConfirmationText')).toContainText('semana');
 
   let saved = await records(page);
   expect(saved).toHaveLength(1);
   expect(saved[0]).toMatchObject({ date: '2026-08-04', gross: 321.5, km: 120, hours: 8.5, fuelSpend: 45 });
 
+  await expect(page.locator('#recordEditButton')).toHaveText('Ver resultados deste dia');
   await page.locator('#recordEditButton').click();
-  await expect(page.locator('#recordConfirmation')).toBeHidden();
+  await expect(page.locator('#r360ResultDetail')).toBeVisible();
+  await page.locator('[data-r360-edit-day="2026-08-04"]').click();
+  await expect(page.locator('#view-day')).toBeVisible();
+  await expect(page.locator('#recordDate')).toHaveValue('2026-08-04');
+  await expect(page.locator('#saveDayButton')).toHaveText('Atualizar dia');
   await expect(page.locator('#recordGross')).toHaveValue('321.5');
-  await expect(page.locator('#recordKm')).toHaveValue('120');
   await expect(optional).toHaveAttribute('open', '');
 
   await page.locator('#recordGross').fill('350');
@@ -105,7 +93,7 @@ test('registro prioriza essenciais, recolhe opcionais e confirma o dia salvo', a
   expect(errors).toEqual([]);
 });
 
-test('edição pelo Histórico continua usando o mesmo formulário e a mesma data', async ({ page }) => {
+test('edição pelos Resultados continua usando o mesmo formulário e a mesma data', async ({ page }) => {
   const stateWithRecord = {
     ...state,
     records: [{ id: 'day-2026-08-03', date: '2026-08-03', gross: 280, km: 100, hours: 7, fuelSpend: 38,
@@ -113,12 +101,14 @@ test('edição pelo Histórico continua usando o mesmo formulário e a mesma dat
       fuelCostKmSnapshot: 4.79 / 13.2, perKmCostSnapshot: 0, percentCostSnapshot: 0, fixedShareSnapshot: 0 }],
   };
   await openApp(page, stateWithRecord);
-  await openHistoryDays(page);
-  const editButton = page.locator('#historyDaysPanel [data-action="edit"][data-date="2026-08-03"]');
-  await expect(editButton).toBeVisible();
-  await editButton.click();
+  await page.locator('nav.fixed.bottom-0 [data-view="history"]').click();
+  const day = page.locator('[data-r360-result-date="2026-08-03"]');
+  await expect(day).toBeVisible();
+  await day.click();
+  await page.locator('[data-r360-edit-day="2026-08-03"]').click();
   await expect(page.locator('#view-day')).toBeVisible();
   await expect(page.locator('#recordDate')).toHaveValue('2026-08-03');
   await expect(page.locator('#recordGross')).toHaveValue('280');
   await expect(page.locator('#recordOptionalDetails')).toHaveAttribute('open', '');
+  await expect(page.locator('#saveDayButton')).toHaveText('Atualizar dia');
 });
