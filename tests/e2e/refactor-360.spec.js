@@ -29,7 +29,7 @@ async function seed(page, state = baseState) {
   await expect.poll(() => page.locator('body').getAttribute('data-r360'), { timeout: 15000 }).toBe('r10');
 }
 
-test('R3.0/R8: navegação definitiva prioriza Registrar e preserva rascunho sem barra durante edição', async ({ page }) => {
+test('R3.0/R8: navegação definitiva prioriza Registrar e retoma rascunho sem barra durante edição', async ({ page }) => {
   await seed(page);
   const labels = await page.locator('nav.fixed.bottom-0 .nav-item span').allTextContents();
   expect(labels.map(text => text.trim())).toEqual(['Agora', 'Resultados', 'Registrar', 'Custos', 'Mais']);
@@ -46,7 +46,8 @@ test('R3.0/R8: navegação definitiva prioriza Registrar e preserva rascunho sem
 
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.locator('body').getAttribute('data-r360'), { timeout: 15000 }).toBe('r10');
-  await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
+  await expect(page.locator('#view-day')).toBeVisible();
+  await expect(page.locator('nav.fixed.bottom-0')).toBeHidden();
   await expect.poll(async () => Number(await page.locator('#recordGross').inputValue())).toBe(333.5);
   await expect.poll(async () => Number(await page.locator('#recordKm').inputValue())).toBe(123);
 });
