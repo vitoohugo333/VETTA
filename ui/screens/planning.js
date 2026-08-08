@@ -145,7 +145,8 @@ export function renderPlanning() {
   if (ui.state.planningSection === 'distribution') body = distribution();
   if (ui.state.planningSection === 'learning') body = learning();
   if (ui.state.planningSection === 'advanced') body = advanced();
-  return `<section id="view-planning" class="view-section ${ui.state.route === 'planning' ? '' : 'hidden'}" data-r1="ready" data-plan-state="${model.state.targetProfit <= 0 ? 'missing-target' : 'active'}"><div class="page-head">${ui.state.planningSection ? '' : '<button type="button" class="back-button" data-back aria-label="Voltar">←</button>'}<div><span class="eyebrow">Planejamento</span></div></div>${body}</section>`;
+  const hubHeader = ui.state.planningSection ? '' : '<div class="page-head"><button type="button" class="back-button" data-back aria-label="Voltar">←</button><div><span class="eyebrow">Planejamento</span></div></div>';
+  return `<section id="view-planning" class="view-section ${ui.state.route === 'planning' ? '' : 'hidden'}" data-r1="ready" data-plan-state="${model.state.targetProfit <= 0 ? 'missing-target' : 'active'}">${hubHeader}${body}</section>`;
 }
 
 export function renderCostModal() {
