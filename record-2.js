@@ -193,8 +193,20 @@
     const returnContext = app.r360ReturnContext;
     app.r360ReturnContext = null;
     if (returnContext?.view === 'history') {
-      if (history.length > 1) history.back();
-      else app.navigateToPrimary('history');
+      app.state.r360.resultsPeriod = returnContext.period === 'month' ? 'month' : 'week';
+      app.save();
+      const restoreDetail = () => {
+        requestAnimationFrame(() => {
+          if (returnContext.date) app.r360Audit?.openResultDetail?.(returnContext.date);
+        });
+      };
+      if (history.length > 1) {
+        window.addEventListener('popstate', restoreDetail, { once: true });
+        history.back();
+      } else {
+        app.navigateToPrimary('history');
+        restoreDetail();
+      }
       return;
     }
     app.showView('dashboard');
