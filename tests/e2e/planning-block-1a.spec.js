@@ -34,7 +34,8 @@ async function openPlan(page) {
 
 async function openSection(page, key) {
   const secondary = ['distribution', 'learning', 'advanced'].includes(key);
-  if (secondary && !await page.locator('#planningSecondary').getAttribute('open')) {
+  const secondaryPanel = page.locator('#planningSecondary');
+  if (secondary && !await secondaryPanel.evaluate(element => element.open)) {
     await page.locator('#planningSecondary > summary').click();
   }
   await page.locator(`[data-planning-section-open="${key}"]`).click();
