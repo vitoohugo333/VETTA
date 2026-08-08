@@ -8,7 +8,7 @@ const dashboard=readFileSync('ui/screens/dashboard.js','utf8'),planning=readFile
 assert.ok(shell.includes('./ui/main.js'));assert.ok(shell.includes('./ui/premium.css'));
 for(const legacy of ['app.js','refactor-360.js','planning-1a.js','today-1c.js','record-2.js'])assert.ok(!shell.includes(legacy),`shell ativo não pode carregar ${legacy}`);
 assert.ok(!shell.includes('tailwindcss.com'));assert.ok(!shell.includes('chart.js'));
-assert.ok(main.includes("document.body.dataset.uiAuthority='premium-v1'"));assert.ok(main.includes('setRenderCallback(render)'));assert.ok(!main.includes('MutationObserver'));assert.ok(!main.includes('setInterval('));
+assert.match(main,/document\.body\.dataset\.uiAuthority\s*=\s*'premium-v1'/);assert.ok(main.includes('setRenderCallback(render)'));assert.ok(!main.includes('MutationObserver'));assert.ok(!main.includes('setInterval('));
 assert.ok(modelSource.includes('vetta-driver-intelligence-v3'));assert.ok(store.includes('history.pushState'));assert.ok(store.includes('popstate'));
 assert.ok(dashboard.includes('r360NowHero'));assert.ok(planning.includes('Quatro decisões formam seu plano'));assert.ok(planning.includes('Marcar como pago não remove o custo da matemática'));assert.ok(record.includes('Prévia antes de salvar'));assert.ok(results.includes('O que formou este resultado'));assert.ok(more.includes('Tudo que não precisa disputar sua rotina'));assert.ok(onboarding.includes('Como você trabalha hoje?'));
 assert.ok(css.includes('@media (min-width:840px)'));assert.ok(css.includes('prefers-reduced-motion'));
