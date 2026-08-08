@@ -91,6 +91,6 @@ test('rascunho de Registrar sobrevive a interrupção e recarga', async ({ page 
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect.poll(() => page.locator('body').getAttribute('data-r360'), { timeout: 15000 }).toBe('r10');
   await page.locator('nav.fixed.bottom-0 [data-view="day"]').click();
-  await expect(page.locator('#recordGross')).toHaveValue('321.50');
-  await expect(page.locator('#recordKm')).toHaveValue('120');
+  await expect.poll(async () => Number(await page.locator('#recordGross').inputValue())).toBe(321.5);
+  await expect.poll(async () => Number(await page.locator('#recordKm').inputValue())).toBe(120);
 });
