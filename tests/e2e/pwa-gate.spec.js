@@ -14,6 +14,26 @@ test('modo instalado abre a tela interna do aplicativo', async ({ page }) => {
   await expect(page.locator('#view-dashboard')).toBeVisible();
 });
 
+test('primeiro service worker não recarrega a tarefa já aberta', async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!location.pathname.endsWith('/app-shell.html')) return;
+    const count = Number(sessionStorage.getItem('vetta-pwa-load-count') || '0') + 1;
+    sessionStorage.setItem('vetta-pwa-load-count', String(count));
+  });
+
+  await page.goto('/app-shell.html', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#view-dashboard')).toBeVisible();
+  await expect.poll(async () => page.evaluate(async () => {
+    if (!('serviceWorker' in navigator)) return 'unsupported';
+    const registration = await navigator.serviceWorker.ready;
+    return registration.active?.state || 'waiting';
+  }), { timeout: 15000 }).toBe('activated');
+
+  await page.waitForTimeout(750);
+  const loads = await page.evaluate(() => Number(sessionStorage.getItem('vetta-pwa-load-count') || '0'));
+  expect(loads).toBe(1);
+});
+
 test('instalação concluída orienta abrir pelo ícone', async ({ page }) => {
   await page.goto('/?forceBrowser=1');
   await page.evaluate(() => window.dispatchEvent(new Event('appinstalled')));
